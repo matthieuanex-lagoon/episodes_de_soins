@@ -29,6 +29,18 @@ La page reprend **exactement** le design de la maquette Prévention (`matthieuan
 
 Toute reprise de la page doit rester dans ce système. Ne pas y réintroduire de mode sombre ni d'autre famille typographique.
 
+## La maquette est fonctionnelle
+
+Deux grilles sont réellement manipulables — celle de la section 02 (dossier validé, on trie) et celle de la section 05 (première ouverture, tout est proposé). Un seul composant les pilote, en fin de fichier. Contrat DOM à respecter si l'on touche au balisage :
+
+- conteneur `.grille` avec `tabindex="0"` ; lignes `.grow` portant `data-imp` (`1|2|3`, `0` = aucune), `data-valide` (`0|1`, défaut 1), `data-lib`, `data-deb` (ISO) ;
+- cellule `.k-i` — son contenu est **rendu par le script**, ne rien y écrire en dur ; `.k-dc` porte le dernier contact au format `jj/mm/aaaa` ;
+- `.statut` en frère de `.grille` dans `.win` ; chips de tri `[data-tri="imp|lib|deb"]` et bouton `[data-action="retrier"]` dans la même `<figure>`.
+
+Comportements implémentés, qui sont autant d'assertions de la spec : clic en trois zones avec aperçu au survol, re-clic du niveau actif qui le retire, `1` `2` `3` `0` au clavier, `Ctrl+Z`, péremption recalculée (haute > 6 mois, moyenne > 18 mois, sur les lignes validées seulement), compteur vivant, **absence de re-tri pendant l'édition** avec bouton « Réappliquer le tri », et réinitialisation par le lien de la barre de navigation.
+
+Ne pas dupliquer d'identifiant : `#grille` désigne la section (ancre de nav), les lignes vivent dans `#grille-lignes`.
+
 ## Vocabulaire — arrêté, ne pas dériver
 
 - Le champ s'appelle **Importance**, jamais « Priorité » (arbitré avec Sophie, équipe dev).

@@ -143,6 +143,21 @@
   .menu .sep { padding: 0; height: 1px; background: #e0e0e0; margin: 3px 0; }
   .menu .hl { background: #e6ebf0; }
 
+  /* interactivité */
+  .grille { outline: none; }
+  .wf .grille .k-i { cursor: pointer; }
+  .wf .k-i.survol { background: #e2ebf7; box-shadow: inset 0 0 0 1px #7ba7d7; }
+  .wf .k-i.prop.survol { background: #e2ebf7; }
+  .imp.apercu i { opacity: .42; }
+  .wf .grow.sel .k-lib { font-weight: 600; }
+  .grille:focus-visible .grow.sel { box-shadow: inset 0 0 0 1px #9c3d2a; }
+  .barre-demo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .mini { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; padding: 4px 11px; border: 1px solid var(--rule); border-radius: 3px; background: #fff; color: var(--ink-soft); cursor: pointer; font-family: inherit; }
+  .mini:hover { border-color: #c9a99f; color: var(--accent); }
+  .mini.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .mini[hidden] { display: none; }
+  .aide { font-size: 13px; color: var(--ink-soft); }
+
   /* état proposé, non validé */
   .wf .k-i.prop { background: repeating-linear-gradient(45deg, #e7e7e7 0 3px, #f4f4f4 3px 6px); }
   .wf .statut { display: flex; align-items: center; gap: 16px; height: 25px; padding: 0 9px; background: linear-gradient(#fbfbfc,#f0f2f4); border-top: 1px solid #d8dce0; color: #4a5058; }
@@ -188,7 +203,7 @@
       <a href="#donnees">Les données</a>
       <a href="#arbitrages">Les arbitrages</a>
       <a href="#pistes">Les pistes</a>
-      <a href="#" class="reinit" id="reinit">Rejouer le tri</a>
+      <a href="#" class="reinit" id="reinit">Réinitialiser la démo</a>
     </nav>
   </div>
 </header>
@@ -276,10 +291,12 @@
       <span class="essayez">Essayez</span>
       <div class="chips">
         <span class="lab">Trier par</span>
-        <button type="button" class="chip" id="c-imp" aria-pressed="true">Importance</button>
-        <button type="button" class="chip" id="c-lib" aria-pressed="false">Libellé</button>
-        <button type="button" class="chip" id="c-deb" aria-pressed="false">Début</button>
+        <button type="button" class="chip" data-tri="imp" aria-pressed="true">Importance</button>
+        <button type="button" class="chip" data-tri="lib" aria-pressed="false">Libellé</button>
+        <button type="button" class="chip" data-tri="deb" aria-pressed="false">Début</button>
+        <button type="button" class="mini" data-action="retrier" hidden>Réappliquer le tri</button>
       </div>
+      <p class="aide" style="margin:0 0 12px">Cliquez dans la gouttière de gauche — trois zones, une par niveau. Le survol montre ce que le clic poserait. Clavier : <code>1</code> <code>2</code> <code>3</code> <code>0</code> sur la ligne sélectionnée, <code>Ctrl+Z</code> pour annuler.</p>
       <div class="wf">
         <div class="win" style="min-width:770px">
           <div class="grouper">Glisser/déposer ici des entêtes de colonne pour effectuer des regroupements</div>
@@ -292,7 +309,7 @@
             <div class="k-cim">CIM10</div>
             <div class="k-ald">ALD</div>
           </div>
-          <div id="grille-lignes">
+          <div id="grille-lignes" class="grille" tabindex="0" role="group" aria-label="Épisodes du dossier, importance modifiable">
             <div class="grow sel" data-imp="1" data-lib="Artériopathie oblitérante des membres inférieurs" data-deb="2002-03-12">
               <div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div>
               <div class="k-lib ald">Artériopathie oblitérante des membres inférieurs</div>
@@ -360,6 +377,7 @@
               <div class="k-note"></div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div>
             </div>
           </div>
+          <div class="statut"></div>
         </div>
       </div>
       <div class="legende-niv">
@@ -368,7 +386,7 @@
         <span><span class="imp n1"><i></i><i></i><i></i></span> Basse</span>
         <span><span class="imp"><i></i><i></i><i></i></span> Non définie — colonne vide en réalité</span>
       </div>
-      <p class="hint">Changez l'ordre : la colonne de gauche continue de dire la vérité. C'est l'intérêt d'un signal porté par la ligne et non par sa position.</p>
+      <p class="hint">Changez l'ordre : la colonne de gauche continue de dire la vérité. C'est l'intérêt d'un signal porté par la ligne et non par sa position. Les niveaux se modifient au clic — et si votre changement défait le tri en cours, la grille ne bouge pas sous le curseur : un bouton <em>Réappliquer le tri</em> apparaît, conformément à la règle du bas de section. Trois dates sont en ambre : ce sont des niveaux moyens dont l'échéance annoncée n'est plus tenue.</p>
     </figure>
   </div>
 
@@ -532,41 +550,34 @@
   <p class="wide">À la première ouverture d'un dossier, chaque épisode reçoit un niveau <strong>proposé</strong>, et sa cellule de gouttière porte un fond hachuré qui signifie « personne n'a encore regardé ». Un clic n'importe où dans la cellule valide tel quel ; un clic dans l'une des trois zones pose un autre niveau et valide dans le même geste.</p>
   <p class="wide">Le premier passage devient une <em>relecture</em> : on ne corrige que ce qui est faux, soit deux ou trois lignes sur onze, au lieu de composer onze décisions à partir de rien.</p>
 
-  <div class="shots">
-    <figure class="shot is-now">
-      <figcaption>À la première ouverture — tout est proposé</figcaption>
-      <div class="wf">
-        <div class="win" style="max-width:560px">
-          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div><div class="k-dc">Dernier contact</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div><div class="k-dc">11/06/2023</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div><div class="k-dc">22/02/2011</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i prop"><span class="imp n1"><i></i><i></i><i></i></span></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div><div class="k-dc"></div></div>
-          <div class="statut">Importance : <b>0 validée sur 11</b> · proposition non regardée</div>
+  <figure class="shot" style="margin-top:30px">
+    <figcaption>À la première ouverture — relisez le dossier</figcaption>
+    <span class="essayez">Essayez</span>
+    <div class="barre-demo">
+      <button type="button" class="mini" data-action="retrier" hidden>Réappliquer le tri</button>
+      <span class="aide">Onze propositions, aucune validée. Cliquez dans la gouttière pour valider tel quel, ou dans une autre zone pour corriger. Quatre lignes sont visiblement mal proposées.</span>
+    </div>
+    <div class="wf">
+      <div class="win" style="max-width:600px">
+        <div class="ghead"><div class="k-i" title="Importance du suivi"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div><div class="k-dc">Dernier contact</div><div class="k-ald">ALD</div></div>
+        <div class="grille" tabindex="0" role="group" aria-label="Première ouverture du dossier, propositions à valider">
+          <div class="grow sel" data-imp="1" data-valide="0" data-lib="Nodule pulmonaire, sans précision" data-deb="2026-08-26"><div class="k-i"></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div><div class="k-dc">26/08/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="1" data-valide="0" data-lib="Sciatique" data-deb="2026-08-26"><div class="k-i"></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div><div class="k-dc">26/08/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Artériopathie oblitérante des membres inférieurs" data-deb="2002-03-12"><div class="k-i"></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div><div class="k-dc">26/08/2026</div><div class="k-ald"><span class="box">✓</span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="TIPMP Tumeur intracanalaire papillaire mucineuse du pancréas" data-deb="2024-06-07"><div class="k-i"></div><div class="k-deb">07/06/2024</div><div class="k-lib" style="width:250px">TIPMP Tumeur intracanalaire papillaire…</div><div class="k-dc">26/08/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Surveillance coloscopique" data-deb="2010-09-04"><div class="k-i"></div><div class="k-deb">04/09/2010</div><div class="k-lib" style="width:250px">Surveillance coloscopique</div><div class="k-dc">26/08/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Flutter et fibrillation auriculaire" data-deb="2026-02-19"><div class="k-i"></div><div class="k-deb">19/02/2026</div><div class="k-lib" style="width:250px">Flutter et fibrillation auriculaire</div><div class="k-dc">03/07/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Tabagisme" data-deb="2010-10-08"><div class="k-i"></div><div class="k-deb">08/10/2010</div><div class="k-lib" style="width:250px">Tabagisme</div><div class="k-dc">14/05/2026</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Hypercholestérolémie" data-deb="2002-03-12"><div class="k-i"></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div><div class="k-dc">11/06/2023</div><div class="k-ald"><span class="box">✓</span></div></div>
+          <div class="grow" data-imp="2" data-valide="0" data-lib="Insuffisance (de la valvule) mitrale (non rhumatismale)" data-deb="2009-10-16"><div class="k-i"></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div><div class="k-dc">22/02/2011</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="3" data-valide="0" data-lib="Hypothyroïdie" data-deb="2013-04-27"><div class="k-i"></div><div class="k-deb">27/04/2013</div><div class="k-lib" style="width:250px">Hypothyroïdie</div><div class="k-dc">27/04/2013</div><div class="k-ald"><span class="box"></span></div></div>
+          <div class="grow" data-imp="3" data-valide="0" data-lib="Non-Classé" data-deb="2001-12-09"><div class="k-i"></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div><div class="k-dc"></div><div class="k-ald"><span class="box"></span></div></div>
         </div>
+        <div class="statut"></div>
       </div>
-      <p class="hint">La proposition se trompe visiblement deux fois : la sciatique du jour est proposée haute parce qu'elle vient d'être ouverte, l'artériopathie moyenne parce qu'elle porte une ALD. Ce n'est pas grave — c'est justement ce que le regard corrige.</p>
-    </figure>
-
-    <figure class="shot">
-      <figcaption>Après relecture — deux corrections, neuf validations</figcaption>
-      <div class="wf">
-        <div class="win" style="max-width:560px">
-          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div><div class="k-dc">Dernier contact</div></div>
-          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div><div class="k-dc dc-perime">11/06/2023</div></div>
-          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div><div class="k-dc dc-perime">22/02/2011</div></div>
-          <div class="grow"><div class="k-i"><span class="imp n1"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div><div class="k-dc">26/08/2026</div></div>
-          <div class="grow"><div class="k-i"></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div><div class="k-dc"></div></div>
-          <div class="statut">Importance : <b>11 validées sur 11</b> · dont 3 hautes</div>
-        </div>
-      </div>
-      <p class="hint">Le hachuré a disparu : chaque ligne porte désormais un jugement, pas une hypothèse. Deux dates passent en ambre — un niveau moyen dont l'échéance n'est plus tenue depuis trois et quinze ans.</p>
-    </figure>
-  </div>
+    </div>
+    <p class="hint">La proposition se trompe quatre fois, et de façon instructive : la sciatique du jour est proposée haute parce qu'elle vient d'être ouverte, l'artériopathie moyenne parce qu'elle porte une ALD, la TIPMP moyenne faute de tout signal, l'hypothyroïdie basse parce que son dernier contact date de 2013. Ce n'est pas grave — c'est exactement ce que le regard corrige, et il ne corrige que ça. Les dates passent en ambre à mesure que vous validez : ce sont les échéances qu'un niveau annonce et que le dossier ne tient plus.</p>
+  </figure>
 
   <h3>Les règles de proposition</h3>
   <p class="wide">Elles n'ont aucune prétention clinique, et c'est ce qui les rend acceptables. Elles ne décident pas : elles mettent en page un point de départ.</p>
@@ -841,48 +852,205 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 
 <script>
 (function () {
-  var grille = document.getElementById('grille-lignes');
-  if (!grille) { return; }
-  var btns = { imp: document.getElementById('c-imp'), lib: document.getElementById('c-lib'), deb: document.getElementById('c-deb') };
-  var lignes = Array.prototype.slice.call(grille.children);
+  var AUJ = new Date(2026, 7, 26);
+  var CLS = { 1: 'n3', 2: 'n2', 3: 'n1' };
+  var NOM = { 1: 'haute', 2: 'moyenne', 3: 'basse' };
+  var DELAI = { 1: 6, 2: 18 };
+  var IMP_ZONE = [3, 2, 1];
 
-  function contact(l) {
-    var c = l.querySelector('.k-dc');
-    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(c ? c.textContent.trim() : '');
-    return m ? m[3] + '-' + m[2] + '-' + m[1] : '0000-00-00';
+  function carres(imp, apercu) {
+    return '<span class="imp ' + (CLS[imp] || '') + (apercu ? ' apercu' : '') + '"><i></i><i></i><i></i></span>';
+  }
+  function lireDate(txt) {
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec((txt || '').trim());
+    return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
+  }
+  function isoContact(row) {
+    var c = row.querySelector('.k-dc');
+    var d = lireDate(c ? c.textContent : '');
+    if (!d) { return '0000-00-00'; }
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function moisEcoules(d) {
+    return (AUJ.getFullYear() - d.getFullYear()) * 12 + (AUJ.getMonth() - d.getMonth());
+  }
+  function rangImp(row) {
+    var n = Number(row.dataset.imp);
+    return n >= 1 && n <= 3 ? n : 9;
   }
 
-  function trier(mode) {
-    var t = lignes.slice();
-    if (mode === 'imp') {
-      t.sort(function (a, b) {
-        var d = Number(a.dataset.imp) - Number(b.dataset.imp);
-        return d !== 0 ? d : contact(b).localeCompare(contact(a));
-      });
-    } else if (mode === 'deb') {
-      t.sort(function (a, b) { return b.dataset.deb.localeCompare(a.dataset.deb); });
-    } else {
-      t.sort(function (a, b) { return a.dataset.lib.localeCompare(b.dataset.lib, 'fr'); });
+  function rendre(row) {
+    var imp = Number(row.dataset.imp) || 0;
+    var valide = row.dataset.valide === '1';
+    var cell = row.querySelector('.k-i');
+    if (!cell) { return; }
+    cell.innerHTML = imp ? carres(imp, false) : '';
+    cell.classList.toggle('prop', !valide);
+    cell.title = (valide ? 'Importance du suivi : ' + (NOM[imp] || 'aucune')
+                         : 'Proposition non validée : ' + (NOM[imp] || 'aucune'))
+                 + ' — cliquez pour poser un niveau';
+    var dc = row.querySelector('.k-dc');
+    if (dc) {
+      var d = lireDate(dc.textContent);
+      var lim = DELAI[imp];
+      var perime = !!(valide && lim && d && moisEcoules(d) > lim);
+      dc.classList.toggle('dc-perime', perime);
+      if (perime) { dc.title = 'Échéance non tenue pour une importance ' + NOM[imp]; }
+      else { dc.removeAttribute('title'); }
     }
-    t.forEach(function (l) { grille.appendChild(l); });
-    Object.keys(btns).forEach(function (k) {
-      if (btns[k]) { btns[k].setAttribute('aria-pressed', k === mode ? 'true' : 'false'); }
-    });
   }
 
-  Object.keys(btns).forEach(function (k) {
-    if (btns[k]) { btns[k].addEventListener('click', function () { trier(k); }); }
-  });
+  function init(grille) {
+    var fig = grille.closest('figure') || document;
+    var win = grille.parentNode;
+    var statut = win.querySelector('.statut');
+    var chips = Array.prototype.slice.call(fig.querySelectorAll('[data-tri]'));
+    var btnRetri = fig.querySelector('[data-action="retrier"]');
+    var lignes = Array.prototype.slice.call(grille.children);
+    var mode = 'imp';
+    var pile = [];
+
+    var depart = lignes.map(function (r) {
+      return { row: r, imp: r.dataset.imp, valide: r.dataset.valide || '1' };
+    });
+    lignes.forEach(function (r) { if (!r.dataset.valide) { r.dataset.valide = '1'; } });
+
+    function ordonne(m) {
+      var t = lignes.slice();
+      if (m === 'deb') {
+        t.sort(function (a, b) { return b.dataset.deb.localeCompare(a.dataset.deb); });
+      } else if (m === 'lib') {
+        t.sort(function (a, b) { return a.dataset.lib.localeCompare(b.dataset.lib, 'fr'); });
+      } else {
+        t.sort(function (a, b) {
+          var d = rangImp(a) - rangImp(b);
+          return d !== 0 ? d : isoContact(b).localeCompare(isoContact(a));
+        });
+      }
+      return t;
+    }
+
+    function appliquer(m) {
+      mode = m;
+      ordonne(m).forEach(function (r) { grille.appendChild(r); });
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c.dataset.tri === m ? 'true' : 'false'); });
+      if (btnRetri) { btnRetri.hidden = true; }
+    }
+
+    function verifierOrdre() {
+      if (!btnRetri) { return; }
+      var voulu = ordonne(mode);
+      var actuel = Array.prototype.slice.call(grille.children);
+      var differe = voulu.some(function (r, i) { return r !== actuel[i]; });
+      btnRetri.hidden = !differe;
+    }
+
+    function majStatut() {
+      if (!statut) { return; }
+      var v = lignes.filter(function (r) { return r.dataset.valide === '1'; }).length;
+      var h = lignes.filter(function (r) { return r.dataset.valide === '1' && r.dataset.imp === '1'; }).length;
+      var txt = 'Importance : <b>' + v + (v > 1 ? ' validées' : ' validée') + ' sur ' + lignes.length + '</b>';
+      txt += v === 0 ? ' · proposition non regardée' : ' · dont ' + h + (h > 1 ? ' hautes' : ' haute');
+      statut.innerHTML = txt;
+    }
+
+    function poser(row, imp, memoriser) {
+      if (memoriser !== false) {
+        pile.push({ row: row, imp: row.dataset.imp, valide: row.dataset.valide });
+        if (pile.length > 60) { pile.shift(); }
+      }
+      row.dataset.imp = String(imp);
+      row.dataset.valide = '1';
+      rendre(row);
+      majStatut();
+      verifierOrdre();
+    }
+
+    function annuler() {
+      var e = pile.pop();
+      if (!e) { return; }
+      e.row.dataset.imp = e.imp;
+      e.row.dataset.valide = e.valide;
+      rendre(e.row);
+      majStatut();
+      verifierOrdre();
+    }
+
+    function selectionner(row) {
+      lignes.forEach(function (r) { r.classList.toggle('sel', r === row); });
+    }
+
+    lignes.forEach(function (row) {
+      var cell = row.querySelector('.k-i');
+      row.addEventListener('click', function () { selectionner(row); });
+      if (!cell) { return; }
+      cell.addEventListener('mousemove', function (ev) {
+        var r = cell.getBoundingClientRect();
+        var z = Math.max(0, Math.min(2, Math.floor((ev.clientX - r.left) / (r.width / 3))));
+        var imp = IMP_ZONE[z];
+        cell.classList.add('survol');
+        cell.innerHTML = carres(imp, true);
+        cell.title = 'Cliquer : importance ' + NOM[imp];
+      });
+      cell.addEventListener('mouseleave', function () {
+        cell.classList.remove('survol');
+        rendre(row);
+      });
+      cell.addEventListener('click', function (ev) {
+        var r = cell.getBoundingClientRect();
+        var z = Math.max(0, Math.min(2, Math.floor((ev.clientX - r.left) / (r.width / 3))));
+        var imp = IMP_ZONE[z];
+        selectionner(row);
+        if (row.dataset.valide === '1' && String(imp) === row.dataset.imp) { poser(row, 0); }
+        else { poser(row, imp); }
+        cell.classList.remove('survol');
+        grille.focus();
+      });
+    });
+
+    grille.addEventListener('keydown', function (ev) {
+      if (ev.ctrlKey && (ev.key === 'z' || ev.key === 'Z')) { ev.preventDefault(); annuler(); return; }
+      var sel = grille.querySelector('.grow.sel');
+      if (!sel) { return; }
+      if (ev.key === '1' || ev.key === '2' || ev.key === '3') { ev.preventDefault(); poser(sel, Number(ev.key)); }
+      else if (ev.key === '0' || ev.key === 'Delete' || ev.key === 'Backspace') { ev.preventDefault(); poser(sel, 0); }
+    });
+
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () { appliquer(c.dataset.tri); });
+    });
+    if (btnRetri) {
+      btnRetri.addEventListener('click', function () { appliquer(mode); });
+    }
+
+    function reinitialiser() {
+      pile = [];
+      depart.forEach(function (e) {
+        e.row.dataset.imp = e.imp;
+        e.row.dataset.valide = e.valide;
+        rendre(e.row);
+      });
+      selectionner(depart[0].row);
+      appliquer('imp');
+      majStatut();
+    }
+
+    lignes.forEach(rendre);
+    appliquer('imp');
+    majStatut();
+    return reinitialiser;
+  }
+
+  var remises = Array.prototype.slice.call(document.querySelectorAll('.grille')).map(init);
 
   var reinit = document.getElementById('reinit');
   if (reinit) {
     reinit.addEventListener('click', function (e) {
       e.preventDefault();
-      trier('imp');
-      grille.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      remises.forEach(function (f) { f(); });
+      var g = document.getElementById('grille-lignes');
+      if (g) { g.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     });
   }
-
-  trier('imp');
 })();
 </script>
