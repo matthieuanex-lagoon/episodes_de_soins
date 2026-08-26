@@ -107,13 +107,48 @@ Emplacements non atteints : `#DCDCDC`.
 - **Cadre compact** : gouttière et carrés identiques. Il ne montre que sept lignes sur onze, d'où le tri par importance par défaut (§7).
 - **Impression N&B** : trois gris voisins ; le compte de carrés porte seul l'information.
 
-## 6. Attribution — 100 % manuelle
+## 6. La saisie
 
-Aucune déduction depuis le CIM10/CISP, ni depuis ALD / À suivre / Facteur de risque. Le dossier d'exemple le justifie mieux qu'un argument : le nodule pulmonaire n'a **ni code, ni note, ni ALD**, et c'est l'un des trois épisodes les plus importants. Aucune règle automatique ne l'aurait trouvé.
+### Le risque n'est pas l'ergonomie, c'est le démarrage à froid
 
-1. **Panneau de détail** : contrôle segmenté `Aucune | Haute | Moyenne | Basse` sous la case « À suivre », au-dessus de `Facteur de risque`. Seul endroit où saisir un motif.
-2. **Menu contextuel** : clic droit sur une ou plusieurs lignes → « Importance du suivi ▸ ». La **multi-sélection est requise** : elle rend supportable le classement initial d'un dossier à onze épisodes.
-3. **Clavier** : touches `1` `2` `3` de la plus haute à la plus basse, `0` ou `Suppr` retire le niveau. Pas de confirmation, annulable par Ctrl+Z. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.
+Si tout part à `NULL`, le premier jour le cadre affiche exactement ce qu'il affiche aujourd'hui : rien. La valeur n'arrive qu'après que chaque dossier a été classé à la main, sans contrepartie immédiate. Un praticien qui ouvre trois dossiers de onze épisodes et doit les trier avant d'y gagner quoi que ce soit abandonne au quatrième. **Le coût est payé d'avance, le bénéfice arrive après : le profil d'adoption le plus défavorable qui soit.** Le reste de cette section est du réglage ; ceci est structurel.
+
+### Une proposition à valider, pas une colonne vide
+
+À la première ouverture d'un dossier, chaque épisode reçoit un niveau **proposé**, et sa cellule de gouttière porte un **fond hachuré** signifiant « personne n'a encore regardé ». Un clic n'importe où dans la cellule valide tel quel ; un clic dans l'une des trois zones pose un autre niveau et valide dans le même geste. Le premier passage devient une *relecture* — deux ou trois corrections sur onze lignes — au lieu de onze décisions à composer.
+
+Règles de proposition, sans prétention clinique : elles ne décident pas, elles mettent en page un point de départ.
+
+| Si l'épisode… | Proposition |
+|---------------|-------------|
+| a été ouvert dans les trois derniers mois | **Haute** — quelque chose est en cours |
+| porte une ALD active, ou la case « À suivre » | **Moyenne** — un suivi existe |
+| a une date de fin, ou plus de contact depuis 5 ans sans ALD | **Basse** — plus rien n'est programmé |
+| aucun de ces cas | **Moyenne** — le milieu, le moins faux par défaut |
+
+### Pourquoi ce n'est pas l'attribution automatique écartée
+
+Ce point revient sur une décision antérieure, et il faut le dire franchement. Le choix « manuel uniquement » était juste sur la question qu'il tranchait : aucune machine ne doit décider de l'importance d'un suivi, et un niveau déduit du CIM10 serait faux une fois sur deux — le nodule pulmonaire n'a ni code, ni note, ni ALD, et c'est l'un des trois épisodes les plus importants.
+
+Mais ce qui était refusé, c'est **l'autorité** de la machine, pas son aide. Un niveau proposé et visiblement non validé n'a aucune autorité : il ne survit pas au premier regard, et le hachuré dit à qui regarde l'écran que personne ne l'a endossé. Toute la différence tient dans le fait que l'état « non validé » **se voie**. Retirez le hachuré, on retombe exactement sur ce qui avait été écarté.
+
+### Poser un niveau : trois gestes
+
+1. **La gouttière**, cliquable en trois zones (§10). Le geste principal.
+2. **Menu contextuel** : clic droit sur une ou plusieurs lignes → « Importance du suivi ▸ ». La multi-sélection reste requise pour traiter plusieurs lignes d'un coup.
+3. **Panneau de détail** : contrôle segmenté `Aucune | Haute | Moyenne | Basse` sous la case « À suivre ». Seul endroit où saisir un motif.
+
+Et le clavier : touches `1` `2` `3` de la plus haute à la plus basse, `0` ou `Suppr` retire le niveau. Pas de confirmation, annulable par Ctrl+Z. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.
+
+### Classer au moment où l'on y pense
+
+Personne ne s'assoit pour trier des épisodes. On touche un épisode quand on consulte à son sujet — le seul moment où le jugement est disponible sans effort. Le contrôle doit être présent à cet instant, dans le panneau ouvert pendant la consultation, et **pré-sélectionné tant que le niveau n'est pas validé**. Une fonctionnalité qui exige une séance de rangement séparée n'aura jamais lieu.
+
+**Corollaire sur la fraîcheur** : un niveau haut sans contact depuis six mois est soit un niveau à baisser, soit un suivi qui a décroché. Dans les deux cas cela doit se voir, et le signal porte sur la cellule `Dernier contact`, jamais sur les carrés — un glyphe, un sens. **Un niveau qui ment est pire qu'une colonne vide**, ce qui range la péremption du côté du cœur et non des suites (§11).
+
+### Un miroir, pas un garde-fou
+
+En pied de la vue détaillée, un discret « *11 validées sur 11 · dont 3 hautes* ». Aucune limite, aucun avertissement, aucun blocage — juste le reflet. C'est ce qui empêche la dérive où tout finit en haut et où le tri ne dit plus rien, et cela ne coûte qu'une ligne de barre d'état.
 
 ## 7. Tri
 
@@ -152,6 +187,16 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 `1` = le niveau le plus haut. Convention de tri interne, jamais affichée : l'utilisateur ne voit que des carrés, le développeur ne manipule que des entiers.
 
 Teintes et nombre de carrés en base plutôt qu'en dur dans l'IHM : la teinte du rouge se règle sans livrer une version, ce qui rend l'arbitrage du §4 réversible à peu de frais.
+
+**La proposition (§6) ne se stocke pas.** Elle se calcule à l'affichage, et `IMPORTANCE_MAJ` suffit à distinguer les trois états sans colonne supplémentaire :
+
+| État | Test | Rendu |
+|------|------|-------|
+| Personne n'a regardé | `IMPORTANCE_MAJ IS NULL` | proposition, cellule hachurée |
+| Jugement posé | `MAJ` renseignée, `IMPORTANCE` renseignée | carrés pleins |
+| Niveau délibérément retiré | `MAJ` renseignée, `IMPORTANCE IS NULL` | colonne vide |
+
+Aucune migration n'est donc nécessaire : tout l'historique existant se présente d'emblée comme proposé, ce qui est exactement l'état de fait.
 
 **Historisation** : tracer les changements dans le journal d'événements du dossier (ancien → nouveau, date, acteur). Un nodule pulmonaire classé haut puis redescendu après un contrôle rassurant est une décision de suivi qui doit laisser une trace datée.
 
@@ -199,9 +244,11 @@ Si le besoin exprimé par la piste B est « celui-là d'abord, aujourd'hui », l
 
 ## 11. Reprise de l'existant, et la suite
 
-Aucune affectation automatique. Tous les épisodes existants passent à `NULL`. Au premier accès d'un dossier, bandeau discret non bloquant — « *11 épisodes non classés* » — avec un lien ouvrant la vue détaillée en multi-sélection. Disparaît définitivement dès que le praticien l'écarte une fois, par dossier. Pas de fenêtre modale.
+**Il n'y a pas de reprise**, et c'est l'intérêt du dispositif du §6 : l'historique se présente d'emblée comme proposé, dossier par dossier, au moment où on l'ouvre. Pas de bandeau « N épisodes non classés » à écarter, pas de campagne de rattrapage, pas de fenêtre modale — le hachuré dit la même chose, ligne par ligne, là où l'action a lieu.
 
-### Péremption du niveau — la suite la plus utile
+### Péremption du niveau — désormais réclamée au cœur
+
+Le §6 argumente que cette règle n'est pas une suite mais une condition : un niveau qui ment est pire qu'une colonne vide. Ce qui reste ici, c'est son réglage fin — quel délai par niveau, et jusqu'où pousser le signalement.
 
 Le dossier contient deux niveaux moyens dont l'échéance n'est plus tenue : hypercholestérolémie sous ALD vue il y a trois ans, insuffisance mitrale vue il y a quinze ans. Un niveau moyen **affirme** qu'un contrôle périodique existe ; quand le dernier contact dépasse largement la période annoncée, le niveau ment.
 

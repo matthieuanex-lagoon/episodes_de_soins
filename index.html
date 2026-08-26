@@ -143,6 +143,12 @@
   .menu .sep { padding: 0; height: 1px; background: #e0e0e0; margin: 3px 0; }
   .menu .hl { background: #e6ebf0; }
 
+  /* état proposé, non validé */
+  .wf .k-i.prop { background: repeating-linear-gradient(45deg, #e7e7e7 0 3px, #f4f4f4 3px 6px); }
+  .wf .statut { display: flex; align-items: center; gap: 16px; height: 25px; padding: 0 9px; background: linear-gradient(#fbfbfc,#f0f2f4); border-top: 1px solid #d8dce0; color: #4a5058; }
+  .wf .statut b { font-weight: 600; color: #1b1b1b; }
+  .wf .dc-perime { color: #b06a06; }
+
   /* piste A — trois feux cliquables */
   .feu { display: inline-flex; gap: 4px; align-items: center; }
   .feu b { width: 9px; height: 9px; border-radius: 50%; display: block; font-size: 0; }
@@ -428,7 +434,7 @@
       </tr>
       <tr>
         <td class="lvl">Non définie</td>
-        <td>Colonne vide, pas même les carrés gris. Pas encore trié : valeur de départ à la création et pour tout l'historique. Rangé en fin de tri, jamais mêlé aux niveaux bas — « pas de surveillance » et « pas encore examiné » sont deux affirmations différentes.</td>
+        <td>Colonne vide, pas même les carrés gris. Rangé en fin de tri, jamais mêlé aux niveaux bas — « pas de surveillance » et « pas encore examiné » sont deux affirmations différentes. Attention : la colonne n'est vraiment vide que si le praticien a <em>retiré</em> le niveau. Tant que personne n'a regardé l'épisode, la cellule montre la proposition hachurée décrite en section 05.</td>
       </tr>
     </tbody>
   </table>
@@ -517,7 +523,70 @@
 <section id="saisie">
   <div class="sec-num">05</div>
   <h2>La saisie et le tri</h2>
-  <p class="wide">Aucune déduction depuis le CIM10, le CISP, l'ALD, la case <em>À suivre</em> ou le facteur de risque. Le dossier le justifie mieux qu'un argument : le nodule pulmonaire n'a <strong>ni code, ni note, ni ALD</strong>, et c'est l'un des trois épisodes les plus importants. Aucune règle automatique ne l'aurait trouvé.</p>
+
+  <h3>Le risque n'est pas l'ergonomie, c'est le démarrage à froid</h3>
+  <p class="wide">Si tout part à <code>NULL</code>, le premier jour le cadre affiche exactement ce qu'il affiche aujourd'hui : rien. La valeur n'arrive qu'après que chaque dossier a été classé à la main, un par un, sans contrepartie immédiate. Un praticien qui ouvre trois dossiers de onze épisodes et doit les trier avant d'y gagner quoi que ce soit abandonne au quatrième. <strong>Le coût est payé d'avance, le bénéfice arrive après : c'est le profil d'adoption le plus défavorable qui soit.</strong></p>
+  <p class="wide">Le reste de cette section est du réglage. Ceci est structurel, et c'est ce qui décide si la fonctionnalité vit.</p>
+
+  <h3>Une proposition à valider, pas une colonne vide</h3>
+  <p class="wide">À la première ouverture d'un dossier, chaque épisode reçoit un niveau <strong>proposé</strong>, et sa cellule de gouttière porte un fond hachuré qui signifie « personne n'a encore regardé ». Un clic n'importe où dans la cellule valide tel quel ; un clic dans l'une des trois zones pose un autre niveau et valide dans le même geste.</p>
+  <p class="wide">Le premier passage devient une <em>relecture</em> : on ne corrige que ce qui est faux, soit deux ou trois lignes sur onze, au lieu de composer onze décisions à partir de rien.</p>
+
+  <div class="shots">
+    <figure class="shot is-now">
+      <figcaption>À la première ouverture — tout est proposé</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:560px">
+          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div><div class="k-dc">Dernier contact</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div><div class="k-dc">11/06/2023</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div><div class="k-dc">22/02/2011</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i prop"><span class="imp n1"><i></i><i></i><i></i></span></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div><div class="k-dc"></div></div>
+          <div class="statut">Importance : <b>0 validée sur 11</b> · proposition non regardée</div>
+        </div>
+      </div>
+      <p class="hint">La proposition se trompe visiblement deux fois : la sciatique du jour est proposée haute parce qu'elle vient d'être ouverte, l'artériopathie moyenne parce qu'elle porte une ALD. Ce n'est pas grave — c'est justement ce que le regard corrige.</p>
+    </figure>
+
+    <figure class="shot">
+      <figcaption>Après relecture — deux corrections, neuf validations</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:560px">
+          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div><div class="k-dc">Dernier contact</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div><div class="k-dc dc-perime">11/06/2023</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div><div class="k-dc dc-perime">22/02/2011</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n1"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div><div class="k-dc">26/08/2026</div></div>
+          <div class="grow"><div class="k-i"></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div><div class="k-dc"></div></div>
+          <div class="statut">Importance : <b>11 validées sur 11</b> · dont 3 hautes</div>
+        </div>
+      </div>
+      <p class="hint">Le hachuré a disparu : chaque ligne porte désormais un jugement, pas une hypothèse. Deux dates passent en ambre — un niveau moyen dont l'échéance n'est plus tenue depuis trois et quinze ans.</p>
+    </figure>
+  </div>
+
+  <h3>Les règles de proposition</h3>
+  <p class="wide">Elles n'ont aucune prétention clinique, et c'est ce qui les rend acceptables. Elles ne décident pas : elles mettent en page un point de départ.</p>
+
+  <table class="decisions">
+    <thead><tr><th>Si l'épisode…</th><th>Proposition</th></tr></thead>
+    <tbody>
+      <tr><td>a été ouvert dans les trois derniers mois</td><td class="lvl"><span class="imp n3"><i></i><i></i><i></i></span> &nbsp;Haute — quelque chose est en cours</td></tr>
+      <tr><td>porte une ALD active, ou la case « À suivre »</td><td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span> &nbsp;Moyenne — un suivi existe</td></tr>
+      <tr><td>a une date de fin, ou plus de contact depuis cinq ans sans ALD</td><td class="lvl"><span class="imp n1"><i></i><i></i><i></i></span> &nbsp;Basse — plus rien n'est programmé</td></tr>
+      <tr><td>ne relève d'aucun de ces cas</td><td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span> &nbsp;Moyenne — le milieu, le moins faux par défaut</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pourquoi ce n'est pas l'attribution automatique écartée</h3>
+  <p class="wide">Ce point revient sur une décision antérieure, et il faut le dire franchement. Le choix « saisie manuelle uniquement » était juste sur la question qu'il tranchait : aucune machine ne doit décider de l'importance d'un suivi, et un niveau déduit du CIM10 serait faux une fois sur deux — le nodule pulmonaire de ce dossier n'a ni code, ni note, ni ALD, et c'est l'un des trois épisodes les plus importants.</p>
+  <p class="wide">Mais ce qui était refusé, c'est <strong>l'autorité</strong> de la machine, pas son aide. Un niveau proposé et visiblement non validé n'a aucune autorité : il ne survit pas au premier regard, et le hachuré dit à qui regarde l'écran que personne ne l'a encore endossé. Toute la différence entre les deux tient dans le fait que l'état « non validé » se voie. Retirez le hachuré, et on retombe exactement sur ce qui avait été écarté.</p>
+
+  <h3>Poser un niveau : trois gestes</h3>
+  <p class="wide">Le premier est la gouttière elle-même, cliquable en trois zones (section 08). Les deux autres restent nécessaires : le menu contextuel pour traiter plusieurs lignes d'un coup, et le panneau de détail pour le cas où l'on veut écrire pourquoi.</p>
 
   <div class="shots">
     <figure class="shot">
@@ -547,7 +616,14 @@
     </figure>
   </div>
 
-  <p style="margin-top:26px">Troisième entrée, la plus rapide : <strong>au clavier</strong>, ligne sélectionnée, touches <code>1</code> <code>2</code> <code>3</code> de la plus haute à la plus basse, <code>0</code> ou <code>Suppr</code> pour retirer le niveau. Aucune confirmation, annulable par <code>Ctrl+Z</code>. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.</p>
+  <p style="margin-top:26px">Et le clavier, pour qui va vite : ligne sélectionnée, touches <code>1</code> <code>2</code> <code>3</code> de la plus haute à la plus basse, <code>0</code> ou <code>Suppr</code> pour retirer le niveau. Aucune confirmation, annulable par <code>Ctrl+Z</code>. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.</p>
+
+  <h3>Classer au moment où l'on y pense</h3>
+  <p class="wide">Personne ne s'assoit pour trier des épisodes. On touche un épisode quand on consulte à son sujet — c'est le seul moment où le jugement est disponible sans effort. Le contrôle doit donc être présent à cet instant, dans le panneau ouvert pendant la consultation, et <strong>pré-sélectionné tant que le niveau n'est pas validé</strong>. Une fonctionnalité qui exige une séance de rangement séparée n'aura jamais lieu.</p>
+  <p class="wide">Corollaire sur la fraîcheur : un niveau haut sans contact depuis six mois est soit un niveau à baisser, soit un suivi qui a décroché. Dans les deux cas cela doit se voir, et le signal porte sur la cellule <em>Dernier contact</em>, jamais sur les carrés — un glyphe, un sens, sinon on ne sait plus si le carré parle du niveau ou de son entretien. <strong>Un niveau qui ment est pire qu'une colonne vide</strong>, ce qui range cette règle du côté du cœur et non des suites (section 09).</p>
+
+  <h3>Un miroir, pas un garde-fou</h3>
+  <p class="wide">En pied de la vue détaillée, un discret <em>« 11 validées sur 11 · dont 3 hautes »</em>. Aucune limite, aucun avertissement, aucun blocage — juste le reflet. C'est ce qui empêche la dérive où tout finit en haut et où le tri ne dit plus rien, et cela ne coûte qu'une ligne de barre d'état.</p>
 
   <h3>Le tri</h3>
   <p class="wide">Clé unique, appliquée partout : <code>ISNULL(IMPORTANCE, 9) ASC, DERNIER_CONTACT DESC</code>. Le tri secondaire n'est pas cosmétique : dans le bloc orange du dossier, il fait remonter la surveillance coloscopique vue ce jour et descendre l'insuffisance mitrale abandonnée depuis 2011. <strong>L'ordre à l'intérieur d'un niveau raconte l'entretien du dossier.</strong></p>
@@ -587,9 +663,10 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 );</code></pre>
 
   <p class="wide">Teintes et nombre de carrés en base plutôt qu'en dur dans l'IHM : la teinte du rouge se règle sans livrer une version, ce qui rend l'arbitrage de la section 07 réversible à peu de frais.</p>
+  <p class="wide"><strong>La proposition ne se stocke pas.</strong> Elle se calcule à l'affichage, et <code>IMPORTANCE_MAJ</code> suffit à distinguer les trois états sans ajouter de colonne : <code>MAJ IS NULL</code> — personne n'a regardé, la cellule affiche la proposition hachurée ; <code>MAJ</code> renseignée avec <code>IMPORTANCE</code> — un jugement a été posé ; <code>MAJ</code> renseignée avec <code>IMPORTANCE IS NULL</code> — le praticien a délibérément retiré le niveau, la colonne est vide. Aucune migration n'est donc nécessaire : tout l'historique existant se présente d'emblée comme proposé, ce qui est exactement l'état de fait.</p>
   <p class="wide"><strong>Historisation.</strong> Les changements de niveau vont au journal d'événements du dossier — ancien, nouveau, date, acteur. L'intérêt médico-légal est réel et ce dossier l'illustre : un nodule pulmonaire classé haut puis redescendu après un contrôle rassurant, c'est une décision de suivi qui doit laisser une trace datée.</p>
   <p class="wide"><strong>Clôture.</strong> <em>Clore épisode</em> ne remet pas <code>IMPORTANCE</code> à NULL. La valeur est conservée ; l'épisode sort de la vue « en cours » par le jeu de <code>Date fin</code>.</p>
-  <p class="wide"><strong>Reprise de l'existant.</strong> Aucune affectation automatique : tout passe à <code>NULL</code>. Au premier accès d'un dossier, un bandeau discret et non bloquant en tête du cadre — « 11 épisodes non classés » — avec un lien qui ouvre la vue détaillée en multi-sélection. Il disparaît définitivement dès que le praticien l'écarte une fois. Pas de fenêtre modale : elle serait fermée sans être lue, cinq fois par jour.</p>
+  <p class="wide"><strong>Reprise de l'existant.</strong> Il n'y en a pas, et c'est l'intérêt du dispositif de la section 05 : l'historique se présente d'emblée comme proposé, dossier par dossier, au moment où on l'ouvre. Pas de bandeau « 11 épisodes non classés » à écarter, pas de campagne de rattrapage, pas de fenêtre modale — le hachuré dit la même chose, ligne par ligne, là où l'action a lieu.</p>
 </section>
 
 <section id="arbitrages">
@@ -741,7 +818,8 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
   <div class="sec-num">09</div>
   <h2>Hors périmètre</h2>
 
-  <h3>La péremption du niveau — la suite la plus utile</h3>
+  <h3>La péremption du niveau — désormais réclamée au cœur</h3>
+  <p class="wide"><em>La section 05 argumente que cette règle n'est pas une suite mais une condition : un niveau qui ment est pire qu'une colonne vide. Ce qui reste ici, c'est son réglage fin — quel délai par niveau, et jusqu'où pousser le signalement.</em></p>
   <p class="wide">Ce dossier contient deux niveaux moyens dont l'échéance n'est plus tenue : une hypercholestérolémie sous ALD vue il y a trois ans, une insuffisance mitrale vue il y a quinze ans. Un niveau moyen <strong>affirme</strong> qu'un contrôle périodique existe ; quand le dernier contact dépasse largement la période annoncée, le niveau ment.</p>
   <p class="wide">Un signalement discret sur ces lignes — un quatrième carré vide cerclé, une teinte d'infobulle — transformerait le dispositif : de « ce qui compte » à « ce qui compte et a décroché ». C'est hors périmètre initial, mais c'est là que se trouve la vraie valeur du champ à deux ans.</p>
 
