@@ -2,42 +2,91 @@
 
 Spécification fonctionnelle.
 Vue détaillée = fenêtre « Episodes et suivis en cours ». Cadre compact = widget de la feuille globale.
-Page de rendu : `priorite-suivi.html`.
+Maquette d'intention : `index.html` → https://matthieuanex-lagoon.github.io/episodes_de_soins/
+
+> **Objectif, en une phrase : voir d'emblée ce qui doit être priorisé et important.**
 
 Vocabulaire et encodage arrêtés avec Sophie : libellé **Importance** (et non « Priorité »), valeurs **haute / moyenne / basse** (aucun chiffre affiché), encodage par **petits carrés** — nombre + couleur.
 
-## 1. Sémantique retenue
+## 1. Le problème : tout est au même niveau
 
-Le niveau exprime l'**importance du suivi** (charge de surveillance *actuelle*), pas la gravité intrinsèque de la pathologie. Conséquence assumée : un épisode grave mais stabilisé redescend de niveau ; un épisode bénin en cours d'exploration monte. Le niveau est **mutable dans le temps** et doit être ré-évaluable en un clic.
+Le cadre n'est pas mal trié, il est **trié sur des critères qui ne portent aucune information clinique**. L'ordre alphabétique classe sur la première lettre d'un libellé ; l'ordre chronologique, sur le moment où quelqu'un a ouvert une ligne. Aucun des deux ne répond à la question de début de consultation.
 
-> **Dire « importance du suivi » en toutes lettres** partout où la place le permet — panneau, infobulle, en-tête d'impression, menu contextuel. « Importance » seul se lit comme l'importance de la maladie, exactement la lecture que cette section écarte. Le complément fait le travail.
+Sur le dossier d'exemple (§3) :
 
-| Rendu | Niveau | Définition opérationnelle | Dossier d'exemple |
-|-------|--------|---------------------------|-------------------|
-| 3 carrés rouges | Haute | Action ou contrôle attendu à échéance courte (< 3 mois). Pathologie instable, en cours d'exploration, en traitement d'attaque, ou événement récent nécessitant un revoir. | Palpitations, bilan en cours |
-| 2 carrés orange | Moyenne | Chronique stabilisé, contrôle périodique planifié (3–12 mois). Rien à décider aujourd'hui, mais l'épisode pilote des contrôles récurrents. | Diabète de type 2 non insulinodépendant (ALD) |
-| 1 carré vert | Basse | Aucune surveillance programmée, mais l'épisode reste pertinent (contexte, contre-indication, facteur de risque, traçabilité). | Entorse de cheville, Certificat de sport |
-| colonne vide | Non définie | Pas encore trié. État par défaut à la création et pour tout l'historique. | Non-Classé |
+- **Sciatique** et **nodule pulmonaire sans précision** ont été ouverts le même jour. Voisins en tri chronologique, voisins en tri alphabétique, deux lignes noires identiques. L'une se résoudra seule, l'autre est une incertitude à lever.
+- L'**artériopathie oblitérante**, revascularisée l'an dernier et sous surveillance échographique semestrielle, tombe en huitième position au tri chronologique — parce qu'elle a été ouverte en 2002.
+- L'**insuffisance mitrale** n'a plus été touchée depuis 2011. Rien ne le signale.
 
-- Les carrés non atteints restent affichés **en gris clair** : c'est ce qui rend l'échelle explicite (un carré vert seul ne dit rien, un carré vert suivi de deux emplacements vides dit « un sur trois »).
-- Sur la ligne **non définie**, la colonne est **entièrement vide**, pas même les carrés gris : un niveau bas et un niveau jamais examiné ne doivent pas se ressembler. Au tri, les non définies se rangent tout en bas, jamais mêlées aux basses.
-- **Aucun chiffre n'apparaît dans l'interface.** Le champ reste numérique en base (nécessaire au tri), sans jamais remonter à l'IHM.
+Le rouge existant n'y remédie pas : il signale une **ALD**, c'est-à-dire une prise en charge administrative, sans rapport avec ce qui doit être revu aujourd'hui. Le nodule pulmonaire n'est pas en ALD.
 
-## 2. Le rouge, déjà occupé par l'ALD — point à trancher
+## 2. Ce que le niveau mesure
 
-Le libellé d'un épisode en ALD est rouge (`#C00000`). Le feu tricolore réclame donc une couleur prise. C'est tenable à trois conditions, tenues par la maquette :
+Le niveau exprime l'**importance du suivi** (charge de surveillance actuelle), pas la gravité intrinsèque de la pathologie, ni l'ancienneté du problème. Il est donc **mutable dans le temps** et doit être ré-évaluable en une touche.
 
-1. **Zones disjointes** — les carrés vivent dans une gouttière de 32 px à l'extrême gauche, le rouge ALD sur le libellé au milieu de la ligne.
+> **Dire « importance du suivi » en toutes lettres** partout où la place le permet — panneau, infobulle, en-tête d'impression, menu contextuel. « Importance » seul se lit comme l'importance de la maladie, lecture que cette section écarte.
+
+### L'incertitude compte autant que la gravité
+
+Point le plus important de la spécification. **Un nodule pulmonaire sans précision n'est pas un diagnostic grave : c'est un diagnostic absent.** Rien n'est établi, l'enjeu potentiel est majeur, le calendrier de contrôle est court. Il mérite le niveau le plus haut non pas malgré son imprécision, mais *à cause d'elle*.
+
+Le niveau haut se justifie donc par deux voies distinctes :
+
+1. **Gravité établie sous surveillance active** — artériopathie revascularisée : on sait ce que c'est et ce que ça exige.
+2. **Gravité possible non écartée** — nodule pulmonaire, lésion pancréatique en attente de contrôle. Ce qu'on ne sait pas encore est ce qui doit remonter le plus vite.
+
+C'est la seconde voie que le tri actuel dessert le plus : un épisode ouvert hier, sans code, sans note, sans ALD, ne se distingue par rien.
+
+### Les niveaux
+
+| Rendu | Niveau | Définition opérationnelle |
+|-------|--------|---------------------------|
+| 3 carrés rouges | Haute | Action ou contrôle attendu à échéance courte (< 3 mois). Pathologie instable, en traitement d'attaque, sous surveillance rapprochée — **ou incertitude portant sur un enjeu grave, non levée**. |
+| 2 carrés orange | Moyenne | Chronique stabilisé, contrôle périodique planifié (3–12 mois). Rien à décider aujourd'hui, mais l'épisode pilote des contrôles récurrents et son abandon se paierait. |
+| 1 carré vert | Basse | Aucune surveillance programmée, mais l'épisode reste pertinent (contexte, antécédent, contre-indication, traçabilité). |
+| colonne vide | Non définie | Pas encore trié. État par défaut à la création et pour tout l'historique. Rangé en fin de tri, jamais mêlé aux niveaux bas. |
+
+- Les carrés non atteints restent affichés **en gris clair** : c'est ce qui rend l'échelle explicite.
+- Sur la ligne **non définie**, la colonne est **entièrement vide**, pas même les carrés gris.
+- **Aucun chiffre n'apparaît dans l'interface.** Le champ reste numérique en base (tri), sans jamais remonter à l'IHM.
+
+## 3. Dossier d'exemple, épisode par épisode
+
+Onze épisodes, deux ALD, vingt-cinq ans d'historique. Les niveaux marqués *(proposé)* sont soumis à validation.
+
+| Niveau | Épisode | Pourquoi ce niveau |
+|--------|---------|--------------------|
+| Haute | **Artériopathie oblitérante des membres inférieurs** — ALD, I73.9, depuis 2002 | Gravité établie sous surveillance active : revascularisation l'an dernier, contrôle échographique semestriel programmé. Le niveau haut « classique ». |
+| Haute | **Nodule pulmonaire, sans précision** — ouvert le 26/08/2026 | Gravité possible non écartée. Ni code, ni note, ni ALD, et pourtant l'épisode qui doit remonter le plus vite. **C'est l'incertitude qui fixe le niveau.** |
+| Haute *(proposé)* | **TIPMP du pancréas** — depuis 2024 | Lésion à potentiel de dégénérescence, contrôle écho-endoscopique noté « à faire ». Un contrôle en attente qui traîne est ce qu'un niveau haut doit rendre visible. |
+| Moyenne *(proposé)* | **Surveillance coloscopique** — Z12.1, depuis 2010 | Surveillance programmée à échéance longue, dernière coloscopie sans anomalie. L'épisode existe pour ne pas laisser passer l'échéance suivante. |
+| Moyenne | **Flutter et fibrillation auriculaire** — I48, depuis 2026 | Trouble du rythme récent mais cadence de suivi posée. Passerait en haut si le traitement était en cours d'ajustement. |
+| Moyenne *(proposé)* | **Tabagisme** — Z72.0, sevré depuis 2022 | Facteur de risque commun de l'artériopathie *et* du nodule : il conditionne les deux suivis les plus hauts. Le sevrage se surveille. Le niveau bas se défendrait si on le tenait pour acquis. |
+| Moyenne | **Hypercholestérolémie** — ALD, E78.0, depuis 2002 | Chronique traitée, bilan annuel. Dernier contact il y a trois ans : échéance non tenue, cf. §10. |
+| Moyenne | **Hypothyroïdie** — E03.9, depuis 2013 | Fruste, anticorps positifs. Contrôle biologique périodique, sans décision en attente. |
+| Moyenne | **Insuffisance mitrale (non rhumatismale)** — I34.0, depuis 2009 | Valvulopathie relevant d'une échographie périodique. Dernier contact 2011, quinze ans. Le niveau ne corrige pas l'oubli, il le rend visible. |
+| Basse | **Sciatique** — M54.3, ouvert le 26/08/2026 | Épisode aigu, résolution attendue, aucune surveillance programmée. Ouvert le même jour que le nodule pulmonaire : deux lignes aujourd'hui identiques, désormais séparées par trois crans. |
+| Non définie | **Non-Classé** — depuis 2001 | Épisode fourre-tout jamais qualifié : le classer serait lui prêter une intention qu'il n'a pas. |
+
+**Distribution attendue** : trois hauts, six moyens, un bas, un non défini. Si tout finit en haut, le dispositif ne trie plus rien — **un dossier chargé doit produire deux ou trois hauts, pas huit**. Règle d'usage à porter en formation, pas contrainte technique.
+
+Le niveau **ne remplace ni le code CIM10, ni l'ALD, ni la note libre**. Il ne dit pas ce qu'est l'épisode : il dit quelle place lui donner dans une consultation de quinze minutes.
+
+## 4. Le rouge, déjà occupé par l'ALD — point à trancher
+
+Deux libellés rouges dans ce dossier (artériopathie, hypercholestérolémie). Le feu tricolore réclame une couleur prise. Tenable à trois conditions :
+
+1. **Zones disjointes** — carrés dans une gouttière de 32 px à l'extrême gauche, rouge ALD sur le libellé.
 2. **Formes disjointes** — trois petits carrés contre du texte.
 3. **Teintes séparées** — vermillon `#D33A2C` pour l'importance, rouge sombre `#C00000` pour l'ALD.
 
-Coût résiduel à connaître : sur un dossier chargé, du rouge à gauche et du rouge au milieu se répondent visuellement même sans parler de la même chose.
+Le dossier fournit l'argument décisif pour ne pas fusionner les deux signaux : l'artériopathie est **rouge et haute**, l'hypercholestérolémie **rouge et moyenne**, le nodule pulmonaire **noir et haut**. Les trois combinaisons coexistent dans le même écran.
 
-**Issue radicale si le coût gêne à l'usage** : retirer la coloration rouge du libellé ALD, l'information restant portée par la colonne `ALD` et ses dates (une pastille y suffit). Argument de fond : l'ALD est un **statut administratif**, l'importance du suivi un **jugement clinique** ; si un seul mérite le rouge, ce n'est pas l'ALD. À ne décider qu'après usage réel.
+**Issue radicale si le coût gêne à l'usage** : retirer la coloration rouge du libellé ALD, l'information restant portée par la colonne `ALD` et ses dates. L'ALD est un **statut administratif**, l'importance du suivi un **jugement clinique** ; si un seul mérite le rouge, ce n'est pas l'ALD. À ne décider qu'après usage réel.
 
-**Daltonisme — contrainte non négociable.** Rouge / orange / vert est exactement l'axe qu'une deutéranopie ne distingue pas (~8 % des hommes). Le compte de carrés 3/2/1 n'est pas un confort : c'est la seule lecture fiable pour ces utilisateurs, et il ne peut pas sauter à l'implémentation.
+**Daltonisme — contrainte non négociable.** Rouge / orange / vert est exactement l'axe qu'une deutéranopie ne distingue pas (~8 % des hommes). Le compte de carrés 3/2/1 n'est pas un confort : c'est la seule lecture fiable pour ces utilisateurs, et la seule qui survive à l'impression N&B.
 
-## 3. Codage visuel
+## 5. Codage visuel
 
 Colonne dédiée de **32 px à l'extrême gauche**, avant `Acteur`, ne contenant que trois carrés de 7 px espacés de 2 px.
 
@@ -50,23 +99,38 @@ Colonne dédiée de **32 px à l'extrême gauche**, avant `Acteur`, ne contenant
 
 Emplacements non atteints : `#DCDCDC`.
 
-- La colonne est **dessinée en propriétaire** et **garde son fond gris même quand la ligne est sélectionnée** : elle se comporte en gouttière, le contraste des carrés ne bouge jamais.
-- Contrairement à la colonne d'indicateur du système, elle est **triable au clic** — c'est ce qui permet de se passer de toute colonne texte.
-- **En-tête de colonne** : 32 px ne tiennent pas le mot « Importance », et une abréviation n'apprend rien. L'en-tête affiche **les trois carrés en gris** — la légende de l'encodage reste ainsi visible en permanence et sert de cible de tri, la flèche de tri s'y installant normalement. Le nom complet vit dans l'infobulle de l'en-tête, le sélecteur de colonnes, le bandeau de regroupement, l'en-tête d'impression et le menu contextuel.
-- Le libellé **reste noir**, sauf ALD. L'importance ne s'exprime jamais par la couleur du texte.
+- Colonne **dessinée en propriétaire**, **fond gris conservé même sur ligne sélectionnée** : elle se comporte en gouttière, le contraste des carrés ne bouge jamais.
+- **Triable au clic**, contrairement à la colonne d'indicateur du système — c'est ce qui permet de se passer de colonne texte.
+- **En-tête de colonne** : 32 px ne tiennent pas le mot « Importance », et une abréviation n'apprend rien. L'en-tête affiche **les trois carrés en gris** — légende permanente de l'encodage et cible de tri, la flèche s'y installant normalement. Le nom complet vit dans l'infobulle d'en-tête, le sélecteur de colonnes, le bandeau de regroupement, l'en-tête d'impression et le menu contextuel.
+- Le libellé **reste noir**, sauf ALD.
 - Infobulle de ligne : `Importance du suivi : haute — contrôle attendu sous 3 mois · définie le 26/08/2026 par MAN`.
-- **Cadre compact** : gouttière et carrés identiques, rien à réapprendre d'une vue à l'autre.
-- **Impression N&B** : les trois teintes deviennent trois gris voisins ; le compte de carrés porte seul l'information — le même mécanisme que pour le daltonisme.
+- **Cadre compact** : gouttière et carrés identiques. Il ne montre que sept lignes sur onze, d'où le tri par importance par défaut (§7).
+- **Impression N&B** : trois gris voisins ; le compte de carrés porte seul l'information.
 
-## 4. Attribution — 100 % manuelle
+## 6. Attribution — 100 % manuelle
 
-Aucune déduction depuis le CIM10/CISP, ni depuis ALD / À suivre / Facteur de risque. Le niveau est une décision clinique explicite, datée et signée (cabinet multi-acteurs, cf. colonne `Acteur`).
+Aucune déduction depuis le CIM10/CISP, ni depuis ALD / À suivre / Facteur de risque. Le dossier d'exemple le justifie mieux qu'un argument : le nodule pulmonaire n'a **ni code, ni note, ni ALD**, et c'est l'un des trois épisodes les plus importants. Aucune règle automatique ne l'aurait trouvé.
 
 1. **Panneau de détail** : contrôle segmenté `Aucune | Haute | Moyenne | Basse` sous la case « À suivre », au-dessus de `Facteur de risque`. Seul endroit où saisir un motif.
-2. **Menu contextuel de la grille** : clic droit sur une ou plusieurs lignes → « Importance du suivi ▸ ». La **multi-sélection est requise** : elle rend le rattrapage de l'historique supportable.
-3. **Clavier** : ligne sélectionnée, touches `1` `2` `3` de la plus haute à la plus basse, `0` ou `Suppr` retire le niveau. Pas de confirmation, annulable par Ctrl+Z. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.
+2. **Menu contextuel** : clic droit sur une ou plusieurs lignes → « Importance du suivi ▸ ». La **multi-sélection est requise** : elle rend supportable le classement initial d'un dossier à onze épisodes.
+3. **Clavier** : touches `1` `2` `3` de la plus haute à la plus basse, `0` ou `Suppr` retire le niveau. Pas de confirmation, annulable par Ctrl+Z. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.
 
-## 5. Modèle de données
+## 7. Tri
+
+Clé de tri : `ISNULL(IMPORTANCE, 9) ASC, DERNIER_CONTACT DESC`.
+
+Le tri secondaire n'est pas cosmétique : dans le bloc moyen du dossier d'exemple, il fait remonter la surveillance coloscopique vue ce jour et descendre l'insuffisance mitrale abandonnée depuis 2011. **L'ordre à l'intérieur d'un niveau raconte l'entretien du dossier.**
+
+| Vue | Tri par défaut | Justification |
+|-----|----------------|---------------|
+| Cadre compact | Importance, puis dernier contact décroissant | Balayé en deux secondes, et sept lignes visibles sur onze : ce qu'il coupe doit être ce qui compte le moins. |
+| Vue détaillée | Dernier tri choisi, mémorisé par praticien. Premier lancement : importance. | Vue de gestion : le tri alphabétique ou par date y reste légitime. |
+
+- Premier clic sur la gouttière : les rouges en haut. Ordre inverse au second clic.
+- **Ne jamais re-trier pendant l'édition** : la ligne ne bouge pas sous le curseur ; le nouvel ordre s'applique au rafraîchissement. Sinon le classement en série — ce qu'on fait à la première ouverture d'un dossier de onze épisodes — devient impraticable.
+- **Groupement** à la demande via le bandeau existant + raccourci au menu contextuel. Pas par défaut : trois en-têtes de groupe coûtent trois lignes sur sept visibles.
+
+## 8. Modèle de données
 
 ```sql
 ALTER TABLE EPISODE ADD IMPORTANCE        TINYINT      NULL;  -- 1 | 2 | 3 ; NULL = non définie
@@ -87,41 +151,36 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 
 `1` = le niveau le plus haut. Convention de tri interne, jamais affichée : l'utilisateur ne voit que des carrés, le développeur ne manipule que des entiers.
 
-Teintes et nombre de carrés en base plutôt qu'en dur dans l'IHM : la teinte du rouge se règle sans livrer une version, ce qui rend l'arbitrage du §2 réversible à peu de frais.
+Teintes et nombre de carrés en base plutôt qu'en dur dans l'IHM : la teinte du rouge se règle sans livrer une version, ce qui rend l'arbitrage du §4 réversible à peu de frais.
 
-**Historisation** : tracer les changements de niveau dans le journal d'événements du dossier (ancien → nouveau, date, acteur). Ré-évaluer l'importance d'un suivi est une décision de suivi.
+**Historisation** : tracer les changements dans le journal d'événements du dossier (ancien → nouveau, date, acteur). Un nodule pulmonaire classé haut puis redescendu après un contrôle rassurant est une décision de suivi qui doit laisser une trace datée.
 
 **Clôture** : `Clore épisode` ne remet pas `IMPORTANCE` à NULL ; l'épisode sort de la vue « en cours » par le jeu de `Date fin`.
 
-## 6. Tri
+## 9. Point à trancher — recouvrement avec « À suivre »
 
-Clé de tri : `ISNULL(IMPORTANCE, 9) ASC, DERNIER_CONTACT DESC`.
-
-| Vue | Tri par défaut | Justification |
-|-----|----------------|---------------|
-| Cadre compact | Importance, puis dernier contact décroissant | Balayé en deux secondes en début de consultation ; il doit répondre à « qu'est-ce qui compte pour ce patient maintenant ». |
-| Vue détaillée | Dernier tri choisi, mémorisé par praticien. Premier lancement : importance. | Vue de gestion : le tri alphabétique ou par date y reste légitime. |
-
-- Premier clic sur la gouttière : les rouges en haut. Ordre inverse au second clic.
-- **Ne jamais re-trier pendant l'édition** : la ligne ne bouge pas sous le curseur ; le nouvel ordre s'applique au rafraîchissement. Sinon le classement en série devient impraticable.
-- **Groupement** à la demande via le bandeau existant + raccourci au menu contextuel. Pas par défaut : trois en-têtes de groupe coûtent trop de hauteur dans un cadre de cinq lignes.
-
-## 7. Point à trancher — recouvrement avec « À suivre »
-
-Un épisode d'importance haute ou moyenne est par définition « à suivre ». Indépendants, les deux champs produiront des dossiers incohérents.
+Le dossier d'exemple montre l'incohérence déjà à l'œuvre : `À suivre` est cochée sur l'artériopathie, l'hypercholestérolémie et l'insuffisance mitrale — **mais pas sur le nodule pulmonaire ni sur la TIPMP**, qui sont pourtant ce qu'il y a de plus à suivre.
 
 1. **Garder la case en lecture seule**, cochée automatiquement dès qu'une importance haute ou moyenne est posée. Saisie unique, compatibilité préservée. *Préférence.*
 2. **Retirer `À suivre`** après migration : `À suivre` ≡ `IMPORTANCE IN (1,2)`. Plus propre, impacte filtres et exports.
-3. Les garder indépendantes — à écarter, faute d'une distinction énonçable en une phrase.
+3. Les garder indépendantes — à écarter : l'état actuel du dossier est exactement ce que produit cette option.
 
-## 8. Reprise de l'existant
+## 10. Reprise de l'existant, et la suite
 
-Aucune affectation automatique. Tous les épisodes existants passent à `NULL`.
+Aucune affectation automatique. Tous les épisodes existants passent à `NULL`. Au premier accès d'un dossier, bandeau discret non bloquant — « *11 épisodes non classés* » — avec un lien ouvrant la vue détaillée en multi-sélection. Disparaît définitivement dès que le praticien l'écarte une fois, par dossier. Pas de fenêtre modale.
 
-Au premier accès d'un dossier après mise à jour, bandeau discret non bloquant en tête du cadre — « *N épisodes non classés* » — avec un lien ouvrant la vue détaillée en multi-sélection. Disparaît définitivement dès que le praticien l'écarte une fois, par dossier. Pas de fenêtre modale : elle serait fermée sans être lue, cinq fois par jour.
+### Péremption du niveau — la suite la plus utile
 
-## 9. Extensions envisageables (hors périmètre initial)
+Le dossier contient deux niveaux moyens dont l'échéance n'est plus tenue : hypercholestérolémie sous ALD vue il y a trois ans, insuffisance mitrale vue il y a quinze ans. Un niveau moyen **affirme** qu'un contrôle périodique existe ; quand le dernier contact dépasse largement la période annoncée, le niveau ment.
 
-- **Péremption du niveau** : un épisode d'importance haute dont le `Dernier contact` dépasse 3 mois mérite un signalement — tout l'intérêt d'un niveau haut est de rendre visible le suivi qui a décroché.
+Un signalement discret sur ces lignes — quatrième carré vide cerclé, teinte d'infobulle — ferait passer le dispositif de « ce qui compte » à « ce qui compte et a décroché ». Hors périmètre initial, mais c'est là que se trouve la valeur du champ à deux ans.
+
+### Autres suites
+
 - Filtre rapide *importance haute seulement* dans le cadre compact.
 - Restitution du niveau dans les exports et le volet d'impression.
+- Report du niveau sur le regroupement par acteur, en cabinet de groupe.
+
+---
+
+*Le dossier d'exemple est dérivé d'un cas réel : libellés, codes et niveaux conservés, jours et mois des dates de début décalés, notes libres généralisées.*

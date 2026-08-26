@@ -1,0 +1,665 @@
+<title>Importance du suivi</title>
+<style>
+  :root {
+    --paper: #f6f4f0;
+    --ink: #22201d;
+    --ink-soft: #5c5751;
+    --rule: #ddd8d0;
+    --card: #ffffff;
+    --accent: #9c3d2a;
+    --accent-soft: #f3e7e3;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
+
+  header.top { position: sticky; top: 0; z-index: 50; background: rgba(246,244,240,0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .top-in { max-width: 1240px; margin: 0 auto; padding: 12px 28px; display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+  .top-title { font-family: Georgia, serif; font-size: 17px; font-weight: 600; }
+  .top-title em { font-style: normal; color: var(--accent); }
+  nav.top-nav { margin-left: auto; display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; }
+  nav.top-nav a { color: var(--ink-soft); text-decoration: none; font-size: 14px; }
+  nav.top-nav a:hover { color: var(--accent); }
+  nav.top-nav a.reinit { color: var(--accent); border: 1px solid #ddc9c2; border-radius: 3px; padding: 2px 9px; }
+  nav.top-nav a.reinit:hover { background: var(--accent-soft); }
+
+  main { max-width: 1240px; margin: 0 auto; padding: 0 28px 100px; }
+
+  .hero { padding: 72px 0 40px; border-bottom: 1px solid var(--rule); }
+  .hero h1 { font-size: 46px; margin: 0 0 18px; max-width: 20ch; }
+  .hero p.lede { font-size: 19px; color: var(--ink-soft); max-width: 62ch; margin: 0; }
+  .meta { margin-top: 28px; font-size: 14px; color: var(--ink-soft); }
+  .phases { display: flex; gap: 0; margin-top: 26px; border: 1px solid var(--rule); border-radius: 3px; background: var(--card); overflow: hidden; }
+  .phases .ph { flex: 1; padding: 12px 16px; border-right: 1px solid var(--rule); }
+  .phases .ph:last-child { border-right: none; }
+  .phases .ph:first-child { background: #fbf7f5; }
+  .phases .ph-t { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+  .phases .ph-c { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+  @media (max-width: 820px) { .phases { flex-direction: column; } .phases .ph { border-right: none; border-bottom: 1px solid var(--rule); } }
+  .version { display: inline-flex; align-items: baseline; gap: 12px; margin-top: 20px; padding: 8px 16px; border: 1px solid var(--rule); border-radius: 3px; background: var(--card); }
+  .version .v-lab { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); }
+  .version .v-num { font-family: Georgia, serif; font-size: 21px; font-weight: 600; line-height: 1; color: var(--accent); }
+  .version .v-date { font-size: 13px; color: var(--ink-soft); }
+
+  section { padding: 56px 0 0; }
+  .sec-num { font-size: 13px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  section h2 { font-size: 31px; margin: 8px 0 18px; }
+  section h3 { font-size: 19px; margin: 34px 0 10px; }
+  section p { max-width: 68ch; }
+  section p.wide { max-width: 84ch; }
+
+  blockquote { margin: 26px 0; padding: 20px 26px; background: var(--accent-soft); border-left: 3px solid var(--accent); font-family: Georgia, serif; font-size: 21px; line-height: 1.45; max-width: 60ch; }
+
+  figure { margin: 0; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(660px, 1fr)); gap: 28px; margin-top: 30px; align-items: start; }
+  .shot { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 22px; overflow-x: auto; }
+  .shot.is-now { background: #fbfaf8; }
+  .shot figcaption { font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 16px; font-weight: 600; }
+  .hint { font-size: 14px; color: var(--ink-soft); margin-top: 14px; font-style: italic; max-width: 68ch; }
+  .essayez { display: inline-block; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 3px; margin-bottom: 14px; }
+
+  table.decisions { border-collapse: collapse; margin-top: 26px; width: 100%; max-width: 980px; font-size: 15px; background: var(--card); }
+  table.decisions th, table.decisions td { border-bottom: 1px solid var(--rule); padding: 11px 14px; text-align: left; vertical-align: top; }
+  table.decisions th { font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+  table.decisions td:first-child { width: 30%; font-weight: 600; }
+  table.decisions td.lvl { width: 1%; white-space: nowrap; font-weight: 600; }
+  .prop { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border-radius: 2px; padding: 1px 6px; margin-left: 7px; white-space: nowrap; font-weight: 600; }
+
+  ul.plain { max-width: 68ch; padding-left: 20px; }
+  ul.plain li { margin-bottom: 10px; }
+
+  pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 13px; line-height: 1.65; background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--rule); border-radius: 3px; padding: 16px 18px; overflow-x: auto; max-width: 900px; color: #3b3833; }
+  code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 0.9em; background: #efece6; border-radius: 2px; padding: 1px 4px; }
+  pre code { background: none; padding: 0; font-size: 1em; }
+
+  footer { border-top: 1px solid var(--rule); margin-top: 70px; padding-top: 26px; font-size: 14px; color: var(--ink-soft); max-width: 68ch; }
+
+  /* ---------- WinForms ---------- */
+  .wf { font-family: "Segoe UI", Tahoma, Geneva, sans-serif; font-size: 12px; color: #1b1b1b; line-height: normal; }
+  .wf .win { background: #ffffff; border: 1px solid #9aa0a6; }
+  .wf .grouper { display: flex; align-items: center; height: 27px; background: linear-gradient(#fbfbfc,#f0f2f4); border-bottom: 1px solid #d8dce0; padding: 0 8px; color: #7a8087; }
+  .wf .ghead { display: flex; height: 25px; align-items: center; background: linear-gradient(#fefefe,#eceef0); border-bottom: 1px solid #c3c7cb; color: #2a2f35; }
+  .wf .ghead > div { padding: 0 6px; border-right: 1px solid #dfe3e6; overflow: hidden; white-space: nowrap; display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .wf .ghead > div:last-child { border-right: none; }
+  .wf .ghead > div.tri { cursor: pointer; user-select: none; }
+  .wf .ghead > div.tri:hover { background: rgba(0,0,0,.05); }
+  .wf .grow { display: flex; height: 24px; align-items: center; border-bottom: 1px solid #eef0f2; cursor: pointer; }
+  .wf .grow:hover { background: #f2f7fd; }
+  .wf .grow > div { padding: 0 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 0; }
+  .wf .grow.sel { background: #d6e4f5; border-top: 1px solid #a8c6e8; border-bottom: 1px solid #a8c6e8; }
+  .wf .grow.sel:hover { background: #d6e4f5; }
+  .wf .ald { color: #c00000; }
+  .wf .soft { color: #6b7075; }
+  .wf .box { display: inline-flex; width: 13px; height: 13px; border: 1px solid #767676; background: #fff; flex-shrink: 0; align-items: center; justify-content: center; font-size: 10px; line-height: 1; color: #1b1b1b; }
+  .wf .btn { min-width: 68px; height: 23px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid #707070; border-radius: 2px; background: linear-gradient(#fdfdfd,#e6e6e6); }
+
+  /* colonnes */
+  .wf .k-i { width: 34px; justify-content: center; display: flex; align-items: center; background: #f0f0f0; border-right: 1px solid #d9dcdf; padding: 0 !important; align-self: stretch; }
+  .wf .ghead .k-i { background: linear-gradient(#fefefe,#eceef0); }
+  .wf .k-lib { width: 248px; } .wf .k-deb { width: 82px; } .wf .k-dc { width: 100px; }
+  .wf .k-note { width: 158px; } .wf .k-cim { width: 58px; } .wf .k-ald { width: 40px; justify-content: center; display: flex; }
+  .wf .k-suiv { width: 56px; justify-content: center; display: flex; }
+  .wf .grow .k-ald, .wf .grow .k-suiv { align-items: center; }
+
+  /* les trois carrés */
+  .imp { display: inline-flex; gap: 2px; align-items: center; flex-shrink: 0; }
+  .imp i { width: 7px; height: 7px; display: block; background: #dcdcdc; }
+  .imp.n3 i { background: #d33a2c; }
+  .imp.n2 i:nth-child(-n+2) { background: #db7500; }
+  .imp.n1 i:nth-child(1) { background: #2e8b45; }
+  .imp.tete i { width: 5px; height: 5px; background: #9a9a9a; }
+  .imp.pr i { background: #e2e2e2; }
+  .imp.pr.n3 i { background: #2b2b2b; }
+  .imp.pr.n2 i:nth-child(-n+2) { background: #7d7d7d; }
+  .imp.pr.n1 i:nth-child(1) { background: #b6b6b6; }
+
+  /* chips de tri */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; }
+  .chips .lab { font-size: 13px; color: var(--ink-soft); margin-right: 4px; }
+  .chip { font-size: 13px; height: 24px; display: inline-flex; align-items: center; padding: 0 12px; border: 1px solid var(--rule); border-radius: 12px; background: #fff; cursor: pointer; user-select: none; color: var(--ink-soft); font-family: inherit; }
+  .chip:hover { border-color: #c9a99f; color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: #ddc9c2; color: var(--accent); font-weight: 600; }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .legende-niv { display: flex; flex-wrap: wrap; gap: 22px; margin: 22px 0 4px; font-size: 14px; color: var(--ink-soft); align-items: center; }
+  .legende-niv span { display: inline-flex; align-items: center; gap: 9px; }
+
+  .panneau { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-start; }
+  .seg { display: inline-flex; border: 1px solid #a9a9a9; background: #fff; }
+  .seg > b { display: flex; align-items: center; gap: 7px; padding: 5px 12px; border-right: 1px solid #d5d5d5; font-weight: 400; }
+  .seg > b:last-child { border-right: none; }
+  .seg > b.on { background: #efefef; font-weight: 600; box-shadow: inset 0 -2px 0 #d33a2c; }
+  .menu { border: 1px solid #a9a9a9; background: #fff; width: 244px; box-shadow: 2px 2px 6px rgba(0,0,0,.18); }
+  .menu div { padding: 5px 12px; display: flex; align-items: center; gap: 9px; }
+  .menu .sep { padding: 0; height: 1px; background: #e0e0e0; margin: 3px 0; }
+  .menu .hl { background: #e6ebf0; }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="top-title">XMED — Module <em>Épisodes de soins</em></div>
+    <nav class="top-nav">
+      <a href="#principe">Le principe</a>
+      <a href="#grille">La grille</a>
+      <a href="#niveaux">Les niveaux</a>
+      <a href="#dossier">Le dossier</a>
+      <a href="#saisie">La saisie</a>
+      <a href="#donnees">Les données</a>
+      <a href="#arbitrages">Les arbitrages</a>
+      <a href="#" class="reinit" id="reinit">Rejouer le tri</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <h1>Voir d'emblée ce qui doit être priorisé</h1>
+  <p class="lede">Le cadre des épisodes aligne aujourd'hui onze lignes au même rang visuel. Une sciatique et un nodule pulmonaire, ouverts le même jour, occupent deux lignes rigoureusement identiques. Ni l'ordre alphabétique ni l'ordre chronologique ne répare cela : aucun des deux ne porte d'information clinique.</p>
+  <div class="phases">
+    <div class="ph">
+      <div class="ph-t">Le constat</div>
+      <div class="ph-c">Un tri qui classe sur une première lettre ou sur une date d'ouverture. Rien qui dise ce qui doit être revu.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-t">La proposition</div>
+      <div class="ph-c">Un niveau d'importance du suivi par épisode, rendu par trois petits carrés, et un tri qui s'appuie dessus.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-t">Reste à trancher</div>
+      <div class="ph-c">Le rouge déjà porté par l'ALD, et le recouvrement avec la case « À suivre ».</div>
+    </div>
+  </div>
+  <div class="version">
+    <span class="v-lab">Version</span>
+    <span class="v-num">3</span>
+    <span class="v-date">26 août 2026 · vocabulaire et encodage arrêtés avec Sophie</span>
+  </div>
+</div>
+
+<section id="principe">
+  <div class="sec-num">01</div>
+  <h2>Le principe</h2>
+  <p class="wide">Le cadre des épisodes n'est pas mal trié — il est trié sur des critères qui ne portent aucune information clinique. Le tri alphabétique classe sur la première lettre d'un libellé. Le tri par date classe sur le moment où quelqu'un a ouvert une ligne. Ni l'un ni l'autre ne répond à la seule question qui se pose en début de consultation.</p>
+
+  <blockquote>Voir d'emblée ce qui doit être priorisé et important.</blockquote>
+
+  <p>Le dossier d'exemple le montre sans qu'il faille argumenter :</p>
+  <ul class="plain">
+    <li><strong>Sciatique</strong> et <strong>nodule pulmonaire, sans précision</strong> ont été ouverts le même jour. Voisins en tri chronologique, voisins en tri alphabétique. Deux lignes noires, même graisse, même hauteur. L'une se résoudra seule, l'autre est une incertitude qu'il faut lever.</li>
+    <li>L'<strong>artériopathie oblitérante</strong>, revascularisée l'an dernier et sous surveillance échographique semestrielle, tombe en huitième position au tri chronologique — parce qu'elle a été ouverte en 2002.</li>
+    <li>L'<strong>insuffisance mitrale</strong> n'a plus été touchée depuis 2011. Rien, dans la vue actuelle, ne le signale.</li>
+  </ul>
+  <p class="wide">Le rouge existant n'y remédie pas : il signale une <strong>ALD</strong>, c'est-à-dire une prise en charge administrative. Utile, mais sans rapport avec ce qui doit être revu aujourd'hui — le nodule pulmonaire n'est pas en ALD.</p>
+</section>
+
+<section id="grille">
+  <div class="sec-num">02</div>
+  <h2>La grille</h2>
+  <p class="wide">Une colonne de 32 px à l'extrême gauche, avant <code>Acteur</code>, qui ne contient que trois carrés de 7 px : trois rouges, deux orange, un vert, les emplacements restants en gris clair. Elle est dessinée en propriétaire et garde son fond gris même quand la ligne est sélectionnée — elle se comporte en gouttière, le contraste des carrés ne bouge jamais. Mais contrairement à la colonne d'indicateur du système, elle est <strong>triable au clic</strong>.</p>
+
+  <div class="shots">
+    <figure class="shot is-now">
+      <figcaption>Aujourd'hui — tri alphabétique</figcaption>
+      <div class="wf">
+        <div class="win" style="min-width:770px">
+          <div class="grouper">Glisser/déposer ici des entêtes de colonne pour effectuer des regroupements</div>
+          <div class="ghead">
+            <div class="k-lib tri">Libellé ▲</div>
+            <div class="k-deb tri">Début</div>
+            <div class="k-dc tri">Dernier contact</div>
+            <div class="k-note">Notes</div>
+            <div class="k-cim">CIM10</div>
+            <div class="k-ald">ALD</div>
+            <div class="k-suiv">À suivre</div>
+          </div>
+          <div class="grow sel"><div class="k-lib ald">Artériopathie oblitérante des membres inférieurs</div><div class="k-deb ald">12/03/2002</div><div class="k-dc ald">26/08/2026</div><div class="k-note ald">revascularisation 2025 —…</div><div class="k-cim ald">I73.9</div><div class="k-ald"><span class="box">✓</span></div><div class="k-suiv"><span class="box">✓</span></div></div>
+          <div class="grow"><div class="k-lib">Flutter et fibrillation auriculaire</div><div class="k-deb">19/02/2026</div><div class="k-dc">03/07/2026</div><div class="k-note"></div><div class="k-cim">I48</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib ald">Hypercholestérolémie</div><div class="k-deb ald">12/03/2002</div><div class="k-dc ald">11/06/2023</div><div class="k-note"></div><div class="k-cim ald">E78.0</div><div class="k-ald"><span class="box">✓</span></div><div class="k-suiv"><span class="box">✓</span></div></div>
+          <div class="grow"><div class="k-lib">Hypothyroïdie</div><div class="k-deb">27/04/2013</div><div class="k-dc">27/04/2013</div><div class="k-note soft">fruste — anticorps anti-TPO</div><div class="k-cim">E03.9</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">Insuffisance (de la valvule) mitrale (non rhumatismale)</div><div class="k-deb">16/10/2009</div><div class="k-dc">22/02/2011</div><div class="k-note"></div><div class="k-cim">I34.0</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box">✓</span></div></div>
+          <div class="grow"><div class="k-lib">Nodule pulmonaire, sans précision</div><div class="k-deb">26/08/2026</div><div class="k-dc">26/08/2026</div><div class="k-note"></div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">Non-Classé</div><div class="k-deb">09/12/2001</div><div class="k-dc"></div><div class="k-note"></div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">Sciatique</div><div class="k-deb">26/08/2026</div><div class="k-dc">26/08/2026</div><div class="k-note"></div><div class="k-cim">M54.3</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">Surveillance coloscopique</div><div class="k-deb">04/09/2010</div><div class="k-dc">26/08/2026</div><div class="k-note soft">coloscopie sans anomalie…</div><div class="k-cim">Z12.1</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">Tabagisme</div><div class="k-deb">08/10/2010</div><div class="k-dc">14/05/2026</div><div class="k-note soft">sevré depuis 2022</div><div class="k-cim">Z72.0</div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+          <div class="grow"><div class="k-lib">TIPMP Tumeur intracanalaire papillaire mucineuse du pancréas</div><div class="k-deb">07/06/2024</div><div class="k-dc">26/08/2026</div><div class="k-note soft">contrôle écho-endo à faire</div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div><div class="k-suiv"><span class="box"></span></div></div>
+        </div>
+      </div>
+      <p class="hint">Onze lignes équivalentes. Le nodule pulmonaire est en sixième position, entre une insuffisance mitrale oubliée depuis 2011 et un épisode « Non-Classé » de 2001.</p>
+    </figure>
+
+    <figure class="shot">
+      <figcaption>Proposé — gouttière d'importance</figcaption>
+      <span class="essayez">Essayez</span>
+      <div class="chips">
+        <span class="lab">Trier par</span>
+        <button type="button" class="chip" id="c-imp" aria-pressed="true">Importance</button>
+        <button type="button" class="chip" id="c-lib" aria-pressed="false">Libellé</button>
+        <button type="button" class="chip" id="c-deb" aria-pressed="false">Début</button>
+      </div>
+      <div class="wf">
+        <div class="win" style="min-width:770px">
+          <div class="grouper">Glisser/déposer ici des entêtes de colonne pour effectuer des regroupements</div>
+          <div class="ghead">
+            <div class="k-i tri" title="Importance du suivi"><span class="imp tete"><i></i><i></i><i></i></span></div>
+            <div class="k-lib tri">Libellé</div>
+            <div class="k-deb tri">Début</div>
+            <div class="k-dc tri">Dernier contact</div>
+            <div class="k-note">Notes</div>
+            <div class="k-cim">CIM10</div>
+            <div class="k-ald">ALD</div>
+          </div>
+          <div id="grille">
+            <div class="grow sel" data-imp="1" data-lib="Artériopathie oblitérante des membres inférieurs" data-deb="2002-03-12">
+              <div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div>
+              <div class="k-lib ald">Artériopathie oblitérante des membres inférieurs</div>
+              <div class="k-deb ald">12/03/2002</div><div class="k-dc ald">26/08/2026</div>
+              <div class="k-note ald">revascularisation 2025 —…</div><div class="k-cim ald">I73.9</div><div class="k-ald"><span class="box">✓</span></div>
+            </div>
+            <div class="grow" data-imp="1" data-lib="Nodule pulmonaire, sans précision" data-deb="2026-08-26">
+              <div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Nodule pulmonaire, sans précision</div>
+              <div class="k-deb">26/08/2026</div><div class="k-dc">26/08/2026</div>
+              <div class="k-note"></div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="1" data-lib="TIPMP Tumeur intracanalaire papillaire mucineuse du pancréas" data-deb="2024-06-07">
+              <div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">TIPMP Tumeur intracanalaire papillaire mucineuse du pancréas</div>
+              <div class="k-deb">07/06/2024</div><div class="k-dc">26/08/2026</div>
+              <div class="k-note soft">contrôle écho-endo à faire</div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Surveillance coloscopique" data-deb="2010-09-04">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Surveillance coloscopique</div>
+              <div class="k-deb">04/09/2010</div><div class="k-dc">26/08/2026</div>
+              <div class="k-note soft">coloscopie sans anomalie…</div><div class="k-cim">Z12.1</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Flutter et fibrillation auriculaire" data-deb="2026-02-19">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Flutter et fibrillation auriculaire</div>
+              <div class="k-deb">19/02/2026</div><div class="k-dc">03/07/2026</div>
+              <div class="k-note"></div><div class="k-cim">I48</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Tabagisme" data-deb="2010-10-08">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Tabagisme</div>
+              <div class="k-deb">08/10/2010</div><div class="k-dc">14/05/2026</div>
+              <div class="k-note soft">sevré depuis 2022</div><div class="k-cim">Z72.0</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Hypercholestérolémie" data-deb="2002-03-12">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib ald">Hypercholestérolémie</div>
+              <div class="k-deb ald">12/03/2002</div><div class="k-dc ald">11/06/2023</div>
+              <div class="k-note"></div><div class="k-cim ald">E78.0</div><div class="k-ald"><span class="box">✓</span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Hypothyroïdie" data-deb="2013-04-27">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Hypothyroïdie</div>
+              <div class="k-deb">27/04/2013</div><div class="k-dc">27/04/2013</div>
+              <div class="k-note soft">fruste — anticorps anti-TPO</div><div class="k-cim">E03.9</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="2" data-lib="Insuffisance (de la valvule) mitrale (non rhumatismale)" data-deb="2009-10-16">
+              <div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Insuffisance (de la valvule) mitrale (non rhumatismale)</div>
+              <div class="k-deb">16/10/2009</div><div class="k-dc">22/02/2011</div>
+              <div class="k-note"></div><div class="k-cim">I34.0</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="3" data-lib="Sciatique" data-deb="2026-08-26">
+              <div class="k-i"><span class="imp n1"><i></i><i></i><i></i></span></div>
+              <div class="k-lib">Sciatique</div>
+              <div class="k-deb">26/08/2026</div><div class="k-dc">26/08/2026</div>
+              <div class="k-note"></div><div class="k-cim">M54.3</div><div class="k-ald"><span class="box"></span></div>
+            </div>
+            <div class="grow" data-imp="9" data-lib="Non-Classé" data-deb="2001-12-09">
+              <div class="k-i"></div>
+              <div class="k-lib">Non-Classé</div>
+              <div class="k-deb">09/12/2001</div><div class="k-dc"></div>
+              <div class="k-note"></div><div class="k-cim"></div><div class="k-ald"><span class="box"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="legende-niv">
+        <span><span class="imp n3"><i></i><i></i><i></i></span> Haute</span>
+        <span><span class="imp n2"><i></i><i></i><i></i></span> Moyenne</span>
+        <span><span class="imp n1"><i></i><i></i><i></i></span> Basse</span>
+        <span><span class="imp"><i></i><i></i><i></i></span> Non définie — colonne vide en réalité</span>
+      </div>
+      <p class="hint">Changez l'ordre : la colonne de gauche continue de dire la vérité. C'est l'intérêt d'un signal porté par la ligne et non par sa position.</p>
+    </figure>
+  </div>
+
+  <h3>L'en-tête de la colonne</h3>
+  <p class="wide">Trente-deux pixels ne tiennent pas le mot « Importance », et une abréviation type <em>Imp.</em> n'apprend rien. L'en-tête affiche <strong>les trois carrés en gris</strong> : la légende de l'encodage reste ainsi présente en permanence et sert de cible de tri, la flèche s'y installant normalement. Le nom complet vit dans l'infobulle de l'en-tête, le sélecteur de colonnes, le bandeau de regroupement, l'en-tête d'impression et le menu contextuel.</p>
+  <p>Au survol d'une ligne : <em>Importance du suivi : haute — contrôle attendu sous 3 mois · définie le 26/08/2026 par MAN.</em></p>
+
+  <h3>La feuille globale et l'impression</h3>
+  <div class="shots">
+    <figure class="shot">
+      <figcaption>Feuille globale — sept lignes visibles sur onze</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:520px">
+          <div style="background:#cfe0f2;color:#123;padding:5px 8px;font-weight:600;border-bottom:1px solid #7ba7d7">Episodes et suivis en cours</div>
+          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:200px">Episode</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:200px">Artériopathie oblitérante des…</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:200px">Nodule pulmonaire, sans préci…</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">07/06/2024</div><div class="k-lib" style="width:200px">TIPMP Tumeur intracanalaire…</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">04/09/2010</div><div class="k-lib" style="width:200px">Surveillance coloscopique</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">19/02/2026</div><div class="k-lib" style="width:200px">Flutter et fibrillation auriculaire</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">08/10/2010</div><div class="k-lib" style="width:200px">Tabagisme</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:200px">Hypercholestérolémie</div></div>
+        </div>
+      </div>
+      <p class="hint">Ce que le cadre coupe par le bas doit être ce qui compte le moins. C'est l'argument le plus court en faveur du tri par importance par défaut.</p>
+    </figure>
+
+    <figure class="shot">
+      <figcaption>Impression, noir et blanc</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:330px">
+          <div class="grow" style="cursor:default"><div class="k-i"><span class="imp pr n3"><i></i><i></i><i></i></span></div><div class="k-lib" style="width:240px">Artériopathie oblitérante des…</div></div>
+          <div class="grow" style="cursor:default"><div class="k-i"><span class="imp pr n3"><i></i><i></i><i></i></span></div><div class="k-lib" style="width:240px">Nodule pulmonaire, sans préci…</div></div>
+          <div class="grow" style="cursor:default"><div class="k-i"><span class="imp pr n2"><i></i><i></i><i></i></span></div><div class="k-lib" style="width:240px">Hypothyroïdie</div></div>
+          <div class="grow" style="cursor:default"><div class="k-i"><span class="imp pr n1"><i></i><i></i><i></i></span></div><div class="k-lib" style="width:240px">Sciatique</div></div>
+          <div class="grow" style="cursor:default"><div class="k-i"></div><div class="k-lib" style="width:240px">Non-Classé</div></div>
+        </div>
+      </div>
+      <p class="hint">Les trois teintes deviennent trois gris voisins. Le compte de carrés porte alors seul l'information — le même mécanisme, exactement, que celui qui sauve la lecture en cas de daltonisme.</p>
+    </figure>
+  </div>
+</section>
+
+<section id="niveaux">
+  <div class="sec-num">03</div>
+  <h2>Les niveaux</h2>
+  <p class="wide">Le niveau exprime l'<strong>importance du suivi</strong> : la charge de surveillance actuelle, ce qui doit être revu. Il ne mesure ni la gravité intrinsèque de la pathologie, ni l'ancienneté du problème. Un cancer en rémission redescend de niveau, une hypothyroïdie fruste bien équilibrée reste au milieu, une sciatique aiguë du jour reste en bas.</p>
+
+  <table class="decisions">
+    <thead><tr><th>Niveau</th><th>Ce qu'il désigne</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="lvl"><span class="imp n3" style="vertical-align:-1px"><i></i><i></i><i></i></span> &nbsp;Haute</td>
+        <td>Trois carrés rouges. Action ou contrôle attendu à échéance courte, moins de trois mois. Pathologie instable, en traitement d'attaque, sous surveillance rapprochée — ou incertitude portant sur un enjeu grave, non encore levée.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2" style="vertical-align:-1px"><i></i><i></i><i></i></span> &nbsp;Moyenne</td>
+        <td>Deux carrés orange. Chronique stabilisé, contrôle périodique planifié de trois à douze mois. Rien à décider aujourd'hui, mais l'épisode pilote des contrôles récurrents et son abandon se paierait.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n1" style="vertical-align:-1px"><i></i><i></i><i></i></span> &nbsp;Basse</td>
+        <td>Un carré vert. Aucune surveillance programmée, mais l'épisode reste pertinent : contexte, antécédent, contre-indication, traçabilité.</td>
+      </tr>
+      <tr>
+        <td class="lvl">Non définie</td>
+        <td>Colonne vide, pas même les carrés gris. Pas encore trié : valeur de départ à la création et pour tout l'historique. Rangé en fin de tri, jamais mêlé aux niveaux bas — « pas de surveillance » et « pas encore examiné » sont deux affirmations différentes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>L'incertitude compte autant que la gravité</h3>
+  <p class="wide">C'est le point le plus important de cette maquette, et celui que le dossier illustre le mieux. <strong>Un nodule pulmonaire sans précision n'est pas un diagnostic grave : c'est un diagnostic absent.</strong> Rien n'est établi, l'enjeu potentiel est majeur, et le calendrier de contrôle est court. Il mérite le niveau le plus haut non pas malgré son imprécision, mais à cause d'elle.</p>
+  <p class="wide">Le niveau haut se justifie donc par deux voies distinctes : une <strong>gravité établie sous surveillance active</strong> — l'artériopathie revascularisée, dont on sait ce qu'elle est et ce qu'elle exige ; ou une <strong>gravité possible non écartée</strong> — le nodule, la lésion pancréatique en attente de contrôle. Ce qu'on ne sait pas encore est ce qui doit remonter le plus vite. C'est la seconde voie que le tri actuel dessert le plus : un épisode ouvert hier, sans code, sans note, sans ALD, ne se distingue par rien.</p>
+
+  <h3>Deux règles de rendu qui ne se négocient pas</h3>
+  <ul class="plain">
+    <li><strong>Le compte de carrés porte l'information sans la couleur.</strong> Rouge, orange et vert forment exactement l'axe qu'une deutéranopie ne distingue pas — environ 8 % des hommes. Le compte 3 / 2 / 1 n'est donc pas un confort : c'est la seule lecture fiable pour ces utilisateurs, et la seule qui survive à l'impression noir et blanc du module.</li>
+    <li><strong>Aucun chiffre n'apparaît dans l'interface.</strong> En base le champ reste numérique parce qu'il faut trier sur quelque chose, mais cette valeur ne remonte ni dans la grille, ni dans le panneau, ni à l'impression. Le vocabulaire visible est « importance du suivi », « haute », « moyenne », « basse ».</li>
+  </ul>
+</section>
+
+<section id="dossier">
+  <div class="sec-num">04</div>
+  <h2>Le dossier, épisode par épisode</h2>
+  <p class="wide">Onze épisodes, deux ALD, vingt-cinq ans d'historique. Les niveaux marqués <span class="prop">proposé</span> ne sont pas arbitrés : ils sont avancés ici avec leur raison, à valider.</p>
+
+  <table class="decisions">
+    <thead><tr><th style="width:1%"></th><th style="width:26%">Épisode</th><th>Pourquoi ce niveau</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="lvl"><span class="imp n3"><i></i><i></i><i></i></span></td>
+        <td>Artériopathie oblitérante des membres inférieurs<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">ALD · I73.9 · depuis 2002</span></td>
+        <td>Gravité établie, sous surveillance active : revascularisation l'an dernier, contrôle échographique semestriel programmé. Le cas typique du niveau haut « classique ».</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n3"><i></i><i></i><i></i></span></td>
+        <td>Nodule pulmonaire, sans précision<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">ouvert le 26/08/2026</span></td>
+        <td>Gravité possible non écartée. Aucun diagnostic, aucun code, aucune ALD — et pourtant l'épisode qui doit remonter le plus vite, parce que le calendrier de contrôle est court et l'enjeu majeur. <strong>C'est l'incertitude qui fixe le niveau.</strong></td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n3"><i></i><i></i><i></i></span></td>
+        <td>TIPMP du pancréas<span class="prop">proposé</span><br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">depuis 2024</span></td>
+        <td>Même logique : lésion à potentiel de dégénérescence, avec un contrôle écho-endoscopique noté « à faire ». Un contrôle en attente qui traîne est précisément ce qu'un niveau haut doit rendre visible.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Surveillance coloscopique<span class="prop">proposé</span><br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">Z12.1 · depuis 2010</span></td>
+        <td>Surveillance programmée à échéance longue, dernière coloscopie sans anomalie. Rien à décider aujourd'hui, mais l'épisode existe pour ne pas laisser passer l'échéance suivante.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Flutter et fibrillation auriculaire<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">I48 · depuis 2026</span></td>
+        <td>Trouble du rythme récent mais dont la cadence de suivi est posée. Passerait en haut si le traitement était en cours d'ajustement ou la tolérance incertaine.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Tabagisme<span class="prop">proposé</span><br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">Z72.0 · sevré depuis 2022</span></td>
+        <td>Facteur de risque commun de l'artériopathie <em>et</em> du nodule : il conditionne les deux suivis les plus hauts du dossier. Le sevrage se surveille. Le niveau bas se défendrait si on le tenait pour acquis.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Hypercholestérolémie<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">ALD · E78.0 · depuis 2002</span></td>
+        <td>Chronique traitée, bilan annuel. Mais dernier contact il y a trois ans : un niveau moyen dont l'échéance n'est plus tenue. Voir la péremption, section 08.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Hypothyroïdie<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">E03.9 · depuis 2013</span></td>
+        <td>Fruste, anticorps positifs : contrôle biologique périodique, sans décision en attente. Le milieu de l'échelle dans sa définition la plus littérale.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
+        <td>Insuffisance mitrale<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">I34.0 · depuis 2009</span></td>
+        <td>Valvulopathie relevant d'une échographie périodique. Dernier contact en 2011 — quinze ans. Le niveau ne corrige pas l'oubli, mais il le rend visible, ce que la vue actuelle ne fait pas.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp n1"><i></i><i></i><i></i></span></td>
+        <td>Sciatique<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">M54.3 · ouvert le 26/08/2026</span></td>
+        <td>Épisode aigu, résolution attendue, aucune surveillance programmée. Ouvert le même jour que le nodule pulmonaire — et c'est tout l'objet du dispositif : deux lignes aujourd'hui identiques, désormais séparées par trois crans.</td>
+      </tr>
+      <tr>
+        <td class="lvl"><span class="imp"><i></i><i></i><i></i></span></td>
+        <td>Non-Classé<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">depuis 2001</span></td>
+        <td>Non définie. Épisode fourre-tout jamais qualifié : le classer serait lui prêter une intention qu'il n'a pas.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="wide" style="margin-top:26px">Trois hauts, six moyens, un bas, un non défini. <strong>La distribution compte : si tout finit en haut, le dispositif ne trie plus rien.</strong> Un dossier chargé doit produire deux ou trois hauts, pas huit. C'est une règle d'usage, pas une contrainte technique, mais elle mérite d'être dite à la formation.</p>
+  <p class="wide">Le niveau ne remplace ni le code CIM10, ni l'ALD, ni la note libre. Il ne dit pas ce qu'est l'épisode : il dit quelle place lui donner dans une consultation de quinze minutes.</p>
+</section>
+
+<section id="saisie">
+  <div class="sec-num">05</div>
+  <h2>La saisie et le tri</h2>
+  <p class="wide">Aucune déduction depuis le CIM10, le CISP, l'ALD, la case <em>À suivre</em> ou le facteur de risque. Le dossier le justifie mieux qu'un argument : le nodule pulmonaire n'a <strong>ni code, ni note, ni ALD</strong>, et c'est l'un des trois épisodes les plus importants. Aucune règle automatique ne l'aurait trouvé.</p>
+
+  <div class="shots">
+    <figure class="shot">
+      <figcaption>Panneau de détail · menu contextuel</figcaption>
+      <div class="wf panneau">
+        <div>
+          <div style="margin-bottom:7px">Importance du suivi :</div>
+          <div class="seg">
+            <b>Aucune</b>
+            <b class="on"><span class="imp n3"><i></i><i></i><i></i></span>Haute</b>
+            <b><span class="imp n2"><i></i><i></i><i></i></span>Moyenne</b>
+            <b><span class="imp n1"><i></i><i></i><i></i></span>Basse</b>
+          </div>
+        </div>
+        <div class="menu">
+          <div>Ouvrir l'épisode</div>
+          <div>Clore l'épisode</div>
+          <div class="sep"></div>
+          <div class="hl">Importance du suivi &nbsp;&nbsp;▸</div>
+          <div><span class="imp n3"><i></i><i></i><i></i></span>Haute</div>
+          <div><span class="imp n2"><i></i><i></i><i></i></span>Moyenne</div>
+          <div><span class="imp n1"><i></i><i></i><i></i></span>Basse</div>
+          <div style="padding-left:33px">Aucune</div>
+        </div>
+      </div>
+      <p class="hint">Le contrôle segmenté se place sous la case « À suivre », au-dessus de « Facteur de risque ». Le menu contextuel accepte la multi-sélection — indispensable, pas confortable : c'est lui qui rend supportable le classement initial d'un dossier à onze épisodes.</p>
+    </figure>
+  </div>
+
+  <p style="margin-top:26px">Troisième entrée, la plus rapide : <strong>au clavier</strong>, ligne sélectionnée, touches <code>1</code> <code>2</code> <code>3</code> de la plus haute à la plus basse, <code>0</code> ou <code>Suppr</code> pour retirer le niveau. Aucune confirmation, annulable par <code>Ctrl+Z</code>. Les chiffres survivent ici parce qu'une rangée de touches est ordonnée par nature — rien n'est affiché.</p>
+
+  <h3>Le tri</h3>
+  <p class="wide">Clé unique, appliquée partout : <code>ISNULL(IMPORTANCE, 9) ASC, DERNIER_CONTACT DESC</code>. Le tri secondaire n'est pas cosmétique : dans le bloc orange du dossier, il fait remonter la surveillance coloscopique vue ce jour et descendre l'insuffisance mitrale abandonnée depuis 2011. <strong>L'ordre à l'intérieur d'un niveau raconte l'entretien du dossier.</strong></p>
+
+  <table class="decisions">
+    <thead><tr><th>Vue</th><th>Tri par défaut</th></tr></thead>
+    <tbody>
+      <tr><td>Cadre compact, feuille globale</td><td>Importance, puis dernier contact décroissant. Il est balayé en deux secondes et ne montre que sept lignes sur onze : ce qu'il coupe doit être ce qui compte le moins.</td></tr>
+      <tr><td>Vue détaillée</td><td>Dernier tri choisi, mémorisé par praticien, avec l'importance au premier lancement. C'est une vue de gestion : y chercher un épisode par son nom reste légitime, et imposer un ordre y serait une gêne quotidienne.</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="plain" style="margin-top:26px">
+    <li><strong>Ne jamais re-trier pendant l'édition.</strong> Affecter un niveau ne déplace pas la ligne sous le curseur ; le nouvel ordre s'applique au rafraîchissement. Une ligne qui saute au moment où on la classe rend impraticable le classement en série — c'est-à-dire précisément ce qu'on fait la première fois qu'on ouvre un dossier de onze épisodes.</li>
+    <li><strong>Le groupement reste à la demande.</strong> Le bandeau de regroupement existe déjà et le menu contextuel propose le raccourci, mais pas par défaut : trois en-têtes de groupe coûtent trois lignes de hauteur, sur sept visibles.</li>
+  </ul>
+</section>
+
+<section id="donnees">
+  <div class="sec-num">06</div>
+  <h2>Les données</h2>
+  <p class="wide"><code>1</code> est le niveau le plus haut. C'est une convention de tri interne, jamais affichée : l'utilisateur ne voit que des carrés, le développeur ne manipule que des entiers.</p>
+
+<pre><code>ALTER TABLE EPISODE ADD IMPORTANCE        TINYINT      NULL;  -- 1 | 2 | 3 ; NULL = non définie
+ALTER TABLE EPISODE ADD IMPORTANCE_MAJ    DATETIME     NULL;  -- date de la dernière décision
+ALTER TABLE EPISODE ADD IMPORTANCE_ACTEUR VARCHAR(8)   NULL;  -- initiales praticien
+ALTER TABLE EPISODE ADD IMPORTANCE_MOTIF  VARCHAR(120) NULL;  -- optionnel, panneau de détail seul
+
+ALTER TABLE EPISODE ADD CONSTRAINT CK_EPISODE_IMPORTANCE
+  CHECK (IMPORTANCE IS NULL OR IMPORTANCE IN (1,2,3));
+
+CREATE TABLE REF_IMPORTANCE_SUIVI (
+  CODE    TINYINT     NOT NULL PRIMARY KEY,  -- 1,2,3
+  LIBELLE VARCHAR(40) NOT NULL,              -- 'Haute','Moyenne','Basse'
+  COULEUR VARCHAR(7)  NOT NULL,              -- '#D33A2C','#DB7500','#2E8B45'
+  CARRES  TINYINT     NOT NULL               -- 3,2,1 : redondance non colorée
+);</code></pre>
+
+  <p class="wide">Teintes et nombre de carrés en base plutôt qu'en dur dans l'IHM : la teinte du rouge se règle sans livrer une version, ce qui rend l'arbitrage de la section 07 réversible à peu de frais.</p>
+  <p class="wide"><strong>Historisation.</strong> Les changements de niveau vont au journal d'événements du dossier — ancien, nouveau, date, acteur. L'intérêt médico-légal est réel et ce dossier l'illustre : un nodule pulmonaire classé haut puis redescendu après un contrôle rassurant, c'est une décision de suivi qui doit laisser une trace datée.</p>
+  <p class="wide"><strong>Clôture.</strong> <em>Clore épisode</em> ne remet pas <code>IMPORTANCE</code> à NULL. La valeur est conservée ; l'épisode sort de la vue « en cours » par le jeu de <code>Date fin</code>.</p>
+  <p class="wide"><strong>Reprise de l'existant.</strong> Aucune affectation automatique : tout passe à <code>NULL</code>. Au premier accès d'un dossier, un bandeau discret et non bloquant en tête du cadre — « 11 épisodes non classés » — avec un lien qui ouvre la vue détaillée en multi-sélection. Il disparaît définitivement dès que le praticien l'écarte une fois. Pas de fenêtre modale : elle serait fermée sans être lue, cinq fois par jour.</p>
+</section>
+
+<section id="arbitrages">
+  <div class="sec-num">07</div>
+  <h2>Les arbitrages</h2>
+
+  <table class="decisions">
+    <thead><tr><th>Sujet</th><th>État</th></tr></thead>
+    <tbody>
+      <tr><td>Sémantique, vocabulaire, encodage, tri</td><td>Arrêtés. « Importance », haute / moyenne / basse, trois carrés, aucun chiffre affiché.</td></tr>
+      <tr><td>Coloration rouge du libellé ALD</td><td><strong>Ouvert.</strong> La garder, ou la libérer au profit de l'importance. À décider après usage réel.</td></tr>
+      <tr><td>Recouvrement avec la case « À suivre »</td><td><strong>Ouvert.</strong> Préférence pour la case en lecture seule, cochée automatiquement.</td></tr>
+      <tr><td>Niveaux de TIPMP, Surveillance coloscopique, Tabagisme</td><td><strong>Proposés</strong>, à valider par le praticien.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Le rouge, déjà occupé par l'ALD</h3>
+  <p class="wide">Ce dossier porte deux libellés rouges — artériopathie et hypercholestérolémie, toutes deux en ALD. Le feu tricolore réclame donc une couleur déjà prise. C'est tenable à trois conditions, tenues par les maquettes : les deux signaux <strong>n'occupent jamais la même zone</strong> (gouttière de gauche contre libellé), <strong>n'ont pas la même forme</strong> (trois petits carrés contre du texte), et <strong>n'ont pas la même teinte</strong> (vermillon <code>#D33A2C</code> contre rouge sombre <code>#C00000</code>).</p>
+  <p class="wide">Ce dossier fournit d'ailleurs l'argument le plus net en faveur de la séparation des deux signaux : l'artériopathie est <strong>rouge et haute</strong>, l'hypercholestérolémie <strong>rouge et moyenne</strong>, le nodule pulmonaire <strong>noir et haut</strong>. Les trois combinaisons existent dans le même écran ; aucune des deux couleurs ne peut donc remplacer l'autre.</p>
+  <p class="wide">Reste un coût résiduel qu'il faut connaître : sur un dossier chargé, du rouge à gauche et du rouge au milieu se répondent visuellement même quand ils ne parlent pas de la même chose. <strong>L'issue radicale</strong>, si cela gêne à l'usage : retirer la coloration du libellé ALD, l'information restant portée par la colonne <code>ALD</code> et ses dates. L'argument de fond est que l'ALD est un statut administratif, quand l'importance du suivi est un jugement clinique — si un seul des deux mérite le rouge, ce n'est pas l'ALD.</p>
+
+  <h3>Le recouvrement avec « À suivre »</h3>
+  <p class="wide">La case <em>À suivre</em> et l'importance du suivi disent presque la même chose. Le dossier montre déjà l'incohérence à l'œuvre : <em>À suivre</em> est cochée sur l'artériopathie, l'hypercholestérolémie et l'insuffisance mitrale — <strong>mais pas sur le nodule pulmonaire ni sur la TIPMP</strong>, qui sont pourtant ce qu'il y a de plus à suivre dans ce dossier.</p>
+  <ul class="plain">
+    <li><strong>Case en lecture seule</strong>, cochée automatiquement dès qu'une importance haute ou moyenne est posée. Saisie unique, filtres et exports existants préservés. <em>Préférence.</em></li>
+    <li><strong>Retrait de la case</strong> après migration, <em>À suivre</em> devenant <code>IMPORTANCE IN (1,2)</code>. Plus propre, mais tout ce qui s'appuie sur la case est à reprendre.</li>
+    <li><strong>Les garder indépendantes</strong> — à écarter : l'état actuel du dossier est exactement ce que produit cette option.</li>
+  </ul>
+</section>
+
+<section id="perimetre">
+  <div class="sec-num">08</div>
+  <h2>Hors périmètre</h2>
+
+  <h3>La péremption du niveau — la suite la plus utile</h3>
+  <p class="wide">Ce dossier contient deux niveaux moyens dont l'échéance n'est plus tenue : une hypercholestérolémie sous ALD vue il y a trois ans, une insuffisance mitrale vue il y a quinze ans. Un niveau moyen <strong>affirme</strong> qu'un contrôle périodique existe ; quand le dernier contact dépasse largement la période annoncée, le niveau ment.</p>
+  <p class="wide">Un signalement discret sur ces lignes — un quatrième carré vide cerclé, une teinte d'infobulle — transformerait le dispositif : de « ce qui compte » à « ce qui compte et a décroché ». C'est hors périmètre initial, mais c'est là que se trouve la vraie valeur du champ à deux ans.</p>
+
+  <h3>Autres suites</h3>
+  <ul class="plain">
+    <li>Filtre rapide <em>importance haute seulement</em> dans le cadre compact.</li>
+    <li>Restitution du niveau dans les exports et le volet d'impression.</li>
+    <li>Report du niveau sur le regroupement par acteur, en cabinet de groupe.</li>
+  </ul>
+</section>
+
+<footer>
+  Maquette d'intention — module Épisodes de soins, XMED. Version 3, 26 août 2026. Vocabulaire et encodage arrêtés avec Sophie.<br><br>
+  Le dossier d'exemple est dérivé d'un cas réel : libellés, codes CIM10 et niveaux conservés, jours et mois des dates de début décalés, notes libres généralisées.
+</footer>
+
+</main>
+
+<script>
+(function () {
+  var grille = document.getElementById('grille');
+  if (!grille) { return; }
+  var btns = { imp: document.getElementById('c-imp'), lib: document.getElementById('c-lib'), deb: document.getElementById('c-deb') };
+  var lignes = Array.prototype.slice.call(grille.children);
+
+  function contact(l) {
+    var c = l.querySelector('.k-dc');
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(c ? c.textContent.trim() : '');
+    return m ? m[3] + '-' + m[2] + '-' + m[1] : '0000-00-00';
+  }
+
+  function trier(mode) {
+    var t = lignes.slice();
+    if (mode === 'imp') {
+      t.sort(function (a, b) {
+        var d = Number(a.dataset.imp) - Number(b.dataset.imp);
+        return d !== 0 ? d : contact(b).localeCompare(contact(a));
+      });
+    } else if (mode === 'deb') {
+      t.sort(function (a, b) { return b.dataset.deb.localeCompare(a.dataset.deb); });
+    } else {
+      t.sort(function (a, b) { return a.dataset.lib.localeCompare(b.dataset.lib, 'fr'); });
+    }
+    t.forEach(function (l) { grille.appendChild(l); });
+    Object.keys(btns).forEach(function (k) {
+      if (btns[k]) { btns[k].setAttribute('aria-pressed', k === mode ? 'true' : 'false'); }
+    });
+  }
+
+  Object.keys(btns).forEach(function (k) {
+    if (btns[k]) { btns[k].addEventListener('click', function () { trier(k); }); }
+  });
+
+  var reinit = document.getElementById('reinit');
+  if (reinit) {
+    reinit.addEventListener('click', function (e) {
+      e.preventDefault();
+      trier('imp');
+      document.getElementById('grille').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  trier('imp');
+})();
+</script>
