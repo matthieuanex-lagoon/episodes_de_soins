@@ -165,7 +165,39 @@ Le dossier d'exemple montre l'incohérence déjà à l'œuvre : `À suivre` est 
 2. **Retirer `À suivre`** après migration : `À suivre` ≡ `IMPORTANCE IN (1,2)`. Plus propre, impacte filtres et exports.
 3. Les garder indépendantes — à écarter : l'état actuel du dossier est exactement ce que produit cette option.
 
-## 10. Reprise de l'existant, et la suite
+## 10. Deux pistes étudiées pour la saisie
+
+**Constat de terrain d'abord** : le tri par la case `À suivre` est déjà en place dans le dossier. Quatre épisodes cochés remontent en tête — insuffisance mitrale, hypercholestérolémie, nodule pulmonaire, artériopathie — dans cet ordre, soit l'insuffisance mitrale abandonnée depuis 2011 devant le nodule ouvert ce matin. Un drapeau binaire crée un bloc de tête sans hiérarchie interne, et le bloc grossit jusqu'à ne plus rien dire. C'est la démonstration la plus courte du besoin de trois niveaux, et elle vient de l'usage.
+
+### Piste A — trois feux à la place de « À suivre », qui se renforcent au clic
+
+La colonne `À suivre` est remplacée par trois pastilles pâles (verte, orange, rouge) ; un clic sature l'une d'elles. La cellule est à la fois l'affichage et la commande.
+
+**Apports** — dissout l'arbitrage du §9 : le champ n'est pas doublé, il est remplacé par celui qui tenait déjà son rôle. Un clic par épisode sans quitter la grille, ni sélection, ni menu, ni panneau : la saisie la plus rapide possible pour classer un dossier au premier passage. Aucune largeur nouvelle, la colonne existe déjà.
+
+**Coûts sous la forme littérale** — le signal s'affaiblit : pâle contre saturé est un écart bien plus faible que « trois marques contre une », et toutes les lignes portent la même masse colorée ; il faut comparer des intensités au lieu de compter. La redondance non colorée se dégrade (il reste la position de la pastille saturée, moins franche à l'impression et pour une deutéranopie). Trois cibles de 9 px dans une ligne de 24 px, sur une cellule qui sert aussi à sélectionner la ligne : le clic accidentel pose un niveau. Retirer un niveau demande un geste caché.
+
+**Forme retenue — la gouttière cliquable.** Garder la gouttière déjà spécifiée (comptage 3/2/1, hors du bandeau de sélection) et la rendre cliquable en trois zones de 10 px sur toute la hauteur de la ligne, le survol montrant ce que le clic poserait. Un seul objet, optimisé pour lire à gauche et pour écrire au clic. `À suivre` est retiré.
+
+### Piste B — un rang par épisode, monté ou descendu à la flèche
+
+**Apports** — expressivité totale, aucun palier imposé, aucune égalité. Départage à l'intérieur d'un niveau, là où le tri actuel se rabat sur le dernier contact. Le geste ne s'apprend pas.
+
+**Coûts** :
+
+- **Le coût est celui du dossier, pas de l'épisode.** Poser un niveau est une décision isolée ; poser un rang oblige à se situer face à tous les autres, à chaque nouvel épisode. La sciatique du jour arrive en rang 11 sur 11 : dix actionnements de flèche.
+- **Un rang ne signifie rien hors de son dossier.** Ni filtrable, ni colorable, ni agrégeable au cabinet, et aucune règle de péremption possible. Toutes les suites du §11 disparaissent.
+- **Il n'y a rien à afficher.** Le rang *est* la position de la ligne : dès qu'on trie autrement, l'information s'évanouit. Inverse exact de la propriété défendue au §5 — un signal porté par la ligne, pas par sa place.
+- **Pas de fusion à deux praticiens.** Un ordre total : le second qui reclasse écrase le jugement du premier.
+- **Dégradation brutale.** Un niveau ancien reste à peu près juste ; un ordre non entretenu est simplement faux.
+
+### Recommandation
+
+**Piste A dans sa forme « gouttière cliquable ». Pas la piste B.**
+
+Si le besoin exprimé par la piste B est « celui-là d'abord, aujourd'hui », la réponse économique est **une épingle** : un épisode remonté en tête indépendamment de son niveau, à un seul état, sans ordre total à maintenir ni conflit entre praticiens. À verser aux suites, pas à la version 1.
+
+## 11. Reprise de l'existant, et la suite
 
 Aucune affectation automatique. Tous les épisodes existants passent à `NULL`. Au premier accès d'un dossier, bandeau discret non bloquant — « *11 épisodes non classés* » — avec un lien ouvrant la vue détaillée en multi-sélection. Disparaît définitivement dès que le praticien l'écarte une fois, par dossier. Pas de fenêtre modale.
 
@@ -177,6 +209,7 @@ Un signalement discret sur ces lignes — quatrième carré vide cerclé, teinte
 
 ### Autres suites
 
+- **L'épingle** — remonter un épisode en tête du dossier indépendamment de son niveau, pour la consultation du jour. La part utile de la piste B (§10), à un seul état.
 - Filtre rapide *importance haute seulement* dans le cadre compact.
 - Restitution du niveau dans les exports et le volet d'impression.
 - Report du niveau sur le regroupement par acteur, en cabinet de groupe.

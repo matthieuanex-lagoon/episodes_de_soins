@@ -142,6 +142,32 @@
   .menu div { padding: 5px 12px; display: flex; align-items: center; gap: 9px; }
   .menu .sep { padding: 0; height: 1px; background: #e0e0e0; margin: 3px 0; }
   .menu .hl { background: #e6ebf0; }
+
+  /* piste A — trois feux cliquables */
+  .feu { display: inline-flex; gap: 4px; align-items: center; }
+  .feu b { width: 9px; height: 9px; border-radius: 50%; display: block; font-size: 0; }
+  .feu .v { background: #d3e6d8; } .feu .o { background: #f5e0c6; } .feu .r { background: #f2d2ce; }
+  .feu .v.on { background: #2e8b45; } .feu .o.on { background: #db7500; } .feu .r.on { background: #d33a2c; }
+  .wf .k-feu { width: 62px; display: flex; justify-content: center; align-items: center; }
+  .zone { display: flex; }
+  .zone span { width: 10px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .zone span.hov { background: #e8eef6; box-shadow: inset 0 0 0 1px #7ba7d7; }
+  .bulle { display: inline-block; margin-left: 8px; background: #fdf8e3; border: 1px solid #e0d3a0; padding: 2px 7px; font-size: 11px; color: #6b5a1e; }
+
+  /* piste B — rang */
+  .wf .k-rang { width: 52px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; color: #4a5058; }
+  .fleches { display: inline-flex; flex-direction: column; gap: 1px; }
+  .fleches u { width: 13px; height: 9px; border: 1px solid #b6bcc2; background: linear-gradient(#fdfdfd,#eceef0); font-size: 7px; line-height: 7px; text-align: center; text-decoration: none; color: #4a5058; }
+
+  .balance { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; margin-top: 26px; }
+  .balance > div { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 18px 20px; }
+  .balance h4 { margin: 0 0 10px; font-family: Georgia, serif; font-size: 17px; font-weight: 600; }
+  .balance ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  .balance li { margin-bottom: 8px; color: var(--ink-soft); }
+  .balance li strong { color: var(--ink); }
+  .verdict { margin-top: 26px; padding: 20px 26px; background: var(--accent-soft); border-left: 3px solid var(--accent); max-width: 76ch; }
+  .verdict p { max-width: none; }
+  .verdict p:last-child { margin-bottom: 0; }
 </style>
 
 <header class="top">
@@ -155,6 +181,7 @@
       <a href="#saisie">La saisie</a>
       <a href="#donnees">Les données</a>
       <a href="#arbitrages">Les arbitrages</a>
+      <a href="#pistes">Les pistes</a>
       <a href="#" class="reinit" id="reinit">Rejouer le tri</a>
     </nav>
   </div>
@@ -458,7 +485,7 @@
       <tr>
         <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
         <td>Hypercholestérolémie<br><span style="font-weight:400;color:var(--ink-soft);font-size:14px">ALD · E78.0 · depuis 2002</span></td>
-        <td>Chronique traitée, bilan annuel. Mais dernier contact il y a trois ans : un niveau moyen dont l'échéance n'est plus tenue. Voir la péremption, section 08.</td>
+        <td>Chronique traitée, bilan annuel. Mais dernier contact il y a trois ans : un niveau moyen dont l'échéance n'est plus tenue. Voir la péremption, section 09.</td>
       </tr>
       <tr>
         <td class="lvl"><span class="imp n2"><i></i><i></i><i></i></span></td>
@@ -593,8 +620,125 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
   </ul>
 </section>
 
-<section id="perimetre">
+<section id="pistes">
   <div class="sec-num">08</div>
+  <h2>Deux pistes étudiées</h2>
+  <p class="wide">Deux propositions ont été mises sur la table pour la saisie du niveau. Elles ne s'opposent pas sur les mêmes questions : la première change <em>comment on saisit</em>, la seconde change <em>ce qu'on saisit</em>.</p>
+
+  <blockquote style="font-size:19px">Le tri par « À suivre » est déjà en place dans le dossier. C'est le contournement que le besoin a produit tout seul — et il montre exactement ce qui manque.</blockquote>
+
+  <p class="wide">Quatre épisodes cochés remontent en tête : insuffisance mitrale, hypercholestérolémie, nodule pulmonaire, artériopathie. Dans <strong>cet ordre</strong> — c'est-à-dire l'insuffisance mitrale abandonnée depuis 2011 devant le nodule pulmonaire ouvert ce matin. Un drapeau binaire crée un bloc de tête sans hiérarchie interne, et le bloc grossit jusqu'à ne plus rien dire. C'est la démonstration la plus courte du besoin de trois niveaux, et elle vient du terrain.</p>
+
+  <h3>Piste A — trois feux à la place de « À suivre », qui se renforcent au clic</h3>
+  <p class="wide">La colonne <em>À suivre</em> est remplacée par trois pastilles pâles — verte, orange, rouge. Un clic sur l'une d'elles la sature : elle devient le niveau de l'épisode. La cellule est à la fois l'affichage et la commande.</p>
+
+  <div class="shots">
+    <figure class="shot">
+      <figcaption>Piste A — littérale : trois feux sur chaque ligne</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:560px">
+          <div class="ghead"><div class="k-deb">Début</div><div class="k-feu">Importance</div><div class="k-lib" style="width:250px">Episode</div></div>
+          <div class="grow"><div class="k-deb ald">12/03/2002</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o"></b><b class="r on"></b></span></div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div></div>
+          <div class="grow"><div class="k-deb">26/08/2026</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o"></b><b class="r on"></b></span></div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div></div>
+          <div class="grow"><div class="k-deb ald">12/03/2002</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o on"></b><b class="r"></b></span></div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div></div>
+          <div class="grow"><div class="k-deb">16/10/2009</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o on"></b><b class="r"></b></span></div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale…</div></div>
+          <div class="grow"><div class="k-deb">27/04/2013</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o on"></b><b class="r"></b></span></div><div class="k-lib" style="width:250px">Hypothyroïdie</div></div>
+          <div class="grow"><div class="k-deb">26/08/2026</div><div class="k-feu"><span class="feu"><b class="v on"></b><b class="o"></b><b class="r"></b></span></div><div class="k-lib" style="width:250px">Sciatique</div></div>
+          <div class="grow"><div class="k-deb">09/12/2001</div><div class="k-feu"><span class="feu"><b class="v"></b><b class="o"></b><b class="r"></b></span></div><div class="k-lib" style="width:250px">Non-Classé</div></div>
+        </div>
+      </div>
+      <p class="hint">Sept lignes, vingt et une pastilles colorées. Ce qui distingue une ligne haute d'une ligne basse n'est plus une quantité de marques, mais la saturation de l'une d'entre elles — un écart bien plus faible, à repérer au milieu d'une masse chromatique uniforme.</p>
+    </figure>
+
+    <figure class="shot">
+      <figcaption>Piste A — retenue : la gouttière elle-même devient cliquable</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:560px">
+          <div class="ghead"><div class="k-i"><span class="imp tete"><i></i><i></i><i></i></span></div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div></div>
+          <div class="grow" style="background:#f2f7fd"><div class="k-i"><span class="zone"><span></span><span class="hov"></span><span></span></span></div><div class="k-deb">16/10/2009</div><div class="k-lib" style="width:250px">Insuffisance (de la valvule) mitrale… <span class="bulle">clic ici : importance moyenne</span></div></div>
+          <div class="grow"><div class="k-i"><span class="imp n2"><i></i><i></i><i></i></span></div><div class="k-deb">27/04/2013</div><div class="k-lib" style="width:250px">Hypothyroïdie</div></div>
+          <div class="grow"><div class="k-i"><span class="imp n1"><i></i><i></i><i></i></span></div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div></div>
+          <div class="grow"><div class="k-i"></div><div class="k-deb">09/12/2001</div><div class="k-lib" style="width:250px">Non-Classé</div></div>
+        </div>
+      </div>
+      <p class="hint">Même idée — la cellule est la commande — mais appliquée à la gouttière déjà spécifiée. Trois zones de survol de 10 px sur toute la hauteur de la ligne ; le survol montre ce que le clic poserait. L'affichage garde le comptage 3 / 2 / 1.</p>
+    </figure>
+  </div>
+
+  <div class="balance">
+    <div>
+      <h4>Ce que la piste A apporte</h4>
+      <ul>
+        <li><strong>Elle dissout l'arbitrage sur « À suivre ».</strong> Le champ n'est pas doublé, il est remplacé — par celui qui tenait déjà son rôle. Plus de risque d'incohérence entre deux colonnes.</li>
+        <li><strong>Un clic par épisode, sans quitter la grille.</strong> Ni sélection préalable, ni menu, ni panneau. C'est la saisie la plus rapide possible pour classer un dossier entier au premier passage.</li>
+        <li><strong>Aucune largeur nouvelle.</strong> La colonne existe déjà, elle change seulement de contenu.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ce qu'elle coûte, sous sa forme littérale</h4>
+      <ul>
+        <li><strong>Le signal s'affaiblit.</strong> Pâle contre saturé est un écart bien plus faible que « trois marques contre une ». Toutes les lignes portent la même masse colorée ; il faut comparer des intensités au lieu de compter. C'est exactement l'objectif du projet qui recule.</li>
+        <li><strong>La redondance non colorée se dégrade.</strong> Le comptage disparaît ; il reste la position de la pastille saturée, lisible mais bien moins franche à l'impression et pour une deutéranopie.</li>
+        <li><strong>Cibles de 9 px.</strong> Trois cibles côte à côte dans une ligne de 24 px, sur une cellule qui sert aussi à sélectionner la ligne : le clic accidentel pose un niveau. Ctrl+Z le rattrape, encore faut-il s'en apercevoir.</li>
+        <li>Retirer un niveau demande un geste caché — recliquer la pastille active — ou une quatrième cible.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Piste B — un rang par épisode, qu'on monte et qu'on descend</h3>
+  <p class="wide">Chaque épisode reçoit un rang dans le dossier, modifiable par deux flèches, et la grille trie dessus. Aucun palier imposé : le praticien exprime un ordre, pas une catégorie.</p>
+
+  <div class="shots">
+    <figure class="shot">
+      <figcaption>Piste B — rang manuel</figcaption>
+      <div class="wf">
+        <div class="win" style="max-width:560px">
+          <div class="ghead"><div class="k-rang tri">Rang</div><div class="k-deb">Début</div><div class="k-lib" style="width:250px">Episode</div></div>
+          <div class="grow"><div class="k-rang">1</div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Artériopathie oblitérante des membres…</div></div>
+          <div class="grow"><div class="k-rang">2</div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Nodule pulmonaire, sans précision</div></div>
+          <div class="grow sel"><div class="k-rang">3 <span class="fleches"><u>▲</u><u>▼</u></span></div><div class="k-deb">07/06/2024</div><div class="k-lib" style="width:250px">TIPMP Tumeur intracanalaire papillaire…</div></div>
+          <div class="grow"><div class="k-rang">4</div><div class="k-deb ald">12/03/2002</div><div class="k-lib ald" style="width:250px">Hypercholestérolémie</div></div>
+          <div class="grow"><div class="k-rang">5</div><div class="k-deb">19/02/2026</div><div class="k-lib" style="width:250px">Flutter et fibrillation auriculaire</div></div>
+          <div class="grow"><div class="k-rang">6</div><div class="k-deb">27/04/2013</div><div class="k-lib" style="width:250px">Hypothyroïdie</div></div>
+          <div class="grow"><div class="k-rang">7</div><div class="k-deb">26/08/2026</div><div class="k-lib" style="width:250px">Sciatique</div></div>
+        </div>
+      </div>
+      <p class="hint">La sciatique ouverte ce matin arrive en rang 11 sur 11. Pour l'y placer, il faut décider de sa position vis-à-vis de dix autres épisodes — et actionner la flèche dix fois.</p>
+    </figure>
+  </div>
+
+  <div class="balance">
+    <div>
+      <h4>Ce que la piste B apporte</h4>
+      <ul>
+        <li><strong>Une expressivité totale.</strong> Aucun regroupement forcé, aucune égalité. Le praticien dit exactement ce qui prime, pour ce patient-là.</li>
+        <li><strong>Elle départage à l'intérieur d'un niveau.</strong> Six épisodes moyens dans ce dossier : le classement actuel les ordonne par dernier contact, ce qui est un substitut, pas un jugement.</li>
+        <li>Le geste — deux flèches — ne s'apprend pas.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ce qu'elle coûte</h4>
+      <ul>
+        <li><strong>Le coût est celui du dossier, pas de l'épisode.</strong> Poser un niveau est une décision isolée ; poser un rang oblige à se situer face à tous les autres, à chaque nouvel épisode. Sur onze lignes, chaque ouverture rejoue le classement.</li>
+        <li><strong>Un rang ne signifie rien hors de son dossier.</strong> « Rang 4 » n'est ni filtrable, ni colorable, ni agrégeable au cabinet, et ne permet aucune règle de péremption. Les suites de la section 09 disparaissent toutes.</li>
+        <li><strong>Il n'y a rien à afficher.</strong> Le rang <em>est</em> la position de la ligne : dès qu'on trie autrement, par date ou par acteur, l'information s'évanouit. C'est l'inverse exact de la propriété défendue en section 02 — un signal porté par la ligne, pas par sa place.</li>
+        <li><strong>Pas de fusion à deux praticiens.</strong> Un rang est un ordre total : le second qui reclasse écrase silencieusement le jugement du premier. Des niveaux par épisode ne se contredisent que sur l'épisode touché.</li>
+        <li><strong>La dégradation est brutale.</strong> Un niveau ancien reste à peu près juste ; un ordre non entretenu, après six épisodes insérés en bout de liste, est simplement faux.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <p><strong>Recommandation — la piste A, dans sa forme « gouttière cliquable » ; pas la piste B.</strong></p>
+    <p>La piste A résout le seul arbitrage vraiment coûteux du projet en supprimant la case <em>À suivre</em> au lieu de la faire cohabiter. Mais sous sa forme littérale, elle affaiblit précisément ce que le projet cherche : trois pastilles sur chaque ligne remplacent une lecture par comptage par une lecture par saturation. Le compromis est de garder la gouttière déjà spécifiée — comptage 3 / 2 / 1, hors du bandeau de sélection — et de la rendre cliquable en trois zones. Un seul objet, optimisé pour lire à gauche et pour écrire au clic.</p>
+    <p>La piste B ne répond pas à la même question, et son coût est structurel plutôt que de détail : elle transforme une décision par épisode en un classement à entretenir par dossier, sans rien produire d'affichable ni de réutilisable. Si le besoin qu'elle exprime est « celui-là d'abord, aujourd'hui », la réponse économique est <strong>une épingle</strong> — un épisode remonté en tête indépendamment de son niveau, à un seul état, sans ordre total à maintenir ni conflit entre praticiens. À verser aux suites, pas à la version 1.</p>
+  </div>
+</section>
+
+<section id="perimetre">
+  <div class="sec-num">09</div>
   <h2>Hors périmètre</h2>
 
   <h3>La péremption du niveau — la suite la plus utile</h3>
@@ -603,6 +747,7 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 
   <h3>Autres suites</h3>
   <ul class="plain">
+    <li><strong>L'épingle</strong> — remonter un épisode en tête du dossier indépendamment de son niveau, pour la consultation du jour. C'est la part utile de la piste B étudiée en section 08, à un seul état : pas d'ordre total à entretenir, pas de conflit entre praticiens.</li>
     <li>Filtre rapide <em>importance haute seulement</em> dans le cadre compact.</li>
     <li>Restitution du niveau dans les exports et le volet d'impression.</li>
     <li>Report du niveau sur le regroupement par acteur, en cabinet de groupe.</li>

@@ -69,6 +69,7 @@ Avant tout commit, vérifier qu'aucune donnée patient verbatim n'a été réint
 | Sujet | État |
 |-------|------|
 | Sémantique, vocabulaire, encodage, tri | Arrêtés |
+| Saisie du niveau — deux pistes étudiées (feux cliquables / rang manuel) | **Recommandé** : gouttière cliquable en trois zones, qui remplace « À suivre ». Le rang manuel est écarté ; sa part utile est une épingle, versée aux suites. |
 | Coloration rouge du libellé ALD — la garder ou la libérer | **Ouvert**, à décider après usage réel |
-| Recouvrement avec la case « À suivre » | **Ouvert**, préférence pour la case en lecture seule |
+| Recouvrement avec la case « À suivre » | **En voie de résolution** : la gouttière cliquable la remplace au lieu de cohabiter avec elle |
 | Niveaux de TIPMP, Surveillance coloscopique, Tabagisme | **Proposés**, à valider par le praticien |
