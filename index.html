@@ -259,7 +259,7 @@
             <div class="k-cim">CIM10</div>
             <div class="k-ald">ALD</div>
           </div>
-          <div id="grille">
+          <div id="grille-lignes">
             <div class="grow sel" data-imp="1" data-lib="Artériopathie oblitérante des membres inférieurs" data-deb="2002-03-12">
               <div class="k-i"><span class="imp n3"><i></i><i></i><i></i></span></div>
               <div class="k-lib ald">Artériopathie oblitérante des membres inférieurs</div>
@@ -618,7 +618,7 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
 
 <script>
 (function () {
-  var grille = document.getElementById('grille');
+  var grille = document.getElementById('grille-lignes');
   if (!grille) { return; }
   var btns = { imp: document.getElementById('c-imp'), lib: document.getElementById('c-lib'), deb: document.getElementById('c-deb') };
   var lignes = Array.prototype.slice.call(grille.children);
@@ -656,7 +656,7 @@ CREATE TABLE REF_IMPORTANCE_SUIVI (
     reinit.addEventListener('click', function (e) {
       e.preventDefault();
       trier('imp');
-      document.getElementById('grille').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      grille.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 
