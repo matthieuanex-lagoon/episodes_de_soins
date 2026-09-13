@@ -119,6 +119,27 @@ body.en-jeu #app{height:100svh;min-height:0}
   border-top:1px solid var(--rule);color:var(--ink-soft);font-size:12px}
 .pied button{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
 
+/* ── Bascule dessin / photo ───────────────────────────── */
+.bascule{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:16px;padding:4px;
+  background:var(--paper-2);border:1.5px solid var(--rule);border-radius:12px;
+}
+.bascule button{
+  min-height:42px;border:0;border-radius:8px;background:none;color:var(--ink-soft);
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-.01em;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.bascule button.on{background:var(--card);color:var(--ink);box-shadow:var(--ombre)}
+.bascule svg{width:17px;height:17px}
+
+/* ── Crédits ──────────────────────────────────────────── */
+.credits{display:grid;gap:0;border-top:1px solid var(--rule)}
+.credit{display:flex;gap:12px;align-items:baseline;padding:11px 2px;border-bottom:1px solid var(--rule);font-size:13px}
+.credit b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13.5px;flex:none;width:39%}
+.credit span{color:var(--ink-soft);line-height:1.35}
+.credit a{color:var(--accent)}
+.credits-intro{font-size:13.5px;color:var(--ink-soft);line-height:1.5;padding-block:2px 16px;max-width:60ch}
+
 /* ── Barre de jeu ─────────────────────────────────────── */
 .barre{display:flex;align-items:center;gap:11px;padding-block:4px 12px}
 .ico{flex:none;width:42px;height:42px;border-radius:11px;border:1.5px solid var(--rule);background:var(--card);display:grid;place-items:center;font-size:17px;line-height:1}
@@ -128,13 +149,21 @@ body.en-jeu #app{height:100svh;min-height:0}
 
 /* ── Corps du jeu ─────────────────────────────────────── */
 .corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
-.plateau{flex:1;min-height:0;display:grid;place-items:center;padding-bottom:26px}
+.plateau{flex:1;min-height:0;display:grid;place-items:center;padding-bottom:26px;container-type:size}
 .plaque{
-  position:relative;width:100%;max-width:310px;aspect-ratio:1/1;max-height:100%;
+  /* Un carré qui tient dans la place disponible. 100cqh = la hauteur
+     utile du plateau ; la largeur s'y aligne, sans dépasser la colonne.
+     La première ligne sert de repli aux navigateurs sans requête de conteneur. */
+  position:relative;aspect-ratio:1/1;height:auto;
+  width:min(100%,420px);
+  width:min(100cqh,100%,420px);
+  max-width:100%;
   background:var(--card);border:1.5px solid var(--ink);border-radius:3px;box-shadow:var(--ombre);
-  display:grid;place-items:center;padding:16px;
+  display:grid;place-items:stretch;padding:16px;
 }
-.dessin{width:100%;height:100%;display:grid;place-items:center}
+.dessin{width:100%;height:100%;min-width:0;min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:2px}
+.plaque.av-photo{padding:9px}
+.photo{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain;display:block;background:var(--paper-2)}
 .obj{height:100%;width:auto;max-width:100%;display:block}
 .obj .bd{fill:var(--glass);stroke:var(--draw);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
 .obj .mt{fill:var(--metal);stroke:var(--draw);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
@@ -210,7 +239,8 @@ body.en-jeu #app{height:100svh;min-height:0}
 .rates h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;font-family:inherit}
 .rates-liste{display:flex;gap:9px;flex-wrap:wrap}
 .rate-item{display:grid;gap:5px;justify-items:center;width:82px}
-.rate-item .cadre{width:82px;height:82px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);display:grid;place-items:center;padding:7px}
+.rate-item .cadre{width:82px;height:82px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);display:grid;place-items:center;padding:7px;overflow:hidden}
+.rate-item .cadre.av-photo{padding:0}
 .rate-item span{font-size:11.5px;line-height:1.2;text-align:center;color:var(--ink-soft)}
 .actions{margin-top:auto;display:grid;gap:9px;padding-top:16px}
 
@@ -220,7 +250,8 @@ body.en-jeu #app{height:100svh;min-height:0}
 .fiches{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding-bottom:10px}
 @media (min-width:520px){.fiches{grid-template-columns:repeat(3,1fr)}}
 .fiche{background:var(--card);border:1.5px solid var(--ink);border-radius:3px;overflow:hidden;display:flex;flex-direction:column}
-.fiche .cadre{aspect-ratio:1/1;display:grid;place-items:center;padding:11px;border-bottom:1.5px solid var(--ink)}
+.fiche .cadre{aspect-ratio:1/1;display:grid;place-items:center;padding:11px;border-bottom:1.5px solid var(--ink);overflow:hidden}
+.fiche .cadre.av-photo{padding:0}
 .fiche .txt{padding:8px 10px 10px;display:grid;gap:3px}
 .fiche b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:14px;letter-spacing:-.01em;line-height:1.2}
 .fiche small{color:var(--ink-soft);font-size:11px;line-height:1.3}
@@ -250,10 +281,16 @@ body.en-jeu #app{height:100svh;min-height:0}
       <p class="sous">Reconnaître les 21 objets de la paillasse. D'abord en choisissant, ensuite de tête.</p>
     </div>
 
+    <div class="bascule" id="bascule" role="group" aria-label="Dessins ou photos">
+      <button type="button" data-vue="dessin" id="vue-dessin">Dessins</button>
+      <button type="button" data-vue="photo" id="vue-photo">Photos</button>
+    </div>
+
     <div class="series" id="liste-series"></div>
 
     <div class="liens">
       <button class="lien" type="button" data-go="fiches">Revoir la fiche des 21 objets &rarr;</button>
+      <button class="lien" type="button" data-go="credits">Crédits et licences des photos &rarr;</button>
     </div>
 
     <div class="pied">
@@ -305,6 +342,18 @@ body.en-jeu #app{height:100svh;min-height:0}
         <button class="secondaire" type="button" data-go="accueil">Retour au menu</button>
       </div>
     </div>
+  </section>
+
+  <!-- ════ CRÉDITS ════ -->
+  <section class="ecran" id="ecran-credits" hidden>
+    <div class="fiches-tete">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au menu">&larr;</button>
+      <h2>Crédits des photos</h2>
+    </div>
+    <p class="credits-intro">Toutes les photographies viennent de Wikimedia Commons, sous licence libre.
+      Chaque ligne donne l'auteur et la licence ; le lien mène au fichier d'origine, où figure le texte complet
+      de la licence. Les dessins au trait, eux, ont été faits pour ce jeu.</p>
+    <div class="credits" id="liste-credits"></div>
   </section>
 
   <!-- ════ FICHES ════ -->
@@ -515,6 +564,31 @@ var ITEMS = [
   '<rect class="wh" x="37" y="55" width="15" height="10" rx="2"/>')}
 ];
 
+/* Photographies : Wikimedia Commons, licences libres. f = fichier
+   d'origine, a = auteur, l = licence. L'écran « Crédits » les affiche
+   et renvoie vers le fichier source. */
+var PHOTOS = {
+  becher:{f:"Glass 100ml beaker.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  erlen:{f:"Erlenmeyer flask hg.jpg", a:"Hannes Grobe", l:"CC BY-SA 2.5"},
+  tube:{f:"Test tube blue background.jpg", a:"Blaž bohorč", l:"CC BY-SA 4.0"},
+  ballon:{f:"Round bottom flask 500ml.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  fiole:{f:"Brand volumetric flask 100ml.jpg", a:"Lucasbosch", l:"CC BY-SA 3.0"},
+  entonnoir:{f:"Analysentrichter.png", a:"MediaLab TH Köln", l:"CC BY-SA 4.0", x:'png'},
+  eprouvette:{f:"Measuring cylinder hg.jpg", a:"Hannes Grobe", l:"CC BY-SA 2.5"},
+  pipette:{f:"Plastic Pasteur pipette.jpg", a:"Cjp24", l:"CC BY-SA 3.0"},
+  comptegoutte:{f:"S 2695170.jpg", a:"Pualuu", l:"CC BY-SA 4.0"},
+  pissette:{f:"Lab wash-bottles water EtOH.jpg", a:"Masur", l:"domaine public"},
+  balance:{f:"Balance Scaltec.jpg", a:"Karelj", l:"domaine public"},
+  capsule:{f:"Disposable weighing boat-02.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  lame:{f:"Standard and large microscope slide.jpg", a:"Mikael Häggström", l:"CC0"},
+  petri:{f:"Petri dish containing Sodium Chloride.jpg", a:"Roi.Frvr", l:"CC0"},
+  verremontre:{f:"Watch glass.JPG", a:"Chrissiejr", l:"CC BY-SA 4.0"},
+  cristallisoir:{f:"Cristallisoir, Pyrex.jpg", a:"Cjp24", l:"CC BY-SA 4.0"},
+  pince:{f:"Small tweezers-set 1.jpg", a:"Nadine90", l:"CC BY-SA 3.0"},
+  chauffeballon:{f:"Electrothermal Heating Mantle.jpg", a:"Markbob1968", l:"CC BY-SA 3.0"},
+  bainmarie:{f:"Digital laboratory water bath.jpg", a:"Confidence24", l:"CC BY-SA 4.0"},
+};
+
 var SERIES = [
   {id:1, nom:'La verrerie de base',   sous:"Ce qui contient, ce qui transvase"},
   {id:2, nom:'Mesurer et prélever',   sous:"Volumes, masses et gouttes"},
@@ -527,6 +601,7 @@ var P = {};          /* progrès : "1-qcm" -> nombre d'étoiles */
 var son = true;
 var partie = null;
 var ecranActuel = 'accueil';
+var vue = 'dessin';
 var serieOuverte = 1;
 var minuteur = null;
 
@@ -535,18 +610,19 @@ function charger(){
     var r = JSON.parse(localStorage.getItem(CLE_STOCK) || '{}');
     P = (r && typeof r.p === 'object' && r.p) ? r.p : {};
     son = r.son !== false;
-  }catch(e){ P = {}; son = true; }
+    vue = (r.vue === 'photo') ? 'photo' : 'dessin';
+  }catch(e){ P = {}; son = true; vue = 'dessin'; }
 }
 function sauver(){
-  try{ localStorage.setItem(CLE_STOCK, JSON.stringify({p:P, son:son})); }catch(e){}
+  try{ localStorage.setItem(CLE_STOCK, JSON.stringify({p:P, son:son, vue:vue})); }catch(e){}
 }
 
 function cle(s,m){ return s + '-' + m; }
 function fait(s,m){ return Object.prototype.hasOwnProperty.call(P, cle(s,m)); }
 function etoilesDe(s,m){ return fait(s,m) ? (P[cle(s,m)]|0) : 0; }
 function debloque(s,m){
-  if(m === 'oral') return fait(s,'qcm');
-  if(s === 'rev')  return fait(1,'qcm') && fait(2,'qcm') && fait(3,'qcm');
+  if(m === 'oral') return s === 'rev' || fait(s,'qcm');
+  if(s === 'rev')  return true;
   return s === 1 || fait(s-1,'qcm');
 }
 function poolDe(s){
@@ -557,6 +633,17 @@ function parId(id){ for(var i=0;i<ITEMS.length;i++){ if(ITEMS[i].id===id) return
 
 /* ═══ Outils ══════════════════════════════════════════════ */
 function $(s){ return document.querySelector(s); }
+
+/* Le visuel d'un objet : le dessin au trait, ou la photo si l'on est
+   en mode photo et qu'il en existe une. */
+function visuel(it){
+  var ph = PHOTOS[it.id];
+  if(vue === 'photo' && ph) return '<img class="photo" src="p/'+it.id+'.'+(ph.x || 'jpg')+'" alt="" draggable="false">';
+  return it.svg;
+}
+function classeCadre(it){
+  return (vue === 'photo' && PHOTOS[it.id]) ? 'av-photo' : 'quadrille';
+}
 function melange(a){
   a = a.slice();
   for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
@@ -623,7 +710,7 @@ function majSon(){
 function montrer(nom){
   ecranActuel = nom;
   document.body.classList.toggle('en-jeu', nom === 'jeu');
-  ['accueil','jeu','bilan','fiches'].forEach(function(n){
+  ['accueil','jeu','bilan','fiches','credits'].forEach(function(n){
     $('#ecran-'+n).hidden = (n !== nom);
   });
   window.scrollTo(0,0);
@@ -666,7 +753,7 @@ function construireAccueil(){
     var apercu = '7 objets · ' + noms.slice(0,3).join(', ').toLowerCase() + '…';
     h += carteSerie(s.id, s.nom, s.sous, apercu);
   });
-  h += carteSerie('rev', 'Révision générale', 'Après les trois séries', '12 objets tirés au hasard sur les 21');
+  h += carteSerie('rev', 'Les 21 mélangés', 'Tout, dans le désordre', 'Les 21 objets, toutes séries confondues');
   $('#liste-series').innerHTML = h;
 }
 
@@ -676,18 +763,40 @@ function construireFiches(){
   SERIES.forEach(function(s){
     h += '<p class="groupe-titre">'+s.id+' · '+s.nom+'</p>';
     poolDe(s.id).forEach(function(it){
-      h += '<div class="fiche"><div class="cadre quadrille">'+it.svg+'</div>'+
+      h += '<div class="fiche"><div class="cadre '+classeCadre(it)+'">'+visuel(it)+'</div>'+
            '<div class="txt"><b>'+it.nom+'</b><small>'+it.role+'</small></div></div>';
     });
   });
   $('#grille-fiches').innerHTML = h;
 }
 
+function construireCredits(){
+  var h = '';
+  ITEMS.forEach(function(it){
+    var c = PHOTOS[it.id];
+    if(!c) return;
+    var lien = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(c.f.replace(/ /g,'_'));
+    h += '<div class="credit"><b>'+it.nom+'</b><span>'+c.a+' — '+c.l+
+         ' · <a href="'+lien+'" target="_blank" rel="noopener">fichier</a></span></div>';
+  });
+  $('#liste-credits').innerHTML = h;
+}
+function majBascule(){
+  var dispo = false;
+  for(var k in PHOTOS){ if(Object.prototype.hasOwnProperty.call(PHOTOS,k)){ dispo = true; break; } }
+  $('#bascule').hidden = !dispo;
+  if(!dispo) vue = 'dessin';
+  $('#vue-dessin').className = (vue === 'dessin') ? 'on' : '';
+  $('#vue-photo').className  = (vue === 'photo')  ? 'on' : '';
+  $('#vue-dessin').setAttribute('aria-pressed', vue === 'dessin');
+  $('#vue-photo').setAttribute('aria-pressed', vue === 'photo');
+}
+
 /* ═══ La partie ═══════════════════════════════════════════ */
 function demarrer(s, m, liste){
   var file;
   if(liste)               file = melange(liste);
-  else if(s === 'rev')    file = melange(ITEMS).slice(0,12);
+  else if(s === 'rev')    file = melange(ITEMS);
   else                    file = melange(poolDe(s));
   partie = { s:s, m:m, file:file, i:0, justes:0, rates:[], repondu:false, revoir:!!liste };
   montrer('jeu');
@@ -699,8 +808,10 @@ function poser(){
   var it = partie.file[partie.i];
   partie.repondu = false;
 
-  $('#plaque').className = 'plaque';
-  $('#dessin').innerHTML = it.svg;
+  var estPhoto = (vue === 'photo' && !!PHOTOS[it.id]);
+  $('#plaque').className = 'plaque' + (estPhoto ? ' av-photo' : '');
+  $('#dessin').className = 'dessin' + (estPhoto ? ' av-photo' : ' quadrille');
+  $('#dessin').innerHTML = visuel(it);
   $('#etiquette').hidden = true;
   $('#etiquette').textContent = '';
   $('#btn-suite').classList.add('invisible');
@@ -805,7 +916,7 @@ function finir(){
     sauver();
   }
 
-  var nomSerie = partie.s === 'rev' ? 'Révision générale' : ('Série ' + partie.s + ' · ' + SERIES[partie.s-1].nom);
+  var nomSerie = partie.s === 'rev' ? 'Les 21 mélangés' : ('Série ' + partie.s + ' · ' + SERIES[partie.s-1].nom);
   $('#bilan-serie').textContent = nomSerie + (partie.m === 'qcm' ? ' · Je choisis' : ' · À voix haute');
   $('#bilan-etoiles').innerHTML = etoilesHTML(et);
   $('#bilan-titre').textContent =
@@ -817,7 +928,7 @@ function finir(){
     var h = '';
     partie.rates.forEach(function(id){
       var it = parId(id);
-      h += '<div class="rate-item"><div class="cadre quadrille">'+it.svg+'</div><span>'+it.nom+'</span></div>';
+      h += '<div class="rate-item"><div class="cadre '+classeCadre(it)+'">'+visuel(it)+'</div><span>'+it.nom+'</span></div>';
     });
     $('#rates-liste').innerHTML = h;
     $('#bilan-rates').hidden = false;
@@ -852,6 +963,12 @@ document.addEventListener('click', function(ev){
 
   var go = el.getAttribute('data-go');
   if(go){ clearTimeout(minuteur); try{ window.speechSynthesis.cancel(); }catch(e){} montrer(go); return; }
+
+  var v = el.getAttribute('data-vue');
+  if(v){
+    if(v !== vue){ vue = v; sauver(); majBascule(); construireFiches(); }
+    return;
+  }
 
   var t = el.getAttribute('data-toggle');
   if(t){
@@ -898,8 +1015,10 @@ function demarrage(donnees){
     if(!fait(s,'qcm') || !fait(s,'oral')){ serieOuverte = s; break; }
     if(i === SERIES.length-1) serieOuverte = 'rev';
   }
+  majBascule();
   construireAccueil();
   construireFiches();
+  construireCredits();
   montrer(donnees && donnees.ecran === 'fiches' ? 'fiches' : 'accueil');
   try{
     if(window.speechSynthesis){
