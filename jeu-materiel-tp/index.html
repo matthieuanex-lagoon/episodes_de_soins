@@ -13,7 +13,7 @@
   --accent:#1b4f8f; --accent-soft:#e3ecf7;
   --ok:#2f7a4f; --ok-soft:#e3f0e7;
   --ko:#b23a2e; --ko-soft:#f7e6e3;
-  --or:#b0801a;
+  --or:#b0801a; --attn:#9a6b12; --attn-soft:#f7eedb;
   --draw:#333e49; --draw-soft:#8a97a3; --glass:#ffffff; --metal:#dde4ea; --liquid:#8fbde6;
   --ombre:0 1px 0 rgba(29,38,48,.05), 0 10px 26px -16px rgba(29,38,48,.45);
 }
@@ -25,7 +25,7 @@
     --accent:#83abe2; --accent-soft:#1a2634;
     --ok:#5fb682; --ok-soft:#17281f;
     --ko:#e28b7e; --ko-soft:#2b1a17;
-    --or:#d4a53c;
+    --or:#d4a53c; --attn:#d9ab4a; --attn-soft:#2a2114;
     --draw:#ccd6df; --draw-soft:#6d7b87; --glass:#232b34; --metal:#2f3843; --liquid:#3f6f9f;
     --ombre:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
   }
@@ -37,7 +37,7 @@
   --accent:#83abe2; --accent-soft:#1a2634;
   --ok:#5fb682; --ok-soft:#17281f;
   --ko:#e28b7e; --ko-soft:#2b1a17;
-  --or:#d4a53c;
+  --or:#d4a53c; --attn:#d9ab4a; --attn-soft:#2a2114;
   --draw:#ccd6df; --draw-soft:#6d7b87; --glass:#232b34; --metal:#2f3843; --liquid:#3f6f9f;
   --ombre:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
 }
@@ -191,7 +191,7 @@ body.en-jeu #app{height:100svh;min-height:0}
 
 /* ── Zone de réponse ──────────────────────────────────── */
 .zone{display:grid;gap:11px}
-.info{min-height:48px;display:flex;align-items:center;font-size:13.5px;line-height:1.35;color:var(--ink-soft);text-wrap:pretty}
+.info{min-height:48px;display:block;padding-block:4px;font-size:13.5px;line-height:1.35;color:var(--ink-soft);text-wrap:pretty}
 .info b{color:var(--ink)}
 .choix-liste{display:grid;gap:9px}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -240,6 +240,18 @@ body.en-jeu #app{height:100svh;min-height:0}
 .champ.bon{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
 .champ.mauvais{background:var(--ko-soft);border-color:var(--ko);color:var(--ko)}
 .form-saisie{display:grid;gap:9px}
+.champ.relu{
+  display:flex;align-items:center;min-height:62px;
+  white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3;
+}
+.champ.attn{background:var(--attn-soft);border-color:var(--attn);color:var(--ink)}
+.faute{
+  color:var(--ko);
+  text-decoration:underline wavy var(--ko);
+  text-decoration-thickness:2px;text-underline-offset:4px;
+}
+.manque{color:var(--ko);font-weight:800;padding-inline:1px}
+.info b.attn{color:var(--attn)}
 
 /* ── Bilan ────────────────────────────────────────────── */
 .bilan{flex:1;display:flex;flex-direction:column;gap:14px;padding-top:6px}
@@ -734,9 +746,15 @@ function variantes(it){
   }
   return v;
 }
-function tolerance(n){ return n <= 6 ? 1 : (n <= 13 ? 2 : 3); }
+/* Une seule faute jusqu'à huit lettres, deux au-delà. Au-delà, ce n'est
+   plus une faute de frappe. */
+function tolerance(n){ return n <= 8 ? 1 : 2; }
 
-/* Renvoie 'juste', 'presque' (le bon objet, mais trop mal écrit) ou 'faux'. */
+/* Renvoie :
+     'juste'   — le nom est trouvé et correctement écrit (aux accents,
+                 particules, pluriels et espaces près, qui ne comptent pas) ;
+     'presque' — le bon objet, mais avec une ou deux fautes d'orthographe ;
+     'faux'    — autre chose.  */
 function juger(saisie, it){
   var s = normaliser(saisie);
   if(!s) return 'faux';
@@ -748,9 +766,110 @@ function juger(saisie, it){
     });
   });
   if(idProche !== it.id) return 'faux';
-  if(dMin <= tolerance(s.length)) return 'juste';
-  if(dMin <= tolerance(s.length) + 2) return 'presque';
+  if(dMin === 0) return 'juste';
+  /* Un espace en trop ou en moins n'est pas une faute d'orthographe. */
+  var compact = s.replace(/ /g, '');
+  var memeAuxEspaces = variantes(it).some(function(v){ return v.replace(/ /g, '') === compact; });
+  if(memeAuxEspaces) return 'juste';
+  var nomAplati = String(it.nom).toLowerCase().normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+  if(compact === nomAplati) return 'juste';
+  if(dMin <= tolerance(s.length)) return 'presque';
   return 'faux';
+}
+
+/* ═══ Montrer où sont les fautes ═════════════════════════
+   On aligne ce qui a été tapé sur le nom attendu, mot à mot puis lettre
+   à lettre, en comparant à accents et casse retirés — une lettre n'est
+   soulignée que si c'est vraiment une faute, jamais un accent manquant.
+   Une lettre oubliée ne peut pas être coloriée : c'est l'étiquette de la
+   planche qui donne alors l'orthographe juste. */
+
+function echapper(t){
+  return String(t).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+  });
+}
+
+/* Les lettres comparables d'un mot, avec leur position dans le mot d'origine. */
+function lettres(brut){
+  var out = [];
+  for(var i = 0; i < brut.length; i++){
+    var c = brut.charAt(i).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if(/^[a-z0-9]$/.test(c)) out.push({i:i, c:c});
+  }
+  return out;
+}
+
+function diffMot(brut, cible){
+  var pos = lettres(brut);
+  var a = pos.map(function(x){ return x.c; }).join('');
+  /* pluriel toléré : on ne souligne pas un s final en trop */
+  if(a.length > 3 && a.charAt(a.length-1) === 's' && cible.charAt(cible.length-1) !== 's'){
+    pos.pop(); a = a.slice(0, -1);
+  }
+  var m = a.length, n = cible.length, i, j;
+  var D = [];
+  for(i = 0; i <= m; i++){ D[i] = [i]; }
+  for(j = 0; j <= n; j++){ D[0][j] = j; }
+  for(i = 1; i <= m; i++){
+    for(j = 1; j <= n; j++){
+      var co = (a.charAt(i-1) === cible.charAt(j-1)) ? 0 : 1;
+      D[i][j] = Math.min(D[i-1][j] + 1, D[i][j-1] + 1, D[i-1][j-1] + co);
+    }
+  }
+  var marque = {};   /* lettre fausse ou en trop : position dans brut */
+  var manque = {};   /* lettre oubliée : nombre de lettres manquant avant cette position */
+  i = m; j = n;
+  while(i > 0 || j > 0){
+    var co2 = (i > 0 && j > 0 && a.charAt(i-1) === cible.charAt(j-1)) ? 0 : 1;
+    if(i > 0 && j > 0 && !co2 && D[i][j] === D[i][j-1] + 1){
+      /* lettre doublée dans le nom : on signale le trou après la série */
+      var trou2 = pos[i-1].i + 1;
+      manque[trou2] = (manque[trou2] || 0) + 1;
+      j--;
+    } else if(i > 0 && j > 0 && D[i][j] === D[i-1][j-1] + co2){
+      if(co2) marque[pos[i-1].i] = true;       /* lettre fausse */
+      i--; j--;
+    } else if(i > 0 && D[i][j] === D[i-1][j] + 1){
+      marque[pos[i-1].i] = true;               /* lettre en trop */
+      i--;
+    } else {
+      var trou = (i > 0) ? pos[i-1].i + 1 : 0; /* lettre oubliée : on marque le trou */
+      manque[trou] = (manque[trou] || 0) + 1;
+      j--;
+    }
+  }
+  var h = '', k, r;
+  for(k = 0; k <= brut.length; k++){
+    for(r = 0; r < (manque[k] || 0); r++) h += '<span class="manque">·</span>';
+    if(k < brut.length){
+      var ch = echapper(brut.charAt(k));
+      h += marque[k] ? '<span class="faute">' + ch + '</span>' : ch;
+    }
+  }
+  return h;
+}
+
+function motsUtiles(t){
+  return String(t || '').split(/\s+/)
+    .map(function(m){ return {brut:m, cle:normaliser(m)}; })
+    .filter(function(m){ return m.cle; });
+}
+
+function marquerFautes(saisie, it){
+  var tapes = motsUtiles(saisie);
+  var libres = motsUtiles(it.nom);
+  return tapes.map(function(mt){
+    var best = -1, bd = Infinity;
+    libres.forEach(function(ma, k){
+      var d = lev(mt.cle, ma.cle);
+      if(d < bd){ bd = d; best = k; }
+    });
+    if(best < 0) return '<span class="faute">' + echapper(mt.brut) + '</span>';
+    var ma = libres.splice(best, 1)[0];
+    return diffMot(mt.brut, ma.cle);
+  }).join(' ');
 }
 
 /* ═══ Son ═════════════════════════════════════════════════ */
@@ -824,7 +943,7 @@ function carteSerie(id, titre, sous, apercu){
   h +=   '<div class="serie-modes">';
   h +=     boutonMode(id,'qcm', 'Je choisis', 'Trois propositions au choix.');
   h +=     boutonMode(id,'oral','Je dis à voix haute', 'On dit, puis on vérifie.');
-  h +=     boutonMode(id,'ecrit','J\'écris le nom', 'Au clavier, fautes tolérées.');
+  h +=     boutonMode(id,'ecrit','J\'écris le nom', 'Au clavier ; les fautes sont signalées.');
   h +=   '</div>';
   h += '</div>';
   return h;
@@ -892,7 +1011,7 @@ function demarrer(s, m, liste){
   if(liste)               file = melange(liste);
   else if(s === 'rev')    file = melange(ITEMS);
   else                    file = melange(poolDe(s));
-  partie = { s:s, m:m, file:file, i:0, justes:0, rates:[], repondu:false, revoir:!!liste };
+  partie = { s:s, m:m, file:file, i:0, justes:0, rates:[], fautes:[], repondu:false, revoir:!!liste };
   montrer('jeu');
   poser();
 }
@@ -975,6 +1094,7 @@ function rendreEcrit(it){
       '<input class="champ" id="champ" type="text" inputmode="text" autocomplete="off" '+
              'autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" '+
              'placeholder="son nom…" aria-label="Écris le nom de cet objet">'+
+      '<div class="champ relu" id="relu" hidden aria-live="polite"></div>'+
       '<button class="principal" type="submit">Vérifier</button>'+
     '</form>';
   $('#form-ecrit').addEventListener('submit', function(ev){
@@ -987,23 +1107,33 @@ function repondreEcrit(){
   if(partie.repondu) return;
   var champ = $('#champ');
   var txt = champ ? champ.value : '';
-  if(!normaliser(txt)) { if(champ) champ.focus(); return; }   /* champ vide : on n'enregistre rien */
+  if(!normaliser(txt)){ if(champ) champ.focus(); return; }   /* champ vide : on n'enregistre rien */
   partie.repondu = true;
   var it = partie.file[partie.i];
   var verdict = juger(txt, it);
   var bon = (verdict !== 'faux');
-  champ.disabled = true;
-  champ.classList.add(bon ? 'bon' : 'mauvais');
-  if(champ.blur) champ.blur();                                /* referme le clavier */
+  if(champ.blur) champ.blur();                               /* referme le clavier */
+
+  /* Le champ laisse place à sa relecture : même boîte, même place, mais
+     les fautes y sont soulignées en rouge. */
+  var relu = $('#relu');
+  relu.className = 'champ relu ' + (verdict === 'juste' ? 'bon' : (verdict === 'presque' ? 'attn' : 'mauvais'));
+  relu.innerHTML = (verdict === 'presque') ? marquerFautes(txt, it) : echapper(txt);
+  champ.hidden = true;
+  relu.hidden = false;
+
   var btn = $('#form-ecrit').querySelector('button');
   if(btn){ btn.disabled = true; btn.classList.add('invisible'); }
-  compter(bon, it);
+
+  compter(bon, it, verdict === 'presque');
   reveler(it, bon);
   if(verdict === 'presque'){
-    $('#info').textContent = 'C\'était bien ça, mais l\'orthographe n\'y était pas tout à fait. ' + it.role;
+    $('#info').innerHTML = '<b class="attn">Attention à l\'orthographe :</b> ' +
+                           echapper(it.nom) + '.';
   }
   $('#btn-suite').classList.remove('invisible');
-  if(bon) minuteur = setTimeout(suivant, 1400);
+  /* Pas d'enchaînement automatique sur une faute : il faut le temps de la lire. */
+  if(verdict === 'juste') minuteur = setTimeout(suivant, 1400);
 }
 
 function autoEvaluer(bon){
@@ -1016,9 +1146,10 @@ function autoEvaluer(bon){
   minuteur = setTimeout(suivant, 620);
 }
 
-function compter(bon, it){
+function compter(bon, it, faute){
   if(bon) partie.justes++;
-  else partie.rates.push(it.id);
+  if(!bon) partie.rates.push(it.id);
+  else if(faute) partie.fautes.push(it.id);   /* trouvé, mais mal écrit : à revoir */
 }
 
 function reveler(it, bon){
@@ -1055,11 +1186,14 @@ function finir(){
   $('#bilan-titre').textContent =
     n === t ? 'Sans faute !' :
     (et === 2 ? 'Bien joué.' : (et === 1 ? 'C\'est un début.' : 'On refait un tour ?'));
-  $('#bilan-score').innerHTML = '<b>'+n+'</b> bonne'+(n>1?'s':'')+' réponse'+(n>1?'s':'')+' sur <b>'+t+'</b>.';
+  var aRevoir = partie.rates.concat(partie.fautes);
+  var nf = partie.fautes.length;
+  $('#bilan-score').innerHTML = '<b>'+n+'</b> bonne'+(n>1?'s':'')+' réponse'+(n>1?'s':'')+' sur <b>'+t+'</b>.' +
+    (nf ? ' Dont <b>'+nf+'</b> avec une faute d\'orthographe.' : '');
 
-  if(partie.rates.length){
+  if(aRevoir.length){
     var h = '';
-    partie.rates.forEach(function(id){
+    aRevoir.forEach(function(id){
       var it = parId(id);
       h += '<div class="rate-item"><div class="cadre '+classeCadre(it)+'">'+visuel(it)+'</div><span>'+it.nom+'</span></div>';
     });
@@ -1070,9 +1204,9 @@ function finir(){
   }
 
   var btn = $('#btn-bilan-1');
-  var s = partie.s, m = partie.m, rates = partie.rates.slice();
+  var s = partie.s, m = partie.m, rates = aRevoir.slice();
   if(rates.length){
-    btn.textContent = 'Revoir les ' + rates.length + ' ratés';
+    btn.textContent = 'Revoir ces ' + rates.length + ' objet' + (rates.length > 1 ? 's' : '');
     btn.onclick = function(){ demarrer(s, m, rates.map(parId)); };
   } else if(m === 'qcm'){
     btn.textContent = 'Passer à « je dis à voix haute » →';

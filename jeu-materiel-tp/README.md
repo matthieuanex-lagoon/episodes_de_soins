@@ -20,7 +20,7 @@ donc rien à charger et un rendu identique en thème clair et sombre.
 |--------|---------|
 | **Je choisis** | Le nom est à trouver parmi trois propositions, tirées dans la même série pour que la confusion soit plausible. |
 | **Je dis à voix haute** | Aucune proposition. L'enfant nomme l'objet, appuie sur *Vérifier*, puis s'auto-évalue. |
-| **J'écris le nom** | Au clavier, avec une comparaison tolérante (voir plus bas). La touche Entrée valide, pour ne pas avoir à viser un bouton derrière le clavier. |
+| **J'écris le nom** | Au clavier. Les fautes sont signalées et pointées (voir plus bas). La touche Entrée valide, pour ne pas avoir à viser un bouton derrière le clavier. |
 
 Les deux derniers niveaux se débloquent une fois « Je choisis » terminé.
 
@@ -41,9 +41,9 @@ en trois étages :
 2. **Particules et pluriels** — `de`, `du`, `des`, `à`, `au`, `le`, `la`,
    `et`… sont ignorés, et le `s` final tombe. « Boîte de Pétri », « boite
    petri » et « boites de pétris » sont donc la même réponse.
-3. **Fautes de frappe** — distance de Levenshtein, tolérance croissante avec
-   la longueur du mot : 1 jusqu'à 6 lettres, 2 jusqu'à 13, 3 au-delà.
-   « Erlenmayer » et « cristalisoir » passent.
+3. **Fautes de frappe** — distance de Levenshtein : une faute jusqu'à huit
+   lettres, deux au-delà. « Erlenmayer » et « cristalisoir » sont reconnus,
+   mais **signalés**, pas avalés en silence.
 
 Le garde-fou est au troisième étage : une saisie n'est acceptée que si elle
 ressemble **plus** au nom attendu qu'à celui de n'importe quel autre des 21
@@ -52,8 +52,21 @@ pour la pissette, et « verre » pour l'un ou l'autre des deux verres. Chaque
 objet accepte aussi quelques raccourcis explicites (`petri`, `portoir`,
 `brucelles`…), choisis pour ne valoir que pour lui.
 
-Une réponse juste sur l'objet mais trop mal écrite pour la tolérance compte
-comme réussie, avec la mention que l'orthographe n'y était pas.
+Les deux premiers étages ne coûtent rien : écrire « boite petri » ou
+« tubeaessai » est juste, sans remarque. Le troisième, lui, ne passe jamais
+inaperçu : la réponse compte comme trouvée, mais l'écran affiche
+**« Attention à l'orthographe »**, le nom correct, et la réponse de l'enfant
+relue avec ses fautes pointées :
+
+- une **lettre fausse ou en trop** est en rouge, soulignée d'une vague ;
+- une **lettre oubliée** est marquée d'un point rouge à sa place — c'est la
+  faute la plus fréquente, et la seule qu'on ne peut pas colorier autrement ;
+- un accent manquant n'est jamais souligné : il ne compte pas.
+
+Sur une consonne doublée, le point se place après la série (« enton·oir »),
+pas avant : les deux positions coûtent autant à l'algorithme, une seule se
+lit. Les objets mal orthographiés reviennent dans « À revoir » du bilan, au
+même titre que les ratés.
 
 Ces règles sont couvertes par une table de 76 cas, dans
 `../outils/test-saisie.js`, à lancer par `node outils/test-saisie.js`.
