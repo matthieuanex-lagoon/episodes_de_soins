@@ -1,0 +1,619 @@
+<title>Chasse aux axes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap">
+<style>
+:root{
+  --paper:#e7edf4; --sheet:#fbfcfe; --grid:#d4e1ee; --grid-faible:#dbe4ee;
+  --ink:#14243c; --ink-soft:#5d6f89; --rule:#b6c6d7;
+  --accent:#0d8f9c; --accent-ink:#ffffff; --accent-soft:#dbf0f2;
+  --calque:#d9541f;
+  --ok:#1a7f4b; --ko:#c13a2c; --gold:#a9790a;
+  --figure:#23406d;
+  --f-disp:'Syne','Trebuchet MS',sans-serif;
+  --f-body:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;
+}
+:root:not([data-theme="light"]){ }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0d141c; --sheet:#161f2a; --grid:#223143; --grid-faible:#141d27;
+    --ink:#e7eff8; --ink-soft:#94a7bc; --rule:#3b4d61;
+    --accent:#33b6c2; --accent-ink:#04232a; --accent-soft:#10333a;
+    --calque:#ff8b4d;
+    --ok:#41c37c; --ko:#f07158; --gold:#e3ae35;
+    --figure:#93b9ea;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0d141c; --sheet:#161f2a; --grid:#223143; --grid-faible:#141d27;
+  --ink:#e7eff8; --ink-soft:#94a7bc; --rule:#3b4d61;
+  --accent:#33b6c2; --accent-ink:#04232a; --accent-soft:#10333a;
+  --calque:#ff8b4d;
+  --ok:#41c37c; --ko:#f07158; --gold:#e3ae35;
+  --figure:#93b9ea;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  background-image:
+    repeating-linear-gradient(to right, var(--grid-faible) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(to bottom, var(--grid-faible) 0 1px, transparent 1px 28px);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:15px; line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:640px; margin:0 auto; padding-inline:20px; padding-block:26px 40px; display:flex; flex-direction:column; gap:18px}
+
+/* ── en-tête ─────────────────────────────────────────── */
+.hud{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.eyebrow{margin:0 0 2px; font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft)}
+.eyebrow sup{font-size:9px; text-transform:none}
+h1{margin:0; font-family:var(--f-disp); font-weight:800; font-size:clamp(27px,6.4vw,40px); line-height:1; letter-spacing:-.025em; text-wrap:balance}
+.compteurs{display:flex; gap:10px}
+.compteur{background:var(--sheet); border:1px solid var(--rule); padding:5px 11px 6px; min-width:66px; text-align:center}
+.compteur b{display:block; font-family:var(--f-mono); font-weight:500; font-size:19px; font-variant-numeric:tabular-nums; line-height:1.15}
+.compteur span{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+.compteur.pop b{animation:pop .45s ease-out}
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.28); color:var(--accent)}100%{transform:scale(1)}}
+
+/* ── règle graduée = progression ─────────────────────── */
+.regle{display:flex; border-top:2px solid var(--rule); padding-top:0; margin-top:-2px}
+.grad{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; min-width:0}
+.grad i{display:block; width:2px; height:8px; background:var(--rule); transition:height .25s, background .25s}
+.grad b{font-family:var(--f-mono); font-size:10px; color:var(--ink-soft); opacity:0; transition:opacity .2s}
+.grad.majeur i{height:15px}
+.grad.majeur b{opacity:1}
+.grad.ok i{background:var(--ok); height:15px}
+.grad.ko i{background:var(--ko); height:15px}
+.grad.ici i{background:var(--accent); height:21px; width:3px}
+.grad.ici b{opacity:1; color:var(--accent); font-weight:500}
+
+/* ── planche ─────────────────────────────────────────── */
+.manche{margin:0; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+.manche em{font-style:normal; color:var(--accent)}
+.planche{
+  background:var(--sheet); border:1px solid var(--rule);
+  box-shadow:0 20px 44px -34px rgba(10,25,45,.75);
+  padding:14px 14px 18px; display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.planche-tete{width:100%; display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px dotted var(--rule); padding-bottom:8px}
+.cat{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft)}
+.nom{font-family:var(--f-disp); font-weight:700; font-size:17px; letter-spacing:-.01em; text-align:right}
+
+.scene{position:relative; width:100%; max-width:432px; aspect-ratio:1/1; perspective:1300px}
+.lay{position:absolute; inset:0; width:100%; height:100%; max-width:100%}
+.fig{color:var(--figure)}
+.pli{color:var(--calque); opacity:0; transform-style:preserve-3d; pointer-events:none;
+     transition:transform .78s cubic-bezier(.55,.03,.3,1), opacity .3s ease}
+.pli.actif{opacity:.84; filter:drop-shadow(0 4px 9px rgba(0,0,0,.17))}
+.axes{pointer-events:none}
+
+.ax-hit{stroke:rgba(0,0,0,0); fill:none; cursor:pointer; pointer-events:stroke}
+.ax-trait{stroke:var(--rule); stroke-width:2; stroke-dasharray:7 6; fill:none; transition:stroke .16s, stroke-width .16s}
+.ax-p{fill:var(--sheet); stroke:var(--rule); stroke-width:2; transition:fill .16s, stroke .16s}
+.ax-m{fill:none; stroke:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.axe{outline:none}
+.axe:hover .ax-trait{stroke:var(--accent)}
+.axe:hover .ax-p{stroke:var(--accent)}
+.axe:focus-visible .ax-p{stroke:var(--ink); stroke-width:3.4}
+.axe.on .ax-trait{stroke:var(--accent); stroke-width:3.6; stroke-dasharray:none}
+.axe.on .ax-p{fill:var(--accent); stroke:var(--accent)}
+.axe.on .ax-m{stroke:var(--accent-ink)}
+.axe.juste .ax-trait{stroke:var(--ok); stroke-width:3.6; stroke-dasharray:none}
+.axe.juste .ax-p{fill:var(--ok); stroke:var(--ok)}
+.axe.juste .ax-m{stroke:#fff}
+.axe.faux .ax-trait{stroke:var(--ko); stroke-width:3; stroke-dasharray:none}
+.axe.faux .ax-p{fill:var(--ko); stroke:var(--ko)}
+.axe.faux .ax-m{stroke:#fff}
+.axe.oublie .ax-trait{stroke:var(--gold); stroke-width:3; stroke-dasharray:3 5}
+.axe.oublie .ax-p{fill:var(--gold); stroke:var(--gold)}
+.axe.oublie .ax-m{stroke:#fff}
+.axe.plie .ax-trait{stroke:var(--calque); stroke-width:4.2; stroke-dasharray:none}
+.mode-pli .ax-hit{cursor:crosshair}
+
+/* ── consigne + boutons ──────────────────────────────── */
+.consigne{margin:0; text-align:center; color:var(--ink-soft); font-size:14.5px}
+.actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+.btn{font-family:var(--f-disp); font-weight:700; font-size:15px; letter-spacing:-.01em;
+     padding:11px 22px; border:1.5px solid transparent; cursor:pointer; transition:transform .12s, background .16s, border-color .16s}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2.5px solid var(--accent); outline-offset:2px}
+.primaire{background:var(--accent); color:var(--accent-ink)}
+.primaire:hover{filter:brightness(1.08)}
+.fantome{background:transparent; color:var(--ink); border-color:var(--rule)}
+.fantome:hover{border-color:var(--accent); color:var(--accent)}
+.fantome[aria-pressed="true"]{background:var(--calque); border-color:var(--calque); color:#fff}
+.fantome:disabled{opacity:.4; cursor:not-allowed}
+
+/* ── verdict ─────────────────────────────────────────── */
+.verdict{border-left:4px solid var(--ink-soft); background:var(--sheet); padding:11px 14px; display:flex; flex-direction:column; gap:3px}
+.verdict.bon{border-color:var(--ok)}
+.verdict.rate{border-color:var(--ko)}
+.verdict h3{margin:0; font-family:var(--f-disp); font-weight:700; font-size:16px}
+.verdict.bon h3{color:var(--ok)}
+.verdict.rate h3{color:var(--ko)}
+.verdict p{margin:0; font-size:14px; color:var(--ink-soft)}
+.verdict .fait{color:var(--ink)}
+.verdict .relance{font-family:var(--f-mono); font-size:11px; letter-spacing:.05em; color:var(--calque); text-transform:uppercase; margin-top:3px}
+
+/* ── écran de fin ────────────────────────────────────── */
+.fin{position:relative; background:var(--sheet); border:1px solid var(--rule); padding:22px 20px 24px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 44px -34px rgba(10,25,45,.75)}
+.tampon{align-self:flex-start; border:2.5px solid var(--accent); color:var(--accent); padding:7px 14px 8px; transform:rotate(-2.2deg);
+        font-family:var(--f-disp); font-weight:800; font-size:clamp(20px,5vw,28px); letter-spacing:-.02em}
+.bilan{display:flex; gap:22px; flex-wrap:wrap; align-items:baseline}
+.bilan div b{font-family:var(--f-mono); font-weight:500; font-size:26px; font-variant-numeric:tabular-nums; display:block}
+.bilan div span{font-family:var(--f-mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-soft)}
+.recap{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:2px 18px}
+.recap li{display:flex; align-items:baseline; gap:8px; padding:4px 0; border-bottom:1px dotted var(--rule); font-size:13.5px}
+.recap .pastille{flex:none; width:14px; height:14px; display:grid; place-items:center; font-family:var(--f-mono); font-size:10px; color:#fff; align-self:center}
+.recap .pastille.ok{background:var(--ok)}
+.recap .pastille.ko{background:var(--ko)}
+.recap .lab{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.recap .nb{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+#confetti{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+
+.aide{margin:0; font-size:13px; color:var(--ink-soft); text-align:center; text-wrap:balance}
+.aide b{color:var(--ink); font-weight:700}
+
+@media (max-width:430px){
+  .planche{padding:12px 10px 16px}
+  .compteur{min-width:58px; padding:4px 9px 5px}
+  .grad b{font-size:9px}
+}
+@media (prefers-reduced-motion: reduce){
+  .pli{transition:none}
+  *{animation-duration:.001s !important}
+}
+</style>
+
+<div class="wrap">
+  <header class="hud">
+    <div>
+      <p class="eyebrow">Symétrie axiale · niveau 6<sup>e</sup></p>
+      <h1>Chasse aux axes</h1>
+    </div>
+    <div class="compteurs">
+      <div class="compteur" id="c-score"><b id="score">0</b><span>points</span></div>
+      <div class="compteur" id="c-jetons"><b id="jetons">3</b><span>calques</span></div>
+    </div>
+  </header>
+
+  <div class="regle" id="regle" aria-hidden="true"></div>
+
+  <main class="jeu" id="jeu" style="display:flex;flex-direction:column;gap:14px">
+    <p class="manche" id="manche">Manche 1 sur 3 · <em>Lettres</em></p>
+
+    <section class="planche">
+      <div class="planche-tete">
+        <span class="cat" id="q-cat">Lettre</span>
+        <span class="nom" id="q-nom">&nbsp;</span>
+      </div>
+      <div class="scene" id="scene">
+        <svg class="lay quadri" viewBox="-140 -140 280 280" aria-hidden="true">
+          <defs>
+            <pattern id="quadrillage" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0 H0 V20" fill="none" stroke="var(--grid)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect x="-140" y="-140" width="280" height="280" fill="url(#quadrillage)"/>
+        </svg>
+        <svg class="lay fig" id="fig-base" viewBox="-140 -140 280 280" aria-hidden="true"></svg>
+        <div class="lay pli" id="pli"><svg viewBox="-140 -140 280 280" width="100%" height="100%" aria-hidden="true"></svg></div>
+        <svg class="lay axes" id="axes" viewBox="-140 -140 280 280" role="group" aria-label="Axes possibles"></svg>
+      </div>
+    </section>
+
+    <p class="consigne" id="consigne">Clique sur tous les axes de symétrie.</p>
+
+    <div class="actions">
+      <button class="btn primaire" id="btn-valider" type="button">Aucun axe&nbsp;!</button>
+      <button class="btn fantome" id="btn-pli" type="button" aria-pressed="false">Plier un calque · 3</button>
+    </div>
+
+    <div class="verdict" id="verdict" aria-live="polite" hidden></div>
+  </main>
+
+  <section class="fin" id="fin" hidden>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+    <div class="tampon" id="rang">Œil de miroir</div>
+    <div class="bilan">
+      <div><b id="f-score">0</b><span>points</span></div>
+      <div><b id="f-juste">0/12</b><span>sans faute</span></div>
+      <div><b id="f-record">0</b><span>record</span></div>
+    </div>
+    <ul class="recap" id="recap"></ul>
+    <div class="actions" style="justify-content:flex-start">
+      <button class="btn primaire" id="btn-rejouer" type="button">Rejouer</button>
+    </div>
+  </section>
+
+  <p class="aide">Un axe de symétrie, c'est un <b>pli</b> qui superpose exactement les deux moitiés. Le calque te laisse plier pour voir&nbsp;— <b>Tab</b> puis <b>Entrée</b> marchent aussi.</p>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ═══ outils géométriques ═══════════════════════════════════════ */
+var P = function(n,R,rot){var o=[],k,a;for(k=0;k<n;k++){a=(rot+k*360/n)*Math.PI/180;o.push((R*Math.cos(a)).toFixed(2)+','+(R*Math.sin(a)).toFixed(2));}return o.join(' ');};
+var ET = function(n,R,r,rot){var o=[],k,a;for(k=0;k<n;k++){a=(rot+k*360/n)*Math.PI/180;o.push((R*Math.cos(a)).toFixed(2)+','+(R*Math.sin(a)).toFixed(2));a=(rot+(k+0.5)*360/n)*Math.PI/180;o.push((r*Math.cos(a)).toFixed(2)+','+(r*Math.sin(a)).toFixed(2));}return o.join(' ');};
+var L = function(d){return '<g fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"><path d="'+d+'"/></g>';};
+var F = function(s){return '<g fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">'+s+'</g>';};
+var TXT = function(t,size,fill){return '<text x="0" y="0" text-anchor="middle" dominant-baseline="central" fill="'+fill+'" font-family="Syne, Trebuchet MS, sans-serif" font-weight="800" font-size="'+size+'" letter-spacing="1">'+t+'</text>';};
+
+var C4=[0,45,90,135], C6=[0,30,60,90,120,150], C8=[0,22.5,45,67.5,90,112.5,135,157.5], C10=[0,18,36,54,72,90,108,126,144,162];
+var ROUGE='#C8102E', BLEU='#0F4C9C', NOIR='#1c1c1c';
+
+/* ═══ le matériel ═══════════════════════════════════════════════ */
+var DATA = {
+lettres:[
+ {n:'A', s:L('M-52 74 L0 -74 L52 74 M-27 22 H27'), a:[90], c:C4, m:"Un seul pli : le vertical. De haut en bas, le A ne se superpose pas."},
+ {n:'H', s:L('M-46 -74 V74 M46 -74 V74 M-46 0 H46'), a:[0,90], c:C4, m:"Deux plis, vertical et horizontal : le H est une des lettres les mieux servies."},
+ {n:'T', s:L('M-50 -70 H50 M0 -70 V74'), a:[90], c:C4, m:"Pli vertical seulement : la barre est en haut, pas en bas."},
+ {n:'X', s:L('M-48 -72 L48 72 M48 -72 L-48 72'), a:[0,90], c:C4, m:"Vertical et horizontal. Pas les diagonales : ce X est plus haut que large."},
+ {n:'O', s:'<g fill="none" stroke="currentColor" stroke-width="17"><ellipse cx="0" cy="0" rx="48" ry="72"/></g>', a:[0,90], c:C4, m:"Vertical et horizontal. Un cercle en aurait une infinité — ce O est un ovale."},
+ {n:'E', s:L('M-42 -72 V72 M-42 -72 H44 M-42 0 H32 M-42 72 H44'), a:[0], c:C4, m:"Pli horizontal seulement : la barre du milieu est pile à mi-hauteur."},
+ {n:'K', s:L('M-42 -72 V72 M44 -72 L-8 0 L44 72'), a:[0], c:C4, m:"Pli horizontal : les deux branches sont l'image l'une de l'autre."},
+ {n:'S', s:L('M44 -50 C44 -80 -44 -80 -44 -44 C-44 -8 44 8 44 44 C44 80 -44 80 -44 52'), a:[], c:C4, m:"Aucun axe. Le S a un centre de symétrie (un demi-tour le remet en place), ce qui n'est pas un pli."},
+ {n:'N', s:L('M-44 74 V-74 L44 74 V-74'), a:[], c:C4, m:"Aucun axe, comme le S et le Z : demi-tour oui, pli non."},
+ {n:'Z', s:L('M-46 -70 H46 L-46 70 H46'), a:[], c:C4, m:"Aucun axe. Beaucoup d'élèves cochent une diagonale : plie pour voir, ça ne tombe pas."},
+ {n:'M', s:L('M-54 74 V-74 L0 18 L54 -74 V74'), a:[90], c:C4, m:"Pli vertical, et lui seul."},
+ {n:'W', s:L('M-54 -74 L-27 74 L0 -20 L27 74 L54 -74'), a:[90], c:C4, m:"Pli vertical. C'est un M retourné : mêmes plis."},
+ {n:'U', s:'<g fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="round"><path d="M-46 -74 V26 A46 46 0 0 0 46 26 V-74"/></g>', a:[90], c:C4, m:"Pli vertical : le fond du U est en bas, pas en haut."},
+ {n:'Y', s:L('M-46 -72 L0 -4 L46 -72 M0 -4 V74'), a:[90], c:C4, m:"Pli vertical."},
+ {n:'I', s:L('M-34 -72 H34 M0 -72 V72 M-34 72 H34'), a:[0,90], c:C4, m:"Vertical et horizontal, comme le H."},
+ {n:'L', s:L('M-36 -72 V72 H42'), a:[], c:C4, m:"Aucun axe : aucun pli ne superpose le pied et la barre."},
+ {n:'P', s:L('M-38 74 V-72 H4 C48 -72 48 -4 4 -4 H-38'), a:[], c:C4, m:"Aucun axe : la boucle n'est qu'en haut."},
+ {n:'D', s:L('M-42 -72 H-4 C46 -72 46 72 -4 72 H-42'), a:[0], c:C4, m:"Pli horizontal : la panse est aussi bombée en haut qu'en bas."},
+ {n:'C', s:L('M46 -48 C46 -78 -46 -78 -46 0 C-46 78 46 78 46 48'), a:[0], c:C4, m:"Pli horizontal."},
+ {n:'B', s:L('M-38 -72 V72 M-38 -72 H2 C40 -72 40 0 2 0 H-38 M-38 0 H2 C40 0 40 72 2 72 H-38'), a:[0], c:C4, m:"Pli horizontal : ici les deux boucles sont exactement de même taille."}
+],
+figures:[
+ {n:'Triangle équilatéral', s:F('<polygon points="'+P(3,88,-90)+'"/>'), a:[30,90,150], c:C6, m:"3 axes : un par sommet, chacun visant le milieu du côté d'en face."},
+ {n:'Triangle isocèle', s:F('<polygon points="0,-84 66,58 -66,58"/>'), a:[90], c:C4, m:"1 axe : celui qui part du sommet situé entre les deux côtés de même longueur."},
+ {n:'Triangle quelconque', s:F('<polygon points="-80,50 72,62 -12,-78"/>'), a:[], c:C4, m:"Aucun axe : les trois côtés ont trois longueurs différentes."},
+ {n:'Carré', s:F('<rect x="-70" y="-70" width="140" height="140"/>'), a:[0,45,90,135], c:C8, m:"4 axes : les deux médianes et les deux diagonales."},
+ {n:'Rectangle', s:F('<rect x="-92" y="-52" width="184" height="104"/>'), a:[0,90], c:C4, m:"2 axes seulement : les médianes. Plie sur une diagonale — les coins tombent à côté."},
+ {n:'Losange', s:F('<polygon points="0,-88 62,0 0,88 -62,0"/>'), a:[0,90], c:C4, m:"2 axes : ses diagonales. C'est l'inverse du rectangle."},
+ {n:'Parallélogramme', s:F('<polygon points="-88,-46 48,-46 88,46 -48,46"/>'), a:[], c:C4, m:"Aucun axe ! Il a un centre de symétrie, mais aucun pli ne le superpose."},
+ {n:'Trapèze isocèle', s:F('<polygon points="-44,-52 44,-52 86,52 -86,52"/>'), a:[90], c:C4, m:"1 axe vertical, entre les deux côtés obliques de même longueur."},
+ {n:'Cerf-volant', s:F('<polygon points="0,-90 58,-16 0,86 -58,-16"/>'), a:[90], c:C4, m:"1 axe : la diagonale qui joint les deux sommets pointus."},
+ {n:'Disque', s:F('<circle cx="0" cy="0" r="82"/>'), a:C8.slice(), c:C8, m:"Toutes les droites qui passent par le centre sont des axes : il y en a une infinité. On n'en montre que 8."},
+ {n:'Croix', s:F('<polygon points="-28,-86 28,-86 28,-28 86,-28 86,28 28,28 28,86 -28,86 -28,28 -86,28 -86,-28 -28,-28"/>'), a:[0,45,90,135], c:C8, m:"4 axes, exactement comme le carré."},
+ {n:'Pentagone régulier', s:F('<polygon points="'+P(5,86,-90)+'"/>'), a:[18,54,90,126,162], c:C10, m:"5 axes : un par sommet. Un polygone régulier à n côtés a n axes."},
+ {n:'Étoile à 5 branches', s:F('<polygon points="'+ET(5,92,40,-90)+'"/>'), a:[18,54,90,126,162], c:C10, m:"5 axes, un par branche — la même famille que le pentagone."},
+ {n:'Hexagone régulier', s:F('<polygon points="'+P(6,86,0)+'"/>'), a:[0,30,60,90,120,150], c:C6, m:"6 axes, et il fallait tous les cocher : 3 passent par les sommets opposés, 3 par les milieux des côtés opposés."},
+ {n:'Cœur', s:F('<path d="M0 80 C-70 30 -78 -18 -52 -44 C-30 -66 -6 -56 0 -30 C6 -56 30 -66 52 -44 C78 -18 70 30 0 80 Z"/>'), a:[90], c:C4, m:"1 axe vertical."}
+],
+panneaux:[
+ {n:'STOP', s:'<polygon points="'+P(8,86,-67.5)+'" fill="'+ROUGE+'"/><polygon points="'+P(8,71,-67.5)+'" fill="none" stroke="#fff" stroke-width="5"/>'+TXT('STOP',38,'#fff'),
+  a:[], c:C4, m:"Piège ! L'octogone, lui, a 8 axes — mais le mot STOP n'en a aucun. Le panneau entier : aucun axe."},
+ {n:'Sens interdit', s:'<circle r="86" fill="'+ROUGE+'"/><rect x="-62" y="-16" width="124" height="32" rx="3" fill="#fff"/>',
+  a:[0,90], c:C4, m:"2 axes : la barre blanche est horizontale et bien centrée."},
+ {n:'Cédez le passage', s:'<polygon points="'+P(3,92,90)+'" fill="'+ROUGE+'" stroke="'+ROUGE+'" stroke-width="12" stroke-linejoin="round"/><polygon points="'+P(3,62,90)+'" fill="#fff" stroke="#fff" stroke-width="9" stroke-linejoin="round"/>',
+  a:[30,90,150], c:C6, m:"3 axes : le triangle est équilatéral et rien n'est écrit dedans. Le seul panneau du jeu à en avoir autant."},
+ {n:'Autres dangers', s:'<polygon points="'+P(3,92,-90)+'" fill="'+ROUGE+'" stroke="'+ROUGE+'" stroke-width="12" stroke-linejoin="round"/><polygon points="'+P(3,62,-90)+'" fill="#fff" stroke="#fff" stroke-width="9" stroke-linejoin="round"/><rect x="-8" y="-36" width="16" height="46" rx="5" fill="'+NOIR+'"/><circle cx="0" cy="20" r="8.5" fill="'+NOIR+'"/>',
+  a:[90], c:C6, m:"Le triangle en aurait 3, mais le point d'exclamation n'en laisse qu'un : le vertical. Compare avec « Cédez le passage »."},
+ {n:'Stationnement interdit', s:'<circle r="86" fill="'+BLEU+'"/><circle r="78" fill="none" stroke="'+ROUGE+'" stroke-width="16"/><rect x="-70" y="-9" width="140" height="18" fill="'+ROUGE+'" transform="rotate(45)"/>',
+  a:[45,135], c:C4, m:"2 axes, mais pas ceux qu'on croit : c'est la barre oblique qui impose ses plis."},
+ {n:'Parking', s:'<rect x="-84" y="-84" width="168" height="168" rx="14" fill="'+BLEU+'"/>'+TXT('P',134,'#fff'),
+  a:[], c:C4, m:"Aucun axe : le carré en a 4, la lettre P n'en a aucun."},
+ {n:'Limitation à 50', s:'<circle r="78" fill="#fff" stroke="'+ROUGE+'" stroke-width="20"/>'+TXT('50',84,NOIR),
+  a:[], c:C4, m:"Aucun axe : le disque et l'anneau en auraient une infinité, le nombre 50 en a zéro."},
+ {n:'Tout droit', s:'<circle r="86" fill="'+BLEU+'"/><path d="M0 -58 L38 -8 L17 -8 L17 58 L-17 58 L-17 -8 L-38 -8 Z" fill="#fff"/>',
+  a:[90], c:C4, m:"1 axe vertical : la flèche monte tout droit."}
+]};
+
+var MANCHES=[
+ {cle:'lettres',  titre:'Lettres',  cat:'Lettre majuscule'},
+ {cle:'figures',  titre:'Figures',  cat:'Figure'},
+ {cle:'panneaux', titre:'Panneaux', cat:'Panneau routier'}
+];
+Object.keys(DATA).forEach(function(k){DATA[k].forEach(function(q,i){q.id=k+'-'+i;});});
+var TOUS={}; Object.keys(DATA).forEach(function(k){DATA[k].forEach(function(q){TOUS[q.id]=q;});});
+
+/* ═══ éléments ══════════════════════════════════════════════════ */
+var $=function(s){return document.querySelector(s);};
+var el={
+  regle:$('#regle'), manche:$('#manche'), cat:$('#q-cat'), nom:$('#q-nom'),
+  figBase:$('#fig-base'), pli:$('#pli'), pliSvg:$('#pli svg'), axes:$('#axes'), scene:$('#scene'),
+  consigne:$('#consigne'), valider:$('#btn-valider'), btnPli:$('#btn-pli'), verdict:$('#verdict'),
+  score:$('#score'), jetons:$('#jetons'), cScore:$('#c-score'), cJetons:$('#c-jetons'),
+  jeu:$('#jeu'), fin:$('#fin'), rang:$('#rang'), fScore:$('#f-score'), fJuste:$('#f-juste'),
+  fRecord:$('#f-record'), recap:$('#recap'), rejouer:$('#btn-rejouer'), confetti:$('#confetti')
+};
+
+var jeu=null, sel=null, phase='choix', modePli=false, pliActif=null, jetonUse=false;
+var BRAVO=['Pile poil.','Impeccable.','Tout juste.','Nickel.','Sans un pli de travers.'];
+
+var MARQUE={juste:'M-4.2 0 L-1.2 3.6 L4.8 -3.8', faux:'M-4 -4 L4 4 M4 -4 L-4 4', oublie:'M0 -4.8 V4.8 M-4.8 0 H4.8'};
+
+function melange(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.random()*(i+1)|0,t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function tirer(pool,n){
+  var s=melange(pool).slice(0,n);
+  var reste=function(){return melange(pool).filter(function(q){return s.indexOf(q)<0;});};
+  if(!s.some(function(q){return q.a.length===0;})){var z=reste().filter(function(q){return q.a.length===0;})[0]; if(z) s[n-1]=z;}
+  if(!s.some(function(q){return q.a.length>1;})){var p=reste().filter(function(q){return q.a.length>1;})[0]; if(p) s[0]=p;}
+  return melange(s);
+}
+
+function nouvellePartie(etat){
+  var qs=[];
+  if(etat && etat.ids && etat.ids.length===12 && etat.ids.every(function(id){return TOUS[id];})){
+    qs=etat.ids.map(function(id){return TOUS[id];});
+    var ii=etat.i|0, rr=etat.res||[];
+    if(rr[ii]!==undefined) ii++;
+    jeu={qs:qs, i:ii, score:etat.score|0, jetons:etat.jetons|0, serie:etat.serie|0, res:rr};
+  } else {
+    MANCHES.forEach(function(m){ tirer(DATA[m.cle],4).forEach(function(q){qs.push(q);}); });
+    jeu={qs:qs, i:0, score:0, jetons:3, serie:0, res:[]};
+  }
+  el.fin.hidden=true; el.jeu.style.display='flex';
+  if(jeu.i>=12){ finir(); return; }
+  afficher();
+}
+
+/* ═══ rendu ═════════════════════════════════════════════════════ */
+function rendreRegle(){
+  el.regle.innerHTML=jeu.qs.map(function(q,k){
+    var c='grad'+(k%4===0?' majeur':'');
+    if(jeu.res[k]===true) c+=' ok'; else if(jeu.res[k]===false) c+=' ko';
+    if(k===jeu.i && phase==='choix') c+=' ici';
+    return '<span class="'+c+'"><i></i><b>'+(k+1)+'</b></span>';
+  }).join('');
+}
+
+function nomAxe(a){
+  if(a===0) return 'axe horizontal';
+  if(a===90) return 'axe vertical';
+  if(a===45) return 'axe oblique descendant';
+  if(a===135) return 'axe oblique montant';
+  return 'axe incliné à '+a+' degrés';
+}
+
+function rendreAxes(q){
+  var n=q.c.length, sep=2*78*Math.sin(Math.PI/(2*n));
+  var hw=Math.max(16,Math.min(34,sep*0.9));
+  el.axes.innerHTML=q.c.map(function(a){
+    var r=a*Math.PI/180, cx=Math.cos(r), cy=Math.sin(r), LL=132, R=112, h0=56;
+    var px=+(cx*R).toFixed(2), py=+(cy*R).toFixed(2);
+    var x2=+(cx*LL).toFixed(2), y2=+(cy*LL).toFixed(2);
+    var hx=+(cx*h0).toFixed(2), hy=+(cy*h0).toFixed(2);
+    return '<g class="axe" data-a="'+a+'" tabindex="0" role="button" aria-pressed="false" aria-label="'+nomAxe(a)+'">'
+      +'<line class="ax-trait" x1="'+(-x2)+'" y1="'+(-y2)+'" x2="'+x2+'" y2="'+y2+'"/>'
+      +'<circle class="ax-p" cx="'+px+'" cy="'+py+'" r="10"/>'
+      +'<circle class="ax-p" cx="'+(-px)+'" cy="'+(-py)+'" r="10"/>'
+      +'<path class="ax-m" transform="translate('+px+','+py+')"/>'
+      +'<path class="ax-m" transform="translate('+(-px)+','+(-py)+')"/>'
+      +'<line class="ax-hit" stroke-width="'+hw.toFixed(1)+'" x1="'+hx+'" y1="'+hy+'" x2="'+x2+'" y2="'+y2+'"/>'
+      +'<line class="ax-hit" stroke-width="'+hw.toFixed(1)+'" x1="'+(-hx)+'" y1="'+(-hy)+'" x2="'+(-x2)+'" y2="'+(-y2)+'"/>'
+      +'</g>';
+  }).join('');
+}
+
+function marquer(g,etat){
+  g.classList.remove('on','juste','faux','oublie');
+  if(etat) g.classList.add(etat);
+  var d=MARQUE[etat]||'';
+  [].forEach.call(g.querySelectorAll('.ax-m'),function(p){p.setAttribute('d',d);});
+}
+
+function afficher(){
+  var q=jeu.qs[jeu.i], m=MANCHES[Math.floor(jeu.i/4)];
+  sel=Object.create(null); phase='choix'; modePli=false; jetonUse=false;
+  deplier(true);
+  el.manche.innerHTML='Manche '+(Math.floor(jeu.i/4)+1)+' sur 3 · <em>'+m.titre+'</em>';
+  el.cat.textContent=m.cat;
+  el.nom.textContent=q.n;
+  el.figBase.innerHTML=q.s;
+  rendreAxes(q);
+  el.consigne.textContent='Clique sur tous les axes de symétrie. S’il n’y en a aucun, valide sans rien cocher.';
+  el.verdict.hidden=true; el.verdict.className='verdict';
+  rendreRegle(); maj();
+  sauver();
+}
+
+function maj(){
+  var nb=Object.keys(sel).length;
+  el.score.textContent=jeu.score;
+  el.jetons.textContent=jeu.jetons;
+  el.scene.classList.toggle('mode-pli',modePli);
+  el.btnPli.setAttribute('aria-pressed',modePli?'true':'false');
+  if(phase==='fini'){
+    el.valider.textContent=(jeu.i===11?'Voir le bilan':'Question suivante');
+    el.btnPli.disabled=true;
+    el.btnPli.textContent='Calques · '+jeu.jetons;
+  }else{
+    el.valider.textContent=nb===0?'Aucun axe !':'Vérifier ('+nb+')';
+    el.btnPli.disabled=(jeu.jetons===0 && !jetonUse);
+    el.btnPli.textContent=modePli?'Revenir au choix':'Plier un calque · '+jeu.jetons;
+  }
+}
+
+/* ═══ le pliage ═════════════════════════════════════════════════ */
+function plier(a){
+  if(pliActif===a){deplier();return;}
+  pliActif=a;
+  var r=a*Math.PI/180, ux=Math.cos(r).toFixed(4), uy=Math.sin(r).toFixed(4);
+  el.pliSvg.innerHTML=el.figBase.innerHTML;
+  el.pli.style.transition='none';
+  el.pli.style.transform='rotate3d('+ux+','+uy+',0,0deg)';
+  void el.pli.offsetWidth;
+  el.pli.style.transition='';
+  el.pli.classList.add('actif');
+  el.pli.style.transform='rotate3d('+ux+','+uy+',0,180deg)';
+  [].forEach.call(el.axes.querySelectorAll('.axe'),function(g){
+    g.classList.toggle('plie',Number(g.dataset.a)===a);
+  });
+}
+function deplier(dur){
+  pliActif=null;
+  el.pli.classList.remove('actif');
+  if(dur){el.pli.style.transition='none'; el.pli.style.transform='none'; void el.pli.offsetWidth; el.pli.style.transition='';}
+  [].forEach.call(el.axes.querySelectorAll('.axe'),function(g){g.classList.remove('plie');});
+}
+
+/* ═══ interactions ══════════════════════════════════════════════ */
+function basculer(g,a){
+  var k=String(a);
+  if(sel[k]){delete sel[k];} else {sel[k]=1;}
+  marquer(g, sel[k]?'on':null);
+  g.setAttribute('aria-pressed', sel[k]?'true':'false');
+  maj(); sauver();
+}
+
+el.axes.addEventListener('click',function(e){
+  var g=e.target.closest('.axe'); if(!g) return;
+  var a=Number(g.dataset.a);
+  if(phase==='fini'||modePli){plier(a);} else {basculer(g,a);}
+});
+el.axes.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  var g=e.target.closest('.axe'); if(!g) return;
+  e.preventDefault();
+  var a=Number(g.dataset.a);
+  if(phase==='fini'||modePli){plier(a);} else {basculer(g,a);}
+});
+
+el.btnPli.addEventListener('click',function(){
+  if(phase==='fini') return;
+  if(modePli){modePli=false; deplier(); el.consigne.textContent='Clique sur tous les axes de symétrie. S’il n’y en a aucun, valide sans rien cocher.'; maj(); return;}
+  if(jeu.jetons<=0 && !jetonUse) return;
+  if(!jetonUse){jeu.jetons--; jetonUse=true; el.cJetons.classList.remove('pop'); void el.cJetons.offsetWidth; el.cJetons.classList.add('pop');}
+  modePli=true;
+  el.consigne.textContent='Calque en main : clique un axe pour plier dessus. Cette question vaudra 50 points.';
+  maj(); sauver();
+});
+
+el.valider.addEventListener('click',function(){ if(phase==='fini') suivant(); else valider(); });
+el.rejouer.addEventListener('click',function(){ nouvellePartie(null); });
+
+/* ═══ correction ════════════════════════════════════════════════ */
+function valider(){
+  var q=jeu.qs[jeu.i];
+  var bons={}; q.a.forEach(function(a){bons[String(a)]=1;});
+  var faux=[], oublies=[], trouves=[];
+  [].forEach.call(el.axes.querySelectorAll('.axe'),function(g){
+    var a=Number(g.dataset.a), k=String(a);
+    if(sel[k] && bons[k]){trouves.push(a); marquer(g,'juste');}
+    else if(sel[k]){faux.push(a); marquer(g,'faux');}
+    else if(bons[k]){oublies.push(a); marquer(g,'oublie');}
+    else {marquer(g,null);}
+  });
+  var exact=(faux.length===0 && oublies.length===0);
+  phase='fini';
+  jeu.res[jeu.i]=exact;
+
+  var gagne=0;
+  if(exact){
+    jeu.serie++;
+    gagne=(jetonUse?50:100)+Math.min(75,25*(jeu.serie-1));
+    jeu.score+=gagne;
+    el.cScore.classList.remove('pop'); void el.cScore.offsetWidth; el.cScore.classList.add('pop');
+  } else { jeu.serie=0; }
+
+  var titre, detail;
+  if(exact){
+    titre=BRAVO[Math.floor(Math.random()*BRAVO.length)]+' +'+gagne+' points';
+    detail=q.a.length===0?'Il n’y avait effectivement aucun axe.'
+      :(q.a.length+' axe'+(q.a.length>1?'s':'')+', tu les as tous.');
+    if(jeu.serie>=3) detail+=' Série de '+jeu.serie+' !';
+  } else {
+    titre='Pas tout à fait.';
+    var bits=[];
+    if(oublies.length) bits.push(oublies.length+' axe'+(oublies.length>1?'s':'')+' oublié'+(oublies.length>1?'s':'')+' (en orange)');
+    if(faux.length) bits.push(faux.length+' de trop (en rouge)');
+    detail=bits.join(', ')+'.';
+  }
+  el.verdict.hidden=false;
+  el.verdict.className='verdict '+(exact?'bon':'rate');
+  el.verdict.innerHTML='<h3>'+titre+'</h3><p class="fait">'+detail+'</p><p>'+q.m+'</p><p class="relance">Clique un axe pour plier le calque dessus</p>';
+  el.consigne.textContent='Vérifie toi-même : clique n’importe quel axe pour plier le calque.';
+
+  var cible = faux.length?faux[0] : (oublies.length?oublies[0] : (q.a.length?q.a[0]:q.c[0]));
+  setTimeout(function(){ if(phase==='fini') plier(cible); },340);
+
+  rendreRegle(); maj(); sauver();
+}
+
+function suivant(){
+  jeu.i++;
+  if(jeu.i>=jeu.qs.length){finir();return;}
+  afficher();
+}
+
+/* ═══ bilan ═════════════════════════════════════════════════════ */
+function record(v){
+  try{
+    if(v===undefined) return Number(localStorage.getItem('chasse-aux-axes:record')||0);
+    localStorage.setItem('chasse-aux-axes:record',String(v));
+  }catch(e){}
+  return 0;
+}
+
+function finir(){
+  phase='fin'; deplier(true);
+  var justes=jeu.res.filter(Boolean).length;
+  var rangs=[[12,'Œil de miroir'],[10,'Main sûre'],[7,'Bon coup d’œil'],[4,'Encore un pli'],[0,'Premiers plis']];
+  var rang=rangs.filter(function(r){return justes>=r[0];})[0][1];
+  el.jeu.style.display='none';
+  el.fin.hidden=false;
+  el.rang.textContent=rang;
+  el.fScore.textContent=jeu.score;
+  el.fJuste.textContent=justes+'/12';
+  var rec=record();
+  if(jeu.score>rec){rec=jeu.score; record(rec);}
+  el.fRecord.textContent=rec;
+  el.recap.innerHTML=jeu.qs.map(function(q,k){
+    var ok=jeu.res[k];
+    var nb=q.a.length===0?'0 axe':(q.n==='Disque'?'∞ axes':q.a.length+' axe'+(q.a.length>1?'s':''));
+    return '<li><span class="pastille '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+'</span>'
+      +'<span class="lab">'+q.n+'</span><span class="nb">'+nb+'</span></li>';
+  }).join('');
+  rendreRegle();
+  try{localStorage.removeItem('chasse-aux-axes:encours');}catch(e){}
+  if(justes===12) confettis();
+}
+
+function confettis(){
+  try{ if(matchMedia('(prefers-reduced-motion: reduce)').matches) return; }catch(e){}
+  var c=el.confetti, w=c.clientWidth, h=c.clientHeight;
+  if(!w||!h) return;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  c.width=w*dpr; c.height=h*dpr;
+  var x=c.getContext('2d'); x.scale(dpr,dpr);
+  var cs=getComputedStyle(document.documentElement);
+  var cols=['--accent','--calque','--ok','--gold','--figure'].map(function(v){return cs.getPropertyValue(v).trim()||'#888';});
+  var ps=[],i;
+  for(i=0;i<80;i++) ps.push({x:Math.random()*w,y:-20-Math.random()*h,vx:(Math.random()-.5)*1.3,vy:1.5+Math.random()*2.3,
+    s:4+Math.random()*5,r:Math.random()*6.28,vr:(Math.random()-.5)*.24,c:cols[i%cols.length]});
+  var t=0;
+  (function boucle(){
+    t++; x.clearRect(0,0,w,h);
+    ps.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);x.restore();});
+    if(t<220) requestAnimationFrame(boucle); else x.clearRect(0,0,w,h);
+  })();
+}
+
+/* ═══ sauvegarde légère ═════════════════════════════════════════ */
+function etat(){
+  if(!jeu) return null;
+  return {ids:jeu.qs.map(function(q){return q.id;}), i:jeu.i, score:jeu.score, jetons:jeu.jetons, serie:jeu.serie, res:jeu.res};
+}
+function sauver(){
+  try{ localStorage.setItem('chasse-aux-axes:encours',JSON.stringify(etat())); }catch(e){}
+}
+
+var depart=null;
+try{ var h=window.claude&&window.claude.hot; if(h&&h.data&&h.data.ids) depart=h.data; }catch(e){}
+if(!depart){ try{ var s=localStorage.getItem('chasse-aux-axes:encours'); if(s) depart=JSON.parse(s); }catch(e){} }
+try{ var h2=window.claude&&window.claude.hot; if(h2&&typeof h2.snapshot==='function') h2.snapshot(etat); }catch(e){}
+
+nouvellePartie(depart);
+})();
+</script>
