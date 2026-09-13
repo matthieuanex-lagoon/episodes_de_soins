@@ -19,7 +19,10 @@ donc rien à charger et un rendu identique en thème clair et sombre.
 | Niveau | Déroulé |
 |--------|---------|
 | **Je choisis** | Le nom est à trouver parmi trois propositions, tirées dans la même série pour que la confusion soit plausible. |
-| **Je dis à voix haute** | Aucune proposition. L'enfant nomme l'objet, appuie sur *Vérifier*, puis s'auto-évalue. Se débloque une fois le premier niveau terminé. |
+| **Je dis à voix haute** | Aucune proposition. L'enfant nomme l'objet, appuie sur *Vérifier*, puis s'auto-évalue. |
+| **J'écris le nom** | Au clavier, avec une comparaison tolérante (voir plus bas). La touche Entrée valide, pour ne pas avoir à viser un bouton derrière le clavier. |
+
+Les deux derniers niveaux se débloquent une fois « Je choisis » terminé.
 
 Les 21 objets sont répartis en trois séries de sept (verrerie de base,
 mesurer et prélever, observer et chauffer), plus **Les 21 mélangés**, tout
@@ -27,6 +30,33 @@ dans le désordre, ouvert d'emblée et dans les deux niveaux.
 Le nom est lu par la synthèse vocale du téléphone à chaque correction ;
 le haut-parleur de la barre coupe le son. Les ratés d'une manche sont
 rejouables immédiatement depuis le bilan.
+
+## Ce que la saisie accepte
+
+La comparaison ne corrige pas l'orthographe, elle reconnaît une intention,
+en trois étages :
+
+1. **Normalisation** — minuscules, accents retirés, traits d'union et
+   apostrophes traités comme des espaces.
+2. **Particules et pluriels** — `de`, `du`, `des`, `à`, `au`, `le`, `la`,
+   `et`… sont ignorés, et le `s` final tombe. « Boîte de Pétri », « boite
+   petri » et « boites de pétris » sont donc la même réponse.
+3. **Fautes de frappe** — distance de Levenshtein, tolérance croissante avec
+   la longueur du mot : 1 jusqu'à 6 lettres, 2 jusqu'à 13, 3 au-delà.
+   « Erlenmayer » et « cristalisoir » passent.
+
+Le garde-fou est au troisième étage : une saisie n'est acceptée que si elle
+ressemble **plus** au nom attendu qu'à celui de n'importe quel autre des 21
+objets. Sans cela, la tolérance de deux caractères validerait « pipette »
+pour la pissette, et « verre » pour l'un ou l'autre des deux verres. Chaque
+objet accepte aussi quelques raccourcis explicites (`petri`, `portoir`,
+`brucelles`…), choisis pour ne valoir que pour lui.
+
+Une réponse juste sur l'objet mais trop mal écrite pour la tolérance compte
+comme réussie, avec la mention que l'orthographe n'y était pas.
+
+Ces règles sont couvertes par une table de 76 cas, dans
+`../outils/test-saisie.js`, à lancer par `node outils/test-saisie.js`.
 
 ## Dessins ou photos
 

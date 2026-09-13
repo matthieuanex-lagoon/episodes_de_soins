@@ -227,6 +227,20 @@ body.en-jeu #app{height:100svh;min-height:0}
 .principal.vert{background:var(--ok);border-color:var(--ok)}
 .invisible{visibility:hidden;pointer-events:none}
 
+/* ── Saisie au clavier ────────────────────────────────── */
+.champ{
+  width:100%;min-height:62px;border-radius:12px;border:1.5px solid var(--rule);
+  background:var(--card);color:var(--ink);padding:12px 16px;
+  font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;font-size:18px;letter-spacing:-.01em;
+  -webkit-appearance:none;appearance:none;
+}
+.champ::placeholder{color:var(--ink-soft);font-weight:400;opacity:.75}
+.champ:focus{border-color:var(--accent);outline:2px solid var(--accent-soft);outline-offset:0}
+.champ.bon{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.champ.mauvais{background:var(--ko-soft);border-color:var(--ko);color:var(--ko)}
+.form-saisie{display:grid;gap:9px}
+
 /* ── Bilan ────────────────────────────────────────────── */
 .bilan{flex:1;display:flex;flex-direction:column;gap:14px;padding-top:6px}
 .bilan h2{font-size:clamp(26px,7.5vw,34px)}
@@ -621,7 +635,7 @@ function cle(s,m){ return s + '-' + m; }
 function fait(s,m){ return Object.prototype.hasOwnProperty.call(P, cle(s,m)); }
 function etoilesDe(s,m){ return fait(s,m) ? (P[cle(s,m)]|0) : 0; }
 function debloque(s,m){
-  if(m === 'oral') return s === 'rev' || fait(s,'qcm');
+  if(m === 'oral' || m === 'ecrit') return s === 'rev' || fait(s,'qcm');
   if(s === 'rev')  return true;
   return s === 1 || fait(s-1,'qcm');
 }
@@ -657,8 +671,87 @@ function etoilesHTML(n){
 var ICONES = {
   choisir:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h10M4 17h6"/><path d="M15.5 17.5 18 20l4.5-5"/></svg>',
   voix:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+  ecrire:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9.5 14h5"/></svg>',
   cadenas:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>'
 };
+
+/* ═══ Comparer ce qui est écrit au nom attendu ════════════
+   On ne corrige pas l'orthographe, on reconnaît une intention.
+   Trois étages : on normalise (accents, traits d'union, majuscules),
+   on retire les particules et les pluriels, puis on tolère quelques
+   fautes de frappe — mais seulement si le mot tapé ne ressemble pas
+   davantage au nom d'un autre objet. Sans quoi « pipette » validerait
+   « pissette », et « verre » n'importe lequel des deux verres. */
+
+var MOTS_VIDES = ['de','du','des','d','a','au','aux','le','la','les','l',
+                  'en','et','un','une','sur','dans','avec','pour','ce','cet'];
+
+function normaliser(t){
+  return String(t || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   /* accents */
+    .replace(/[^a-z0-9]+/g, ' ')                        /* traits d'union, apostrophes, ponctuation */
+    .split(' ')
+    .filter(function(m){ return m && MOTS_VIDES.indexOf(m) < 0; })
+    .map(function(m){ return m.length > 3 ? m.replace(/s$/, '') : m; })  /* pluriels */
+    .join(' ')
+    .trim();
+}
+
+/* Distance de Levenshtein, sur des chaînes courtes. */
+function lev(a, b){
+  if(a === b) return 0;
+  var m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  var prec = new Array(n + 1), cour = new Array(n + 1), i, j;
+  for(j = 0; j <= n; j++) prec[j] = j;
+  for(i = 1; i <= m; i++){
+    cour[0] = i;
+    for(j = 1; j <= n; j++){
+      var co = (a.charCodeAt(i-1) === b.charCodeAt(j-1)) ? 0 : 1;
+      cour[j] = Math.min(cour[j-1] + 1, prec[j] + 1, prec[j-1] + co);
+    }
+    for(j = 0; j <= n; j++) prec[j] = cour[j];
+  }
+  return prec[n];
+}
+
+/* Raccourcis admis en plus du nom complet. Volontairement courts :
+   un raccourci qui vaudrait pour deux objets n'en est pas un. */
+var RACCOURCIS = {
+  tube:['tube'], fiole:['fiole'], eprouvette:['eprouvette'], pissette:['pissette'],
+  balance:['balance'], capsule:['capsule'], petri:['petri'], erlen:['erlen'],
+  comptegoutte:['compte-gouttes'], portetubes:['porte-tubes','portoir'],
+  lame:['lame','lamelle'], pince:['pince','brucelles'], chauffeballon:['chauffe-ballon']
+};
+function variantes(it){
+  var v = [normaliser(it.nom)];
+  var r = RACCOURCIS[it.id] || [];
+  for(var i = 0; i < r.length; i++){
+    var n = normaliser(r[i]);
+    if(n && v.indexOf(n) < 0) v.push(n);
+  }
+  return v;
+}
+function tolerance(n){ return n <= 6 ? 1 : (n <= 13 ? 2 : 3); }
+
+/* Renvoie 'juste', 'presque' (le bon objet, mais trop mal écrit) ou 'faux'. */
+function juger(saisie, it){
+  var s = normaliser(saisie);
+  if(!s) return 'faux';
+  var idProche = null, dMin = Infinity;
+  ITEMS.forEach(function(x){
+    variantes(x).forEach(function(v){
+      var d = lev(s, v);
+      if(d < dMin){ dMin = d; idProche = x.id; }
+    });
+  });
+  if(idProche !== it.id) return 'faux';
+  if(dMin <= tolerance(s.length)) return 'juste';
+  if(dMin <= tolerance(s.length) + 2) return 'presque';
+  return 'faux';
+}
 
 /* ═══ Son ═════════════════════════════════════════════════ */
 var ac = null;
@@ -719,8 +812,7 @@ function montrer(nom){
 /* ═══ Accueil ═════════════════════════════════════════════ */
 function carteSerie(id, titre, sous, apercu){
   var ouvrable = debloque(id,'qcm');
-  var eQ = etoilesDe(id,'qcm'), eO = etoilesDe(id,'oral');
-  var total = Math.min(eQ + eO, 3);
+  var total = Math.min(etoilesDe(id,'qcm') + etoilesDe(id,'oral') + etoilesDe(id,'ecrit'), 3);
   var num = (id === 'rev') ? '★' : id;
   var h = '';
   h += '<div class="serie'+(ouvrable?'':' verrou')+(serieOuverte===id?' ouvert':'')+'" data-serie="'+id+'">';
@@ -732,6 +824,7 @@ function carteSerie(id, titre, sous, apercu){
   h +=   '<div class="serie-modes">';
   h +=     boutonMode(id,'qcm', 'Je choisis', 'Trois propositions au choix.');
   h +=     boutonMode(id,'oral','Je dis à voix haute', 'On dit, puis on vérifie.');
+  h +=     boutonMode(id,'ecrit','J\'écris le nom', 'Au clavier, fautes tolérées.');
   h +=   '</div>';
   h += '</div>';
   return h;
@@ -740,8 +833,9 @@ function boutonMode(id, m, titre, sous){
   var ok = debloque(id, m);
   var e  = etoilesDe(id, m);
   var h = '<button class="mode" type="button" data-jouer="'+id+'" data-mode="'+m+'"'+(ok?'':' disabled')+'>';
-  h += '<span class="pic">'+(ok ? (m==='qcm'?ICONES.choisir:ICONES.voix) : ICONES.cadenas)+'</span>';
-  h += '<span class="lbl"><b>'+titre+'</b><small>'+(ok ? sous : (m==='oral' ? 'Après « Je choisis ».' : 'Après la série précédente.'))+'</small></span>';
+  var ic = (m === 'qcm') ? ICONES.choisir : (m === 'oral' ? ICONES.voix : ICONES.ecrire);
+  h += '<span class="pic">'+(ok ? ic : ICONES.cadenas)+'</span>';
+  h += '<span class="lbl"><b>'+titre+'</b><small>'+(ok ? sous : ((m==='oral'||m==='ecrit') ? 'Après « Je choisis ».' : 'Après la série précédente.'))+'</small></span>';
   if(ok) h += '<span class="etoiles">'+etoilesHTML(e)+'</span>';
   h += '</button>';
   return h;
@@ -821,7 +915,8 @@ function poser(){
   $('#jauge').style.width = Math.round((partie.i / t) * 100) + '%';
 
   if(partie.m === 'qcm') rendreQcm(it);
-  else rendreOral(it);
+  else if(partie.m === 'oral') rendreOral(it);
+  else rendreEcrit(it);
 }
 
 function rendreQcm(it){
@@ -873,6 +968,44 @@ function devoilerOral(){
     '</div>';
 }
 
+function rendreEcrit(it){
+  $('#info').innerHTML = 'Écris le nom de cet objet. <b>Les accents et les petits mots ne comptent pas.</b>';
+  $('#choix').innerHTML =
+    '<form class="form-saisie" id="form-ecrit" novalidate>'+
+      '<input class="champ" id="champ" type="text" inputmode="text" autocomplete="off" '+
+             'autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" '+
+             'placeholder="son nom…" aria-label="Écris le nom de cet objet">'+
+      '<button class="principal" type="submit">Vérifier</button>'+
+    '</form>';
+  $('#form-ecrit').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    repondreEcrit();
+  });
+}
+
+function repondreEcrit(){
+  if(partie.repondu) return;
+  var champ = $('#champ');
+  var txt = champ ? champ.value : '';
+  if(!normaliser(txt)) { if(champ) champ.focus(); return; }   /* champ vide : on n'enregistre rien */
+  partie.repondu = true;
+  var it = partie.file[partie.i];
+  var verdict = juger(txt, it);
+  var bon = (verdict !== 'faux');
+  champ.disabled = true;
+  champ.classList.add(bon ? 'bon' : 'mauvais');
+  if(champ.blur) champ.blur();                                /* referme le clavier */
+  var btn = $('#form-ecrit').querySelector('button');
+  if(btn){ btn.disabled = true; btn.classList.add('invisible'); }
+  compter(bon, it);
+  reveler(it, bon);
+  if(verdict === 'presque'){
+    $('#info').textContent = 'C\'était bien ça, mais l\'orthographe n\'y était pas tout à fait. ' + it.role;
+  }
+  $('#btn-suite').classList.remove('invisible');
+  if(bon) minuteur = setTimeout(suivant, 1400);
+}
+
 function autoEvaluer(bon){
   var it = partie.file[partie.i];
   compter(bon, it);
@@ -917,7 +1050,7 @@ function finir(){
   }
 
   var nomSerie = partie.s === 'rev' ? 'Les 21 mélangés' : ('Série ' + partie.s + ' · ' + SERIES[partie.s-1].nom);
-  $('#bilan-serie').textContent = nomSerie + (partie.m === 'qcm' ? ' · Je choisis' : ' · À voix haute');
+  $('#bilan-serie').textContent = nomSerie + (partie.m === 'qcm' ? ' · Je choisis' : (partie.m === 'oral' ? ' · À voix haute' : ' · J\'écris'));
   $('#bilan-etoiles').innerHTML = etoilesHTML(et);
   $('#bilan-titre').textContent =
     n === t ? 'Sans faute !' :
@@ -944,6 +1077,9 @@ function finir(){
   } else if(m === 'qcm'){
     btn.textContent = 'Passer à « je dis à voix haute » →';
     btn.onclick = function(){ demarrer(s, 'oral'); };
+  } else if(m === 'oral'){
+    btn.textContent = 'Passer à « j\'écris le nom » →';
+    btn.onclick = function(){ demarrer(s, 'ecrit'); };
   } else if(s !== 'rev' && s < 3){
     btn.textContent = 'Série ' + (s+1) + ' →';
     btn.onclick = function(){ serieOuverte = s+1; construireAccueil(); montrer('accueil'); };
