@@ -1,0 +1,1180 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le labo de poche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* ── Tokens ───────────────────────────────────────────── */
+:root{
+  --paper:#eef1ea; --paper-2:#e5e9df; --card:#fbfcf9;
+  --ink:#1d2630; --ink-soft:#5f6b76; --rule:#cfd6c9;
+  --grid:#cbd9e8;
+  --accent:#1b4f8f; --accent-soft:#e3ecf7;
+  --ok:#2f7a4f; --ok-soft:#e3f0e7;
+  --ko:#b23a2e; --ko-soft:#f7e6e3;
+  --or:#b0801a;
+  --draw:#333e49; --draw-soft:#8a97a3; --glass:#ffffff; --metal:#dde4ea; --liquid:#8fbde6;
+  --ombre:0 1px 0 rgba(29,38,48,.05), 0 10px 26px -16px rgba(29,38,48,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12161b; --paper-2:#171c22; --card:#1c222a;
+    --ink:#e8eef3; --ink-soft:#98a5b1; --rule:#2c343e;
+    --grid:#23313f;
+    --accent:#83abe2; --accent-soft:#1a2634;
+    --ok:#5fb682; --ok-soft:#17281f;
+    --ko:#e28b7e; --ko-soft:#2b1a17;
+    --or:#d4a53c;
+    --draw:#ccd6df; --draw-soft:#6d7b87; --glass:#232b34; --metal:#2f3843; --liquid:#3f6f9f;
+    --ombre:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12161b; --paper-2:#171c22; --card:#1c222a;
+  --ink:#e8eef3; --ink-soft:#98a5b1; --rule:#2c343e;
+  --grid:#23313f;
+  --accent:#83abe2; --accent-soft:#1a2634;
+  --ok:#5fb682; --ok-soft:#17281f;
+  --ko:#e28b7e; --ko-soft:#2b1a17;
+  --or:#d4a53c;
+  --draw:#ccd6df; --draw-soft:#6d7b87; --glass:#232b34; --metal:#2f3843; --liquid:#3f6f9f;
+  --ombre:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Atkinson Hyperlegible",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent; overscroll-behavior-y:none;
+}
+button{font:inherit;color:inherit;margin:0;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:800;letter-spacing:-.02em;text-wrap:balance;margin:0}
+p{margin:0}
+
+#app{
+  min-height:100svh; max-width:640px; margin-inline:auto;
+  padding-inline:18px;
+  padding-block:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-bottom));
+  display:flex; flex-direction:column;
+}
+.ecran{flex:1;display:flex;flex-direction:column;min-height:0}
+body.en-jeu{overflow:hidden}
+body.en-jeu #app{height:100svh;min-height:0}
+.eyebrow sup{text-transform:lowercase}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+.quadrille{
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:16px 16px; background-position:center;
+}
+
+/* ── Accueil ──────────────────────────────────────────── */
+.fiche-tete{padding-block:14px 22px;display:grid;gap:6px}
+.fiche-tete h1{font-size:clamp(30px,9vw,42px);line-height:1.02}
+.fiche-tete .sous{color:var(--ink-soft);font-size:15px;max-width:34ch}
+.series{display:grid;gap:12px}
+.serie{
+  display:grid;gap:0;width:100%;text-align:left;padding:0;
+  background:var(--card);border:1.5px solid var(--ink);border-radius:3px;box-shadow:var(--ombre);
+  overflow:hidden;
+}
+.serie.verrou{opacity:.55;border-color:var(--rule);box-shadow:none}
+.serie-tete{display:flex;align-items:center;gap:13px;padding:13px 14px;width:100%;background:none;border:0;text-align:left}
+.serie-n{
+  flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:15px;
+  font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;
+}
+.serie.verrou .serie-n{background:var(--paper-2);color:var(--ink-soft)}
+.serie-txt{flex:1;min-width:0;display:grid;gap:2px}
+.serie-txt b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em}
+.serie-txt small{color:var(--ink-soft);font-size:12.5px;line-height:1.3;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.etoiles{flex:none;letter-spacing:1px;font-size:14px;color:var(--rule)}
+.etoiles i{font-style:normal}
+.etoiles i.on{color:var(--or)}
+.serie-modes{display:none;padding:0 14px 14px;gap:9px;grid-template-columns:1fr}
+.serie.ouvert .serie-modes{display:grid}
+.mode{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  min-height:56px;padding:9px 13px;border-radius:11px;
+  border:1.5px solid var(--rule);background:var(--paper);
+}
+.mode:disabled{opacity:.5;cursor:default}
+.mode .pic{flex:none;width:30px;height:30px;display:grid;place-items:center;color:var(--accent)}
+.mode .lbl{flex:1;display:grid;gap:1px}
+.mode .lbl b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:15.5px}
+.mode .lbl small{color:var(--ink-soft);font-size:12px;line-height:1.25}
+.mode .etoiles{font-size:12px}
+.liens{margin-top:16px;display:grid;gap:10px}
+.lien{
+  background:none;border:0;padding:10px 0;text-align:left;color:var(--accent);
+  font-weight:700;font-size:14.5px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;
+}
+.pied{margin-top:auto;padding-top:22px;display:flex;gap:14px;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--rule);color:var(--ink-soft);font-size:12px}
+.pied button{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+
+/* ── Bascule dessin / photo ───────────────────────────── */
+.bascule{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:16px;padding:4px;
+  background:var(--paper-2);border:1.5px solid var(--rule);border-radius:12px;
+}
+.bascule button{
+  min-height:42px;border:0;border-radius:8px;background:none;color:var(--ink-soft);
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-.01em;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.bascule button.on{background:var(--card);color:var(--ink);box-shadow:var(--ombre)}
+.bascule svg{width:17px;height:17px}
+
+/* ── Crédits ──────────────────────────────────────────── */
+.credits{display:grid;gap:0;border-top:1px solid var(--rule)}
+.credit{display:flex;gap:12px;align-items:baseline;padding:11px 2px;border-bottom:1px solid var(--rule);font-size:13px}
+.credit b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13.5px;flex:none;width:39%}
+.credit span{color:var(--ink-soft);line-height:1.35}
+.credit a{color:var(--accent)}
+.credits-intro{font-size:13.5px;color:var(--ink-soft);line-height:1.5;padding-block:2px 16px;max-width:60ch}
+
+/* ── Barre de jeu ─────────────────────────────────────── */
+.barre{display:flex;align-items:center;gap:11px;padding-block:4px 12px}
+.ico{flex:none;width:42px;height:42px;border-radius:11px;border:1.5px solid var(--rule);background:var(--card);display:grid;place-items:center;font-size:17px;line-height:1}
+.jauge{flex:1;height:8px;border-radius:99px;background:var(--rule);overflow:hidden}
+.jauge-in{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.compte{flex:none;font-size:13px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+
+/* ── Corps du jeu ─────────────────────────────────────── */
+.corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
+.plateau{flex:1;min-height:0;display:grid;place-items:center;padding-bottom:26px;container-type:size}
+.plaque{
+  /* Un carré qui tient dans la place disponible. 100cqh = la hauteur
+     utile du plateau ; la largeur s'y aligne, sans dépasser la colonne.
+     La première ligne sert de repli aux navigateurs sans requête de conteneur. */
+  position:relative;aspect-ratio:1/1;height:auto;
+  width:min(100%,420px);
+  width:min(100cqh,100%,420px);
+  max-width:100%;
+  background:var(--card);border:1.5px solid var(--ink);border-radius:3px;box-shadow:var(--ombre);
+  display:grid;place-items:stretch;padding:16px;
+}
+.dessin{width:100%;height:100%;min-width:0;min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:2px}
+.plaque.av-photo{padding:9px}
+.photo{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain;display:block;background:var(--paper-2)}
+.obj{height:100%;width:auto;max-width:100%;display:block}
+.obj .bd{fill:var(--glass);stroke:var(--draw);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.obj .mt{fill:var(--metal);stroke:var(--draw);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.obj .rb{fill:var(--draw-soft);stroke:var(--draw);stroke-width:2.6;stroke-linejoin:round}
+.obj .dk{fill:var(--draw);stroke:none}
+.obj .wh{fill:var(--card);stroke:none}
+.obj .lq{fill:var(--liquid);stroke:none}
+.obj .ln{fill:none;stroke:var(--draw);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.obj .ep{fill:none;stroke:var(--draw);stroke-width:7;stroke-linecap:round}
+.obj .tn{fill:none;stroke:var(--draw-soft);stroke-width:1.8;stroke-linecap:round}
+.obj .cd{fill:none;stroke:var(--metal);stroke-width:1.8;stroke-linecap:round}
+.marque{position:absolute;top:9px;right:9px;width:30%;height:30%;pointer-events:none;transform:rotate(5deg)}
+.marque path{fill:none;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:260;stroke-dashoffset:260;opacity:.92}
+.plaque.juste .marque.coche path{stroke:var(--ok);stroke-dashoffset:0;transition:stroke-dashoffset .5s ease-out}
+.plaque.rate .marque.croix path{stroke:var(--ko);stroke-dashoffset:0;transition:stroke-dashoffset .45s ease-out}
+.etiquette{
+  position:absolute;left:50%;bottom:-17px;transform:translateX(-50%) rotate(-1.3deg);
+  width:max-content;max-width:104%;text-align:center;
+  background:var(--card);border:1.5px solid var(--ink);border-radius:2px;
+  padding:6px 16px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:clamp(17px,5.2vw,23px);line-height:1.15;letter-spacing:-.01em;
+  box-shadow:2px 3px 0 rgba(29,38,48,.10);
+}
+
+/* ── Zone de réponse ──────────────────────────────────── */
+.zone{display:grid;gap:11px}
+.info{min-height:48px;display:flex;align-items:center;font-size:13.5px;line-height:1.35;color:var(--ink-soft);text-wrap:pretty}
+.info b{color:var(--ink)}
+.choix-liste{display:grid;gap:9px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.choix{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;min-height:58px;padding:10px 14px;
+  border-radius:12px;border:1.5px solid var(--rule);background:var(--card);
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(16px,4.3vw,18.5px);
+  letter-spacing:-.01em;transition:transform .1s ease,background .15s,border-color .15s,color .15s;
+}
+.choix .lettre{
+  flex:none;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;
+  background:var(--paper-2);color:var(--ink-soft);font-size:12.5px;font-weight:800;
+}
+.choix:active{transform:scale(.985)}
+.choix:disabled{cursor:default}
+.choix.bon{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.choix.bon .lettre{background:var(--ok);color:var(--card)}
+.choix.mauvais{background:var(--ko-soft);border-color:var(--ko);color:var(--ko)}
+.choix.mauvais .lettre{background:var(--ko);color:var(--card)}
+.principal{
+  width:100%;min-height:60px;border-radius:12px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;
+  transition:transform .1s ease,opacity .15s;
+}
+:root[data-theme="dark"] .principal,
+.principal{color:var(--card)}
+.principal:active{transform:scale(.985)}
+.secondaire{
+  width:100%;min-height:60px;border-radius:12px;border:1.5px solid var(--rule);background:var(--card);
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:16px;letter-spacing:-.01em;
+}
+.secondaire:active{transform:scale(.985)}
+.principal.vert{background:var(--ok);border-color:var(--ok)}
+.invisible{visibility:hidden;pointer-events:none}
+
+/* ── Saisie au clavier ────────────────────────────────── */
+.champ{
+  width:100%;min-height:62px;border-radius:12px;border:1.5px solid var(--rule);
+  background:var(--card);color:var(--ink);padding:12px 16px;
+  font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;font-size:18px;letter-spacing:-.01em;
+  -webkit-appearance:none;appearance:none;
+}
+.champ::placeholder{color:var(--ink-soft);font-weight:400;opacity:.75}
+.champ:focus{border-color:var(--accent);outline:2px solid var(--accent-soft);outline-offset:0}
+.champ.bon{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.champ.mauvais{background:var(--ko-soft);border-color:var(--ko);color:var(--ko)}
+.form-saisie{display:grid;gap:9px}
+
+/* ── Bilan ────────────────────────────────────────────── */
+.bilan{flex:1;display:flex;flex-direction:column;gap:14px;padding-top:6px}
+.bilan h2{font-size:clamp(26px,7.5vw,34px)}
+.etoiles-gd{font-size:34px;letter-spacing:6px;color:var(--rule);line-height:1}
+.etoiles-gd i{font-style:normal}
+.etoiles-gd i.on{color:var(--or)}
+.score{font-size:15px;color:var(--ink-soft)}
+.score b{color:var(--ink);font-variant-numeric:tabular-nums}
+.rates{display:grid;gap:8px;margin-top:2px}
+.rates h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;font-family:inherit}
+.rates-liste{display:flex;gap:9px;flex-wrap:wrap}
+.rate-item{display:grid;gap:5px;justify-items:center;width:82px}
+.rate-item .cadre{width:82px;height:82px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);display:grid;place-items:center;padding:7px;overflow:hidden}
+.rate-item .cadre.av-photo{padding:0}
+.rate-item span{font-size:11.5px;line-height:1.2;text-align:center;color:var(--ink-soft)}
+.actions{margin-top:auto;display:grid;gap:9px;padding-top:16px}
+
+/* ── Fiches ───────────────────────────────────────────── */
+.fiches-tete{display:flex;align-items:center;gap:11px;padding-block:4px 14px}
+.fiches-tete h2{font-size:22px;flex:1}
+.fiches{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding-bottom:10px}
+@media (min-width:520px){.fiches{grid-template-columns:repeat(3,1fr)}}
+.fiche{background:var(--card);border:1.5px solid var(--ink);border-radius:3px;overflow:hidden;display:flex;flex-direction:column}
+.fiche .cadre{aspect-ratio:1/1;display:grid;place-items:center;padding:11px;border-bottom:1.5px solid var(--ink);overflow:hidden}
+.fiche .cadre.av-photo{padding:0}
+.fiche .txt{padding:8px 10px 10px;display:grid;gap:3px}
+.fiche b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:14px;letter-spacing:-.01em;line-height:1.2}
+.fiche small{color:var(--ink-soft);font-size:11px;line-height:1.3}
+.groupe-titre{grid-column:1/-1;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;padding-top:8px}
+
+/* ── Écrans courts / paysage ──────────────────────────── */
+@media (orientation:landscape) and (max-height:560px){
+  .corps{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:18px}
+  .plateau{padding-bottom:24px;height:100%}
+  .info{min-height:0}
+}
+@keyframes secousse{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-4px)}}
+.secoue{animation:secousse .34s}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .plaque.juste .marque.coche path,.plaque.rate .marque.croix path{stroke-dashoffset:0}
+}
+</style>
+
+<main id="app">
+
+  <!-- ════ ACCUEIL ════ -->
+  <section class="ecran" id="ecran-accueil">
+    <div class="fiche-tete">
+      <p class="eyebrow">Sciences &middot; 6<sup>e</sup> &middot; REA</p>
+      <h1>Le labo de poche</h1>
+      <p class="sous">Reconnaître les 21 objets de la paillasse. D'abord en choisissant, ensuite de tête.</p>
+    </div>
+
+    <div class="bascule" id="bascule" role="group" aria-label="Dessins ou photos">
+      <button type="button" data-vue="dessin" id="vue-dessin">Dessins</button>
+      <button type="button" data-vue="photo" id="vue-photo">Photos</button>
+    </div>
+
+    <div class="series" id="liste-series"></div>
+
+    <div class="liens">
+      <button class="lien" type="button" data-go="fiches">Revoir la fiche des 21 objets &rarr;</button>
+      <button class="lien" type="button" data-go="credits">Crédits et licences des photos &rarr;</button>
+    </div>
+
+    <div class="pied">
+      <span>Identifier le matériel utilisé dans les laboratoires.</span>
+      <button type="button" id="btn-reset">Effacer les étoiles</button>
+    </div>
+  </section>
+
+  <!-- ════ JEU ════ -->
+  <section class="ecran" id="ecran-jeu" hidden>
+    <div class="barre">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au menu">&larr;</button>
+      <div class="jauge"><div class="jauge-in" id="jauge"></div></div>
+      <p class="compte" id="compte">1/7</p>
+      <button class="ico" type="button" id="btn-son" aria-label="Couper le son">&#128266;</button>
+    </div>
+
+    <div class="corps">
+      <div class="plateau">
+        <div class="plaque" id="plaque">
+          <div class="dessin quadrille" id="dessin"></div>
+          <svg class="marque coche" viewBox="0 0 100 100" aria-hidden="true"><path d="M16 55 L39 78 L86 20"/></svg>
+          <svg class="marque croix" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 24 L76 76 M76 24 L24 76"/></svg>
+          <p class="etiquette" id="etiquette" hidden aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="zone">
+        <p class="info" id="info"></p>
+        <div class="choix-liste" id="choix"></div>
+        <button class="principal invisible" type="button" id="btn-suite">Continuer &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ BILAN ════ -->
+  <section class="ecran" id="ecran-bilan" hidden>
+    <div class="bilan">
+      <p class="eyebrow" id="bilan-serie"></p>
+      <div class="etoiles-gd" id="bilan-etoiles"></div>
+      <h2 id="bilan-titre"></h2>
+      <p class="score" id="bilan-score"></p>
+      <div class="rates" id="bilan-rates" hidden>
+        <h3>À revoir</h3>
+        <div class="rates-liste" id="rates-liste"></div>
+      </div>
+      <div class="actions">
+        <button class="principal" type="button" id="btn-bilan-1"></button>
+        <button class="secondaire" type="button" data-go="accueil">Retour au menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CRÉDITS ════ -->
+  <section class="ecran" id="ecran-credits" hidden>
+    <div class="fiches-tete">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au menu">&larr;</button>
+      <h2>Crédits des photos</h2>
+    </div>
+    <p class="credits-intro">Toutes les photographies viennent de Wikimedia Commons, sous licence libre.
+      Chaque ligne donne l'auteur et la licence ; le lien mène au fichier d'origine, où figure le texte complet
+      de la licence. Les dessins au trait, eux, ont été faits pour ce jeu.</p>
+    <div class="credits" id="liste-credits"></div>
+  </section>
+
+  <!-- ════ FICHES ════ -->
+  <section class="ecran" id="ecran-fiches" hidden>
+    <div class="fiches-tete">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au menu">&larr;</button>
+      <h2>Les 21 objets</h2>
+    </div>
+    <div class="fiches" id="grille-fiches"></div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══ Les 21 objets ═══════════════════════════════════════
+   Dessins au trait, viewBox 120×160, redessinés d'après la
+   fiche méthode. Les classes (bd/ln/tn/mt/rb/dk/lq) prennent
+   leurs couleurs des tokens, donc les deux thèmes suivent.  */
+
+function dessin(interieur){
+  return '<svg class="obj" viewBox="0 0 120 160" aria-hidden="true">'+interieur+'</svg>';
+}
+
+var ITEMS = [
+/* ── Série 1 · la verrerie de base ── */
+{id:'becher', nom:'Bécher', serie:1,
+ role:"Contenir, mélanger ou chauffer un liquide. Ses graduations ne sont qu'indicatives.",
+ svg:dessin(
+  '<path class="bd" d="M32 46 L36 130 q1 10 11 10 h26 q10 0 11-10 L88 46 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="46" rx="28" ry="7"/>'+
+  '<path class="ln" d="M85 41 q12 0 13 6 q-6 4 -12 1"/>'+
+  '<path class="tn" d="M43 74 h13 M43 90 h9 M43 106 h13 M43 122 h9"/>')},
+
+{id:'erlen', nom:'Erlenmeyer', serie:1,
+ role:"Agiter un liquide sans le renverser : son col est étroit, son fond large.",
+ svg:dessin(
+  '<path class="bd" d="M50 40 L50 62 L26 128 q-3 12 8 12 h52 q11 0 8-12 L70 62 L70 40 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="40" rx="10" ry="4"/>'+
+  '<path class="tn" d="M38 112 h15 M34 124 h11"/>')},
+
+{id:'tube', nom:'Tube à essai', serie:1,
+ role:"Faire une réaction sur une toute petite quantité de produit.",
+ svg:dessin(
+  '<path class="bd" d="M48 26 L48 116 a12 12 0 0 0 24 0 L72 26 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="26" rx="12" ry="4.5"/>')},
+
+{id:'ballon', nom:'Ballon', serie:1,
+ role:"Chauffer un liquide : son fond rond répartit la chaleur de façon homogène.",
+ svg:dessin(
+  '<rect class="bd" x="50" y="26" width="20" height="48" rx="2"/>'+
+  '<circle class="bd" cx="60" cy="106" r="36"/>'+
+  '<ellipse class="bd" cx="60" cy="26" rx="10" ry="4"/>')},
+
+{id:'fiole', nom:'Fiole jaugée', serie:1,
+ role:"Préparer un volume précis : on remplit exactement jusqu'au trait de jauge.",
+ svg:dessin(
+  '<path class="mt" d="M53 11 h14 l2 13 h-18 z"/>'+
+  '<path class="bd" d="M55 24 L55 72 C55 82 30 90 30 112 C30 132 40 141 50 141 H70 C80 141 90 132 90 112 C90 90 65 82 65 72 L65 24 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="24" rx="5" ry="2.6"/>'+
+  '<path class="ln" d="M54 47 h12"/>')},
+
+{id:'verrepied', nom:'Verre à pied', serie:1,
+ role:"Recueillir ou transvaser un liquide ; son pied le rend stable sur la paillasse.",
+ svg:dessin(
+  '<path class="bd" d="M28 48 L52 110 h16 L92 48 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="48" rx="32" ry="7"/>'+
+  '<path class="ln" d="M89 43 q11 0 12 6 q-6 4 -12 1"/>'+
+  '<path class="bd" d="M54 108 h12 v22 h-12 z"/>'+
+  '<ellipse class="bd" cx="60" cy="132" rx="26" ry="8"/>')},
+
+{id:'entonnoir', nom:'Entonnoir', serie:1,
+ role:"Transvaser sans déborder, ou filtrer en y posant un papier filtre.",
+ svg:dessin(
+  '<path class="bd" d="M26 38 L53 84 V132 q7 8 14 0 V84 L94 38 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="38" rx="34" ry="8"/>')},
+
+/* ── Série 2 · mesurer et prélever ── */
+{id:'eprouvette', nom:'Éprouvette graduée', serie:2,
+ role:"Mesurer un volume avec précision : on lit au bas du ménisque, à hauteur des yeux.",
+ svg:dessin(
+  '<path class="bd" d="M46 34 V120 L36 134 h48 L74 120 V34 Z"/>'+
+  '<ellipse class="bd" cx="60" cy="34" rx="14" ry="5"/>'+
+  '<path class="ln" d="M72 29 q10 1 11 6 q-6 3 -11 0"/>'+
+  '<path class="tn" d="M50 54 h8 M50 64 h14 M50 74 h8 M50 84 h14 M50 94 h8 M50 104 h14"/>')},
+
+{id:'pipette', nom:'Pipette', serie:2,
+ role:"Prélever un liquide et le déposer là où il faut, sans rien renverser.",
+ svg:dessin(
+  '<path class="bd" d="M50 20 C40 26 38 44 50 52 H70 C82 44 80 26 70 20 Z"/>'+
+  '<path class="bd" d="M52 52 H68 L65 126 q-5 8 -10 0 Z"/>'+
+  '<path class="tn" d="M54 70 h12 M54 84 h11 M55 98 h10"/>')},
+
+{id:'comptegoutte', nom:'Pipette compte-goutte', serie:2,
+ role:"Ajouter un réactif goutte par goutte, en comptant les gouttes.",
+ svg:dessin(
+  '<path class="rb" d="M48 16 C40 22 40 38 48 44 H72 C80 38 80 22 72 16 Z"/>'+
+  '<path class="bd" d="M51 44 H69 V96 L64 120 q-4 7 -8 0 L51 96 Z"/>'+
+  '<path class="lq" d="M60 130 c7 9 8 12 8 15 a8 8 0 0 1 -16 0 c0 -3 1 -6 8 -15 z"/>')},
+
+{id:'pissette', nom:'Pissette à eau', serie:2,
+ role:"Rincer la verrerie à l'eau distillée grâce à son long bec.",
+ svg:dessin(
+  '<path class="bd" d="M38 66 q0 -8 6 -8 h32 q6 0 6 8 v56 q0 10 -10 10 H48 q-10 0 -10 -10 z"/>'+
+  '<path class="lq" opacity=".5" d="M40 98 h40 v24 q0 8 -8 8 H48 q-8 0 -8 -8 z"/>'+
+  '<rect class="mt" x="52" y="42" width="16" height="16" rx="3"/>'+
+  '<path class="ln" d="M60 42 V30 q0 -7 -8 -7 H34 q-7 0 -7 7 V40"/>')},
+
+{id:'balance', nom:'Balance électronique', serie:2,
+ role:"Mesurer une masse en grammes. On fait la tare avant de poser le produit.",
+ svg:dessin(
+  '<rect class="mt" x="12" y="88" width="96" height="42" rx="12"/>'+
+  '<rect class="dk" x="26" y="101" width="38" height="17" rx="3"/>'+
+  '<path class="wh" d="M32 105 h5 v9 h-5 z M41 105 h5 v9 h-5 z M50 105 h5 v9 h-5 z"/>'+
+  '<circle class="ln" cx="84" cy="110" r="6"/>'+
+  '<rect class="bd" x="24" y="58" width="72" height="34" rx="6"/>')},
+
+{id:'capsule', nom:'Capsule de pesée', serie:2,
+ role:"Recevoir le produit à peser sans salir le plateau de la balance.",
+ svg:dessin(
+  '<path class="bd" d="M100 76 q16 2 16 10 t-16 10"/>'+
+  '<path class="bd" d="M16 84 v6 q0 18 44 18 t44 -18 v-6"/>'+
+  '<ellipse class="bd" cx="60" cy="84" rx="44" ry="22"/>'+
+  '<ellipse class="tn" cx="60" cy="84" rx="34" ry="15"/>')},
+
+{id:'portetubes', nom:'Porte-tubes à essai', serie:2,
+ role:"Tenir les tubes bien droits pendant l'expérience et pour les transporter.",
+ svg:dessin(
+  '<path class="bd" d="M24.5 40 V112 a5.5 5.5 0 0 0 11 0 V40 Z"/>'+
+  '<path class="bd" d="M39.5 40 V112 a5.5 5.5 0 0 0 11 0 V40 Z"/>'+
+  '<path class="bd" d="M54.5 40 V112 a5.5 5.5 0 0 0 11 0 V40 Z"/>'+
+  '<path class="bd" d="M69.5 40 V112 a5.5 5.5 0 0 0 11 0 V40 Z"/>'+
+  '<path class="bd" d="M84.5 40 V112 a5.5 5.5 0 0 0 11 0 V40 Z"/>'+
+  '<rect class="mt" x="18" y="96" width="10" height="24"/>'+
+  '<rect class="mt" x="92" y="96" width="10" height="24"/>'+
+  '<rect class="mt" x="16" y="80" width="88" height="16" rx="3"/>'+
+  '<ellipse class="tn" cx="30" cy="82" rx="5.5" ry="2"/>'+
+  '<ellipse class="tn" cx="45" cy="82" rx="5.5" ry="2"/>'+
+  '<ellipse class="tn" cx="60" cy="82" rx="5.5" ry="2"/>'+
+  '<ellipse class="tn" cx="75" cy="82" rx="5.5" ry="2"/>'+
+  '<ellipse class="tn" cx="90" cy="82" rx="5.5" ry="2"/>'+
+  '<rect class="mt" x="12" y="118" width="96" height="13" rx="4"/>')},
+
+/* ── Série 3 · observer et chauffer ── */
+{id:'lame', nom:'Lame et lamelle', serie:3,
+ role:"Préparer un échantillon très fin à observer au microscope.",
+ svg:dessin(
+  '<g transform="rotate(-9 60 82)">'+
+  '<rect class="bd" x="10" y="60" width="100" height="42" rx="3"/>'+
+  '<rect class="bd" x="66" y="68" width="28" height="26" rx="2"/>'+
+  '<ellipse class="lq" opacity=".6" cx="80" cy="81" rx="7" ry="5"/>'+
+  '</g>')},
+
+{id:'petri', nom:'Boîte de Pétri', serie:3,
+ role:"Faire pousser et observer des micro-organismes, à l'abri sous son couvercle.",
+ svg:dessin(
+  '<path class="bd" d="M16 86 v10 q0 16 44 16 t44 -16 V86"/>'+
+  '<ellipse class="bd" cx="60" cy="86" rx="44" ry="20"/>'+
+  '<ellipse class="tn" cx="60" cy="86" rx="37" ry="15"/>')},
+
+{id:'verremontre', nom:'Verre de montre', serie:3,
+ role:"Couvrir un bécher, ou recevoir une petite quantité de solide.",
+ svg:dessin(
+  '<g transform="rotate(-13 60 88)">'+
+  '<ellipse class="bd" cx="60" cy="88" rx="46" ry="19"/>'+
+  '<path class="tn" d="M23 84 q37 18 74 0"/>'+
+  '</g>')},
+
+{id:'cristallisoir', nom:'Cristallisoir', serie:3,
+ role:"Laisser évaporer une solution pour récupérer les cristaux au fond.",
+ svg:dessin(
+  '<path class="bd" d="M20 66 V110 q0 10 40 10 t40 -10 V66"/>'+
+  '<ellipse class="bd" cx="60" cy="66" rx="40" ry="16"/>'+
+  '<ellipse class="tn" cx="60" cy="66" rx="33" ry="12"/>')},
+
+{id:'pince', nom:'Pince fine', serie:3,
+ role:"Saisir un petit échantillon sans l'abîmer et sans y mettre les doigts.",
+ svg:dessin(
+  '<g transform="rotate(-22 60 80)">'+
+  '<path class="ep" d="M60 22 C41 46 39 100 54 134"/>'+
+  '<path class="ep" d="M60 22 C79 46 81 100 66 134"/>'+
+  '</g>')},
+
+{id:'chauffeballon', nom:'Chauffe-ballon', serie:3,
+ role:"Chauffer un ballon sans flamme, à une température que l'on règle.",
+ svg:dessin(
+  '<path class="mt" d="M22 62 h76 v52 q0 10 -10 10 H32 q-10 0 -10 -10 z"/>'+
+  '<ellipse class="mt" cx="60" cy="62" rx="38" ry="14"/>'+
+  '<ellipse class="dk" cx="60" cy="63" rx="28" ry="10"/>'+
+  '<path class="cd" d="M37 62 q23 13 46 0"/>'+
+  '<rect class="dk" x="22" y="94" width="76" height="18"/>'+
+  '<circle class="wh" cx="40" cy="103" r="6"/>'+
+  '<path class="ln" d="M22 104 q-14 5 -12 24"/>')},
+
+{id:'bainmarie', nom:'Bain-marie', serie:3,
+ role:"Chauffer doucement plusieurs tubes à la fois dans de l'eau chaude.",
+ svg:dessin(
+  '<path class="bd" d="M14 74 h92 v40 q0 8 -8 8 H22 q-8 0 -8 -8 z"/>'+
+  '<path class="lq" opacity=".45" d="M17 88 h86 v26 q0 5 -5 5 H22 q-5 0 -5 -5 z"/>'+
+  '<path class="bd" d="M64 52 V102 a5 5 0 0 0 10 0 V52 Z"/>'+
+  '<path class="bd" d="M77 52 V102 a5 5 0 0 0 10 0 V52 Z"/>'+
+  '<path class="bd" d="M90 52 V102 a5 5 0 0 0 10 0 V52 Z"/>'+
+  '<rect class="mt" x="60" y="56" width="46" height="10" rx="2"/>'+
+  '<rect class="dk" x="16" y="44" width="42" height="30" rx="4"/>'+
+  '<circle class="wh" cx="27" cy="60" r="5"/>'+
+  '<rect class="wh" x="37" y="55" width="15" height="10" rx="2"/>')}
+];
+
+/* Photographies : Wikimedia Commons, licences libres. f = fichier
+   d'origine, a = auteur, l = licence. L'écran « Crédits » les affiche
+   et renvoie vers le fichier source. */
+var PHOTOS = {
+  becher:{f:"Glass 100ml beaker.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  erlen:{f:"Erlenmeyer flask hg.jpg", a:"Hannes Grobe", l:"CC BY-SA 2.5"},
+  tube:{f:"Test tube blue background.jpg", a:"Blaž bohorč", l:"CC BY-SA 4.0"},
+  ballon:{f:"Round bottom flask 500ml.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  fiole:{f:"Brand volumetric flask 100ml.jpg", a:"Lucasbosch", l:"CC BY-SA 3.0"},
+  entonnoir:{f:"Analysentrichter.png", a:"MediaLab TH Köln", l:"CC BY-SA 4.0", x:'png'},
+  eprouvette:{f:"Measuring cylinder hg.jpg", a:"Hannes Grobe", l:"CC BY-SA 2.5"},
+  pipette:{f:"Plastic Pasteur pipette.jpg", a:"Cjp24", l:"CC BY-SA 3.0"},
+  comptegoutte:{f:"S 2695170.jpg", a:"Pualuu", l:"CC BY-SA 4.0"},
+  pissette:{f:"Lab wash-bottles water EtOH.jpg", a:"Masur", l:"domaine public"},
+  balance:{f:"Balance Scaltec.jpg", a:"Karelj", l:"domaine public"},
+  capsule:{f:"Disposable weighing boat-02.jpg", a:"Lilly_M", l:"CC BY-SA 3.0"},
+  lame:{f:"Standard and large microscope slide.jpg", a:"Mikael Häggström", l:"CC0"},
+  petri:{f:"Petri dish containing Sodium Chloride.jpg", a:"Roi.Frvr", l:"CC0"},
+  verremontre:{f:"Watch glass.JPG", a:"Chrissiejr", l:"CC BY-SA 4.0"},
+  cristallisoir:{f:"Cristallisoir, Pyrex.jpg", a:"Cjp24", l:"CC BY-SA 4.0"},
+  pince:{f:"Small tweezers-set 1.jpg", a:"Nadine90", l:"CC BY-SA 3.0"},
+  chauffeballon:{f:"Electrothermal Heating Mantle.jpg", a:"Markbob1968", l:"CC BY-SA 3.0"},
+  bainmarie:{f:"Digital laboratory water bath.jpg", a:"Confidence24", l:"CC BY-SA 4.0"},
+};
+
+var SERIES = [
+  {id:1, nom:'La verrerie de base',   sous:"Ce qui contient, ce qui transvase"},
+  {id:2, nom:'Mesurer et prélever',   sous:"Volumes, masses et gouttes"},
+  {id:3, nom:'Observer et chauffer',  sous:"Le microscope et la chaleur"}
+];
+
+/* ═══ État ════════════════════════════════════════════════ */
+var CLE_STOCK = 'labo-de-poche-v1';
+var P = {};          /* progrès : "1-qcm" -> nombre d'étoiles */
+var son = true;
+var partie = null;
+var ecranActuel = 'accueil';
+var vue = 'dessin';
+var serieOuverte = 1;
+var minuteur = null;
+
+function charger(){
+  try{
+    var r = JSON.parse(localStorage.getItem(CLE_STOCK) || '{}');
+    P = (r && typeof r.p === 'object' && r.p) ? r.p : {};
+    son = r.son !== false;
+    vue = (r.vue === 'photo') ? 'photo' : 'dessin';
+  }catch(e){ P = {}; son = true; vue = 'dessin'; }
+}
+function sauver(){
+  try{ localStorage.setItem(CLE_STOCK, JSON.stringify({p:P, son:son, vue:vue})); }catch(e){}
+}
+
+function cle(s,m){ return s + '-' + m; }
+function fait(s,m){ return Object.prototype.hasOwnProperty.call(P, cle(s,m)); }
+function etoilesDe(s,m){ return fait(s,m) ? (P[cle(s,m)]|0) : 0; }
+function debloque(s,m){
+  if(m === 'oral' || m === 'ecrit') return s === 'rev' || fait(s,'qcm');
+  if(s === 'rev')  return true;
+  return s === 1 || fait(s-1,'qcm');
+}
+function poolDe(s){
+  if(s === 'rev') return ITEMS.slice();
+  return ITEMS.filter(function(i){ return i.serie === s; });
+}
+function parId(id){ for(var i=0;i<ITEMS.length;i++){ if(ITEMS[i].id===id) return ITEMS[i]; } return null; }
+
+/* ═══ Outils ══════════════════════════════════════════════ */
+function $(s){ return document.querySelector(s); }
+
+/* Le visuel d'un objet : le dessin au trait, ou la photo si l'on est
+   en mode photo et qu'il en existe une. */
+function visuel(it){
+  var ph = PHOTOS[it.id];
+  if(vue === 'photo' && ph) return '<img class="photo" src="p/'+it.id+'.'+(ph.x || 'jpg')+'" alt="" draggable="false">';
+  return it.svg;
+}
+function classeCadre(it){
+  return (vue === 'photo' && PHOTOS[it.id]) ? 'av-photo' : 'quadrille';
+}
+function melange(a){
+  a = a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function etoilesHTML(n){
+  var h='';
+  for(var i=1;i<=3;i++) h += '<i class="'+(i<=n?'on':'')+'">'+(i<=n?'★':'☆')+'</i>';
+  return h;
+}
+var ICONES = {
+  choisir:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h10M4 17h6"/><path d="M15.5 17.5 18 20l4.5-5"/></svg>',
+  voix:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+  ecrire:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9.5 14h5"/></svg>',
+  cadenas:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>'
+};
+
+/* ═══ Comparer ce qui est écrit au nom attendu ════════════
+   On ne corrige pas l'orthographe, on reconnaît une intention.
+   Trois étages : on normalise (accents, traits d'union, majuscules),
+   on retire les particules et les pluriels, puis on tolère quelques
+   fautes de frappe — mais seulement si le mot tapé ne ressemble pas
+   davantage au nom d'un autre objet. Sans quoi « pipette » validerait
+   « pissette », et « verre » n'importe lequel des deux verres. */
+
+var MOTS_VIDES = ['de','du','des','d','a','au','aux','le','la','les','l',
+                  'en','et','un','une','sur','dans','avec','pour','ce','cet'];
+
+function normaliser(t){
+  return String(t || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   /* accents */
+    .replace(/[^a-z0-9]+/g, ' ')                        /* traits d'union, apostrophes, ponctuation */
+    .split(' ')
+    .filter(function(m){ return m && MOTS_VIDES.indexOf(m) < 0; })
+    .map(function(m){ return m.length > 3 ? m.replace(/s$/, '') : m; })  /* pluriels */
+    .join(' ')
+    .trim();
+}
+
+/* Distance de Levenshtein, sur des chaînes courtes. */
+function lev(a, b){
+  if(a === b) return 0;
+  var m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  var prec = new Array(n + 1), cour = new Array(n + 1), i, j;
+  for(j = 0; j <= n; j++) prec[j] = j;
+  for(i = 1; i <= m; i++){
+    cour[0] = i;
+    for(j = 1; j <= n; j++){
+      var co = (a.charCodeAt(i-1) === b.charCodeAt(j-1)) ? 0 : 1;
+      cour[j] = Math.min(cour[j-1] + 1, prec[j] + 1, prec[j-1] + co);
+    }
+    for(j = 0; j <= n; j++) prec[j] = cour[j];
+  }
+  return prec[n];
+}
+
+/* Raccourcis admis en plus du nom complet. Volontairement courts :
+   un raccourci qui vaudrait pour deux objets n'en est pas un. */
+var RACCOURCIS = {
+  tube:['tube'], fiole:['fiole'], eprouvette:['eprouvette'], pissette:['pissette'],
+  balance:['balance'], capsule:['capsule'], petri:['petri'], erlen:['erlen'],
+  comptegoutte:['compte-gouttes'], portetubes:['porte-tubes','portoir'],
+  lame:['lame','lamelle'], pince:['pince','brucelles'], chauffeballon:['chauffe-ballon']
+};
+function variantes(it){
+  var v = [normaliser(it.nom)];
+  var r = RACCOURCIS[it.id] || [];
+  for(var i = 0; i < r.length; i++){
+    var n = normaliser(r[i]);
+    if(n && v.indexOf(n) < 0) v.push(n);
+  }
+  return v;
+}
+function tolerance(n){ return n <= 6 ? 1 : (n <= 13 ? 2 : 3); }
+
+/* Renvoie 'juste', 'presque' (le bon objet, mais trop mal écrit) ou 'faux'. */
+function juger(saisie, it){
+  var s = normaliser(saisie);
+  if(!s) return 'faux';
+  var idProche = null, dMin = Infinity;
+  ITEMS.forEach(function(x){
+    variantes(x).forEach(function(v){
+      var d = lev(s, v);
+      if(d < dMin){ dMin = d; idProche = x.id; }
+    });
+  });
+  if(idProche !== it.id) return 'faux';
+  if(dMin <= tolerance(s.length)) return 'juste';
+  if(dMin <= tolerance(s.length) + 2) return 'presque';
+  return 'faux';
+}
+
+/* ═══ Son ═════════════════════════════════════════════════ */
+var ac = null;
+function bip(bon){
+  if(!son) return;
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!ac) ac = new AC();
+    if(ac.state === 'suspended') ac.resume();
+    var o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
+    o.type = 'sine';
+    o.connect(g); g.connect(ac.destination);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.16, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.30);
+    if(bon){ o.frequency.setValueAtTime(620, t); o.frequency.setValueAtTime(880, t + 0.09); }
+    else   { o.frequency.setValueAtTime(240, t); o.frequency.setValueAtTime(180, t + 0.10); }
+    o.start(t); o.stop(t + 0.32);
+  }catch(e){}
+}
+var voixFr = null;
+function choisirVoix(){
+  try{
+    var vs = window.speechSynthesis.getVoices() || [];
+    voixFr = vs.filter(function(v){ return /^fr/i.test(v.lang); })[0] || null;
+  }catch(e){}
+}
+function parler(texte){
+  if(!son) return;
+  try{
+    var s = window.speechSynthesis;
+    if(!s) return;
+    s.cancel();
+    var u = new SpeechSynthesisUtterance(texte);
+    u.lang = 'fr-FR'; u.rate = 0.92; u.pitch = 1;
+    if(!voixFr) choisirVoix();
+    if(voixFr) u.voice = voixFr;
+    setTimeout(function(){ try{ s.speak(u); }catch(e){} }, 130);
+  }catch(e){}
+}
+function majSon(){
+  var b = $('#btn-son');
+  b.innerHTML = son ? '🔊' : '🔇';
+  b.setAttribute('aria-label', son ? 'Couper le son' : 'Remettre le son');
+}
+
+/* ═══ Navigation ══════════════════════════════════════════ */
+function montrer(nom){
+  ecranActuel = nom;
+  document.body.classList.toggle('en-jeu', nom === 'jeu');
+  ['accueil','jeu','bilan','fiches','credits'].forEach(function(n){
+    $('#ecran-'+n).hidden = (n !== nom);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ═══ Accueil ═════════════════════════════════════════════ */
+function carteSerie(id, titre, sous, apercu){
+  var ouvrable = debloque(id,'qcm');
+  var total = Math.min(etoilesDe(id,'qcm') + etoilesDe(id,'oral') + etoilesDe(id,'ecrit'), 3);
+  var num = (id === 'rev') ? '★' : id;
+  var h = '';
+  h += '<div class="serie'+(ouvrable?'':' verrou')+(serieOuverte===id?' ouvert':'')+'" data-serie="'+id+'">';
+  h +=   '<button class="serie-tete" type="button" data-toggle="'+id+'"'+(ouvrable?'':' disabled')+'>';
+  h +=     '<span class="serie-n">'+num+'</span>';
+  h +=     '<span class="serie-txt"><b>'+titre+'</b><small>'+(ouvrable?apercu:sous)+'</small></span>';
+  h +=     '<span class="etoiles">'+(ouvrable?etoilesHTML(total):ICONES.cadenas)+'</span>';
+  h +=   '</button>';
+  h +=   '<div class="serie-modes">';
+  h +=     boutonMode(id,'qcm', 'Je choisis', 'Trois propositions au choix.');
+  h +=     boutonMode(id,'oral','Je dis à voix haute', 'On dit, puis on vérifie.');
+  h +=     boutonMode(id,'ecrit','J\'écris le nom', 'Au clavier, fautes tolérées.');
+  h +=   '</div>';
+  h += '</div>';
+  return h;
+}
+function boutonMode(id, m, titre, sous){
+  var ok = debloque(id, m);
+  var e  = etoilesDe(id, m);
+  var h = '<button class="mode" type="button" data-jouer="'+id+'" data-mode="'+m+'"'+(ok?'':' disabled')+'>';
+  var ic = (m === 'qcm') ? ICONES.choisir : (m === 'oral' ? ICONES.voix : ICONES.ecrire);
+  h += '<span class="pic">'+(ok ? ic : ICONES.cadenas)+'</span>';
+  h += '<span class="lbl"><b>'+titre+'</b><small>'+(ok ? sous : ((m==='oral'||m==='ecrit') ? 'Après « Je choisis ».' : 'Après la série précédente.'))+'</small></span>';
+  if(ok) h += '<span class="etoiles">'+etoilesHTML(e)+'</span>';
+  h += '</button>';
+  return h;
+}
+function construireAccueil(){
+  var h = '';
+  SERIES.forEach(function(s){
+    var noms = poolDe(s.id).map(function(i){ return i.nom; });
+    var apercu = '7 objets · ' + noms.slice(0,3).join(', ').toLowerCase() + '…';
+    h += carteSerie(s.id, s.nom, s.sous, apercu);
+  });
+  h += carteSerie('rev', 'Les 21 mélangés', 'Tout, dans le désordre', 'Les 21 objets, toutes séries confondues');
+  $('#liste-series').innerHTML = h;
+}
+
+/* ═══ Fiches ══════════════════════════════════════════════ */
+function construireFiches(){
+  var h = '';
+  SERIES.forEach(function(s){
+    h += '<p class="groupe-titre">'+s.id+' · '+s.nom+'</p>';
+    poolDe(s.id).forEach(function(it){
+      h += '<div class="fiche"><div class="cadre '+classeCadre(it)+'">'+visuel(it)+'</div>'+
+           '<div class="txt"><b>'+it.nom+'</b><small>'+it.role+'</small></div></div>';
+    });
+  });
+  $('#grille-fiches').innerHTML = h;
+}
+
+function construireCredits(){
+  var h = '';
+  ITEMS.forEach(function(it){
+    var c = PHOTOS[it.id];
+    if(!c) return;
+    var lien = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(c.f.replace(/ /g,'_'));
+    h += '<div class="credit"><b>'+it.nom+'</b><span>'+c.a+' — '+c.l+
+         ' · <a href="'+lien+'" target="_blank" rel="noopener">fichier</a></span></div>';
+  });
+  $('#liste-credits').innerHTML = h;
+}
+function majBascule(){
+  var dispo = false;
+  for(var k in PHOTOS){ if(Object.prototype.hasOwnProperty.call(PHOTOS,k)){ dispo = true; break; } }
+  $('#bascule').hidden = !dispo;
+  if(!dispo) vue = 'dessin';
+  $('#vue-dessin').className = (vue === 'dessin') ? 'on' : '';
+  $('#vue-photo').className  = (vue === 'photo')  ? 'on' : '';
+  $('#vue-dessin').setAttribute('aria-pressed', vue === 'dessin');
+  $('#vue-photo').setAttribute('aria-pressed', vue === 'photo');
+}
+
+/* ═══ La partie ═══════════════════════════════════════════ */
+function demarrer(s, m, liste){
+  var file;
+  if(liste)               file = melange(liste);
+  else if(s === 'rev')    file = melange(ITEMS);
+  else                    file = melange(poolDe(s));
+  partie = { s:s, m:m, file:file, i:0, justes:0, rates:[], repondu:false, revoir:!!liste };
+  montrer('jeu');
+  poser();
+}
+
+function poser(){
+  clearTimeout(minuteur);
+  var it = partie.file[partie.i];
+  partie.repondu = false;
+
+  var estPhoto = (vue === 'photo' && !!PHOTOS[it.id]);
+  $('#plaque').className = 'plaque' + (estPhoto ? ' av-photo' : '');
+  $('#dessin').className = 'dessin' + (estPhoto ? ' av-photo' : ' quadrille');
+  $('#dessin').innerHTML = visuel(it);
+  $('#etiquette').hidden = true;
+  $('#etiquette').textContent = '';
+  $('#btn-suite').classList.add('invisible');
+
+  var n = partie.i + 1, t = partie.file.length;
+  $('#compte').textContent = n + '/' + t;
+  $('#jauge').style.width = Math.round((partie.i / t) * 100) + '%';
+
+  if(partie.m === 'qcm') rendreQcm(it);
+  else if(partie.m === 'oral') rendreOral(it);
+  else rendreEcrit(it);
+}
+
+function rendreQcm(it){
+  $('#info').innerHTML = 'Comment s\'appelle cet objet&nbsp;?';
+  var autres = melange((partie.s === 'rev' ? ITEMS : poolDe(it.serie)).filter(function(x){ return x.id !== it.id; })).slice(0,2);
+  var options = melange([it].concat(autres));
+  var lettres = ['A','B','C'];
+  var h = '';
+  options.forEach(function(o, k){
+    h += '<button class="choix" type="button" data-id="'+o.id+'"><span class="lettre">'+lettres[k]+'</span>'+o.nom+'</button>';
+  });
+  $('#choix').innerHTML = h;
+}
+
+function repondreQcm(btn){
+  if(partie.repondu) return;
+  partie.repondu = true;
+  var it = partie.file[partie.i];
+  var bon = btn.getAttribute('data-id') === it.id;
+  var tous = $('#choix').querySelectorAll('.choix');
+  for(var k=0;k<tous.length;k++){
+    tous[k].disabled = true;
+    if(tous[k].getAttribute('data-id') === it.id) tous[k].classList.add('bon');
+  }
+  if(!bon){ btn.classList.add('mauvais'); btn.classList.add('secoue'); }
+  compter(bon, it);
+  reveler(it, bon);
+  $('#btn-suite').classList.remove('invisible');
+  if(bon) minuteur = setTimeout(suivant, 1250);
+}
+
+function rendreOral(it){
+  $('#info').innerHTML = 'Dis à voix haute le nom de cet objet, <b>puis vérifie</b>.';
+  $('#choix').innerHTML = '<button class="principal" type="button" data-verifier="1">Vérifier</button>';
+}
+
+function devoilerOral(){
+  if(partie.repondu) return;
+  partie.repondu = true;
+  var it = partie.file[partie.i];
+  $('#etiquette').textContent = it.nom;
+  $('#etiquette').hidden = false;
+  $('#info').textContent = it.role;
+  parler(it.nom);
+  $('#choix').innerHTML =
+    '<div class="duo">'+
+      '<button class="principal vert" type="button" data-auto="1">J\'avais bon</button>'+
+      '<button class="secondaire" type="button" data-auto="0">Je ne savais pas</button>'+
+    '</div>';
+}
+
+function rendreEcrit(it){
+  $('#info').innerHTML = 'Écris le nom de cet objet. <b>Les accents et les petits mots ne comptent pas.</b>';
+  $('#choix').innerHTML =
+    '<form class="form-saisie" id="form-ecrit" novalidate>'+
+      '<input class="champ" id="champ" type="text" inputmode="text" autocomplete="off" '+
+             'autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" '+
+             'placeholder="son nom…" aria-label="Écris le nom de cet objet">'+
+      '<button class="principal" type="submit">Vérifier</button>'+
+    '</form>';
+  $('#form-ecrit').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    repondreEcrit();
+  });
+}
+
+function repondreEcrit(){
+  if(partie.repondu) return;
+  var champ = $('#champ');
+  var txt = champ ? champ.value : '';
+  if(!normaliser(txt)) { if(champ) champ.focus(); return; }   /* champ vide : on n'enregistre rien */
+  partie.repondu = true;
+  var it = partie.file[partie.i];
+  var verdict = juger(txt, it);
+  var bon = (verdict !== 'faux');
+  champ.disabled = true;
+  champ.classList.add(bon ? 'bon' : 'mauvais');
+  if(champ.blur) champ.blur();                                /* referme le clavier */
+  var btn = $('#form-ecrit').querySelector('button');
+  if(btn){ btn.disabled = true; btn.classList.add('invisible'); }
+  compter(bon, it);
+  reveler(it, bon);
+  if(verdict === 'presque'){
+    $('#info').textContent = 'C\'était bien ça, mais l\'orthographe n\'y était pas tout à fait. ' + it.role;
+  }
+  $('#btn-suite').classList.remove('invisible');
+  if(bon) minuteur = setTimeout(suivant, 1400);
+}
+
+function autoEvaluer(bon){
+  var it = partie.file[partie.i];
+  compter(bon, it);
+  $('#plaque').classList.add(bon ? 'juste' : 'rate');
+  bip(bon);
+  var b = $('#choix').querySelectorAll('button');
+  for(var k=0;k<b.length;k++) b[k].disabled = true;
+  minuteur = setTimeout(suivant, 620);
+}
+
+function compter(bon, it){
+  if(bon) partie.justes++;
+  else partie.rates.push(it.id);
+}
+
+function reveler(it, bon){
+  $('#etiquette').textContent = it.nom;
+  $('#etiquette').hidden = false;
+  $('#plaque').classList.add(bon ? 'juste' : 'rate');
+  $('#info').textContent = it.role;
+  bip(bon);
+  parler(it.nom);
+}
+
+function suivant(){
+  clearTimeout(minuteur);
+  partie.i++;
+  if(partie.i >= partie.file.length) finir();
+  else poser();
+}
+
+/* ═══ Bilan ═══════════════════════════════════════════════ */
+function finir(){
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  var t = partie.file.length, n = partie.justes;
+  var et = (n === t) ? 3 : (n >= Math.ceil(t*0.7) ? 2 : (n >= Math.ceil(t*0.4) ? 1 : 0));
+
+  if(!partie.revoir){
+    var k = cle(partie.s, partie.m);
+    if(!fait(partie.s, partie.m) || (P[k]|0) < et) P[k] = et;
+    sauver();
+  }
+
+  var nomSerie = partie.s === 'rev' ? 'Les 21 mélangés' : ('Série ' + partie.s + ' · ' + SERIES[partie.s-1].nom);
+  $('#bilan-serie').textContent = nomSerie + (partie.m === 'qcm' ? ' · Je choisis' : (partie.m === 'oral' ? ' · À voix haute' : ' · J\'écris'));
+  $('#bilan-etoiles').innerHTML = etoilesHTML(et);
+  $('#bilan-titre').textContent =
+    n === t ? 'Sans faute !' :
+    (et === 2 ? 'Bien joué.' : (et === 1 ? 'C\'est un début.' : 'On refait un tour ?'));
+  $('#bilan-score').innerHTML = '<b>'+n+'</b> bonne'+(n>1?'s':'')+' réponse'+(n>1?'s':'')+' sur <b>'+t+'</b>.';
+
+  if(partie.rates.length){
+    var h = '';
+    partie.rates.forEach(function(id){
+      var it = parId(id);
+      h += '<div class="rate-item"><div class="cadre '+classeCadre(it)+'">'+visuel(it)+'</div><span>'+it.nom+'</span></div>';
+    });
+    $('#rates-liste').innerHTML = h;
+    $('#bilan-rates').hidden = false;
+  } else {
+    $('#bilan-rates').hidden = true;
+  }
+
+  var btn = $('#btn-bilan-1');
+  var s = partie.s, m = partie.m, rates = partie.rates.slice();
+  if(rates.length){
+    btn.textContent = 'Revoir les ' + rates.length + ' ratés';
+    btn.onclick = function(){ demarrer(s, m, rates.map(parId)); };
+  } else if(m === 'qcm'){
+    btn.textContent = 'Passer à « je dis à voix haute » →';
+    btn.onclick = function(){ demarrer(s, 'oral'); };
+  } else if(m === 'oral'){
+    btn.textContent = 'Passer à « j\'écris le nom » →';
+    btn.onclick = function(){ demarrer(s, 'ecrit'); };
+  } else if(s !== 'rev' && s < 3){
+    btn.textContent = 'Série ' + (s+1) + ' →';
+    btn.onclick = function(){ serieOuverte = s+1; construireAccueil(); montrer('accueil'); };
+  } else {
+    btn.textContent = 'Rejouer';
+    btn.onclick = function(){ demarrer(s, m); };
+  }
+
+  construireAccueil();
+  montrer('bilan');
+}
+
+/* ═══ Écoutes ═════════════════════════════════════════════ */
+document.addEventListener('click', function(ev){
+  var el = ev.target.closest ? ev.target.closest('button') : null;
+  if(!el) return;
+
+  var go = el.getAttribute('data-go');
+  if(go){ clearTimeout(minuteur); try{ window.speechSynthesis.cancel(); }catch(e){} montrer(go); return; }
+
+  var v = el.getAttribute('data-vue');
+  if(v){
+    if(v !== vue){ vue = v; sauver(); majBascule(); construireFiches(); }
+    return;
+  }
+
+  var t = el.getAttribute('data-toggle');
+  if(t){
+    var id = (t === 'rev') ? 'rev' : parseInt(t,10);
+    serieOuverte = (serieOuverte === id) ? null : id;
+    construireAccueil();
+    return;
+  }
+
+  var j = el.getAttribute('data-jouer');
+  if(j){
+    var sid = (j === 'rev') ? 'rev' : parseInt(j,10);
+    bip(true);
+    demarrer(sid, el.getAttribute('data-mode'));
+    return;
+  }
+
+  if(el.classList.contains('choix')){ repondreQcm(el); return; }
+  if(el.getAttribute('data-verifier')){ devoilerOral(); return; }
+  var a = el.getAttribute('data-auto');
+  if(a !== null && a !== undefined && (a === '0' || a === '1')){ autoEvaluer(a === '1'); return; }
+
+  if(el.id === 'btn-suite'){ suivant(); return; }
+  if(el.id === 'btn-son'){
+    son = !son; sauver(); majSon();
+    if(!son){ try{ window.speechSynthesis.cancel(); }catch(e){} }
+    return;
+  }
+  if(el.id === 'btn-reset'){
+    if(window.confirm('Effacer toutes les étoiles et recommencer à la série 1 ?')){
+      P = {}; sauver(); serieOuverte = 1; construireAccueil();
+    }
+    return;
+  }
+});
+
+/* ═══ Démarrage ═══════════════════════════════════════════ */
+function demarrage(donnees){
+  charger();
+  majSon();
+  serieOuverte = 1;
+  for(var i=0;i<SERIES.length;i++){
+    var s = SERIES[i].id;
+    if(!fait(s,'qcm') || !fait(s,'oral')){ serieOuverte = s; break; }
+    if(i === SERIES.length-1) serieOuverte = 'rev';
+  }
+  majBascule();
+  construireAccueil();
+  construireFiches();
+  construireCredits();
+  montrer(donnees && donnees.ecran === 'fiches' ? 'fiches' : 'accueil');
+  try{
+    if(window.speechSynthesis){
+      choisirVoix();
+      window.speechSynthesis.onvoiceschanged = choisirVoix;
+    }
+  }catch(e){}
+}
+
+try{
+  if(window.claude && window.claude.hot && window.claude.hot.snapshot){
+    window.claude.hot.snapshot(function(){ return {ecran: ecranActuel}; });
+  }
+}catch(e){}
+
+if(window.claude && window.claude.hot && window.claude.hot.ready){
+  window.claude.hot.ready(demarrage);
+} else {
+  demarrage((window.claude && window.claude.hot && window.claude.hot.data) || {});
+}
+
+})();
+</script>
