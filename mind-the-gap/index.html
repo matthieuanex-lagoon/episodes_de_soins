@@ -1,0 +1,1413 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mind the Gap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Jost:wght@500;600;700&display=swap">
+<style>
+/* ══ Jetons ══════════════════════════════════════════════
+   Papier de plan de métro : un gris franchement bleuté, pas
+   un crème. Le bleu et le rouge sont ceux du roundel London
+   Transport ; les trois lignes reprennent des couleurs de
+   lignes réelles qui ne sont ni le vert ni le rouge, gardés
+   pour « juste » et « raté ».                              */
+:root{
+  --paper:#eaeef2; --paper-2:#dfe5eb; --card:#ffffff;
+  --ink:#10161c; --ink-soft:#5b6773; --rule:#c8d2db;
+  --bleu:#0019a8; --bar-txt:#ffffff; --rouge:#e32017;
+  --ok:#1d7a46; --ok-doux:#e0efe6;
+  --ko:#c4271c; --ko-doux:#f9e6e4;
+  --or:#c9a227; --jaune:#f5d400;
+  --draw:#2a323a; --draw-soft:#aebbc6;
+  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l0:#10161c;
+  --lc:var(--l1);
+  --ombre:0 1px 0 rgba(16,22,28,.05), 0 12px 28px -18px rgba(16,22,28,.55);
+}
+/* Le thème sombre complet est en bas de la feuille : « Thème sombre ». */
+
+/* ══ Base ════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Atkinson Hyperlegible",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent; overscroll-behavior-y:none;
+}
+button,input{font:inherit;color:inherit;margin:0}
+button{cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+:focus-visible{outline:3px solid var(--bleu);outline-offset:2px}
+h1,h2,h3{font-family:"Jost",ui-sans-serif,system-ui,sans-serif;font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+p{margin:0}
+
+#app{
+  overflow-x:clip;
+  min-height:100svh; max-width:660px; margin-inline:auto;
+  padding-inline:18px;
+  padding-block:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-bottom));
+  display:flex; flex-direction:column;
+}
+.ecran{flex:1;display:flex;flex-direction:column;min-height:0}
+body.en-jeu{overflow:hidden}
+body.en-jeu #app{height:100svh;min-height:0}
+.eyebrow{font-family:"Jost",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--bleu)}
+
+/* ══ Accueil ═════════════════════════════════════════════ */
+.tete{padding-block:10px 18px;display:grid;gap:8px;justify-items:start}
+.logo{display:flex;align-items:center;gap:12px}
+.logo svg{width:52px;height:52px;flex:none}
+.tete h1{font-size:clamp(32px,9.5vw,44px);line-height:1;letter-spacing:-.02em}
+.tete .sous{color:var(--ink-soft);font-size:15px;max-width:38ch}
+
+.oyster{
+  display:grid;gap:8px;padding:13px 15px;margin-bottom:16px;
+  background:var(--card);border:1.5px solid var(--rule);border-radius:12px;box-shadow:var(--ombre);
+}
+.oyster .l{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.oyster b{font-family:"Jost",sans-serif;font-weight:600;font-size:15px}
+.oyster small{color:var(--ink-soft);font-size:12.5px;font-variant-numeric:tabular-nums}
+.barre-glob{height:7px;border-radius:99px;background:var(--paper-2);overflow:hidden}
+.barre-glob i{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--l1),var(--l2) 55%,var(--l3));transition:width .4s ease}
+
+.plan{display:grid;gap:12px}
+.l1{--lc:var(--l1)} .l2{--lc:var(--l2)} .l3{--lc:var(--l3)} .l0{--lc:var(--l0)}
+.ligne{background:var(--card);border:1.5px solid var(--rule);border-radius:12px;box-shadow:var(--ombre);overflow:hidden}
+.ligne.verrou{opacity:.55;box-shadow:none}
+.ligne-tete{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;background:none;border:0;text-align:left}
+.ligne-tete::before{content:"";flex:none;width:8px;align-self:stretch;border-radius:99px;background:var(--lc)}
+.ligne-txt{flex:1;min-width:0;display:grid;gap:2px}
+.ligne-txt b{font-family:"Jost",sans-serif;font-weight:600;font-size:18px;letter-spacing:-.01em;display:block}
+.ligne-txt small{color:var(--ink-soft);font-size:12.5px;line-height:1.3;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.etoiles{flex:none;letter-spacing:1px;font-size:14px;color:var(--rule)}
+.etoiles i{font-style:normal}
+.etoiles i.on{color:var(--or)}
+.ligne-corps{display:none;padding:0 14px 14px;gap:10px;grid-template-columns:1fr}
+.ligne.ouvert .ligne-corps{display:grid}
+
+/* Les stations de la ligne : un point par mot, plein quand le mot
+   est su dans les trois modes, à moitié quand il est en route. */
+.stations{position:relative;display:flex;align-items:center;justify-content:space-between;
+  height:20px;margin:2px 4px 6px;min-width:0}
+.stations::before{content:"";position:absolute;left:3px;right:3px;top:50%;height:4px;margin-top:-2px;
+  background:var(--lc);opacity:.28;border-radius:2px}
+.stations b{position:relative;width:10px;height:10px;border-radius:50%;flex:none;
+  background:var(--card);box-shadow:inset 0 0 0 3px var(--lc)}
+.stations b.p{background:color-mix(in srgb,var(--lc) 45%,var(--card))}
+.stations b.m{background:var(--lc)}
+
+.mode{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  min-height:58px;padding:9px 13px;border-radius:11px;
+  border:1.5px solid var(--rule);background:var(--paper);
+}
+.mode:disabled{opacity:.5;cursor:default}
+.mode .pic{flex:none;width:30px;height:30px;display:grid;place-items:center;color:var(--lc)}
+.mode .lbl{flex:1;display:grid;gap:1px;min-width:0}
+.mode .lbl b{font-family:"Jost",sans-serif;font-weight:600;font-size:15.5px}
+.mode .lbl small{color:var(--ink-soft);font-size:12px;line-height:1.25;display:block}
+
+.liens{margin-top:16px;display:grid;gap:2px;justify-items:start}
+.lien{background:none;border:0;padding:10px 0;text-align:left;color:var(--bleu);
+  font-weight:700;font-size:14.5px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.pied{margin-top:auto;padding-top:20px;display:flex;gap:14px;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--rule);color:var(--ink-soft);font-size:12px}
+.pied button{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+
+/* ══ Barre de jeu ════════════════════════════════════════ */
+.barre{display:flex;align-items:center;gap:11px;padding-block:4px 10px}
+.ico{flex:none;width:42px;height:42px;border-radius:11px;border:1.5px solid var(--rule);background:var(--card);
+  display:grid;place-items:center;font-size:17px;line-height:1}
+.trajet{position:relative;flex:1;display:flex;align-items:center;justify-content:space-between;height:20px;min-width:0}
+.trajet::before{content:"";position:absolute;left:4px;right:4px;top:50%;height:4px;margin-top:-2px;background:var(--rule);border-radius:2px}
+.trajet u{position:absolute;left:4px;top:50%;height:4px;margin-top:-2px;background:var(--lc);border-radius:2px;
+  width:0;transition:width .35s ease}
+.trajet i{position:relative;width:9px;height:9px;border-radius:50%;flex:none;background:var(--card);
+  box-shadow:inset 0 0 0 2.5px var(--rule)}
+.trajet i.ok{background:var(--lc);box-shadow:inset 0 0 0 2.5px var(--lc)}
+.trajet i.ko{background:var(--ko);box-shadow:inset 0 0 0 2.5px var(--ko)}
+.trajet i.now{width:16px;height:16px;background:var(--card);box-shadow:inset 0 0 0 4px var(--ink)}
+.compte{flex:none;font-family:"Jost",sans-serif;font-size:13.5px;font-weight:600;color:var(--ink-soft);
+  font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+
+/* ══ Le quai : roundel + barre ═══════════════════════════ */
+.corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
+.quai{flex:1;min-height:0;display:grid;place-items:center;padding-block:4px 34px;container-type:size}
+.roundel{
+  position:relative;aspect-ratio:1/1;
+  width:min(78%,268px);
+  width:min(calc(100cqh - 34px),78%,268px);
+  max-width:100%;
+  border-radius:50%;border:9px solid var(--lc);background:var(--card);
+  display:grid;place-items:center;box-shadow:var(--ombre);
+}
+.dess-box{width:56%;aspect-ratio:1/1;transform:translateY(-10%)}
+.dess{width:100%;height:100%;display:block}
+.bar{
+  position:absolute;left:-12%;right:-12%;top:62%;
+  background:var(--bleu);color:var(--bar-txt);
+  display:flex;align-items:center;justify-content:center;
+  min-height:19%;padding:7px 12px;text-align:center;
+  font-family:"Jost",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  font-size:clamp(15px,4.4vw,23px);line-height:1.1;
+}
+.note{
+  position:absolute;left:-12%;right:-12%;top:100%;
+  padding-top:9px;text-align:center;color:var(--ink-soft);font-size:13px;font-style:italic;
+}
+.tampon{
+  position:absolute;top:1%;right:-6%;transform:rotate(7deg) scale(.6);opacity:0;
+  background:var(--card);border:3px solid var(--ok);color:var(--ok);border-radius:6px;
+  padding:5px 11px;white-space:nowrap;
+  font-family:"Jost",sans-serif;font-weight:700;font-size:14px;letter-spacing:.09em;text-transform:uppercase;
+  transition:transform .22s cubic-bezier(.2,1.6,.4,1),opacity .18s;
+}
+.tampon.vu{opacity:1;transform:rotate(7deg) scale(1)}
+.tampon.ko{border-color:var(--ko);color:var(--ko)}
+
+/* ══ Zone de réponse ═════════════════════════════════════ */
+.zone{display:grid;gap:10px}
+.info{min-height:46px;padding-block:2px;font-size:13.5px;line-height:1.35;color:var(--ink-soft);text-wrap:pretty}
+.info b{color:var(--ink)}
+.info b.ok{color:var(--ok)} .info b.ko{color:var(--ko)}
+.choix-liste{display:grid;gap:9px}
+.choix{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;min-height:58px;padding:10px 14px;
+  border-radius:12px;border:1.5px solid var(--rule);background:var(--card);
+  font-family:"Jost",sans-serif;font-weight:600;font-size:clamp(17px,4.6vw,20px);letter-spacing:-.01em;
+  transition:transform .1s ease,background .15s,border-color .15s,color .15s;
+}
+.choix .lettre{flex:none;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;
+  background:var(--paper-2);color:var(--ink-soft);font-size:12.5px;font-weight:700}
+.choix:active{transform:scale(.985)}
+.choix:disabled{cursor:default}
+.choix.bon{background:var(--ok-doux);border-color:var(--ok);color:var(--ok)}
+.choix.bon .lettre{background:var(--ok);color:var(--card)}
+.choix.mauvais{background:var(--ko-doux);border-color:var(--ko);color:var(--ko)}
+.choix.mauvais .lettre{background:var(--ko);color:var(--card)}
+
+.principal{width:100%;min-height:58px;border-radius:12px;border:1.5px solid var(--bleu);background:var(--bleu);
+  color:var(--bar-txt);font-family:"Jost",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;
+  transition:transform .1s ease}
+.principal:active{transform:scale(.985)}
+.principal.vert{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.secondaire{width:100%;min-height:52px;border-radius:12px;border:1.5px solid var(--rule);background:var(--card);
+  font-family:"Jost",sans-serif;font-weight:600;font-size:15.5px}
+.secondaire:active{transform:scale(.985)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.invisible{visibility:hidden;pointer-events:none}
+
+/* Oral */
+.micro{
+  width:100%;min-height:74px;border-radius:14px;border:2px solid var(--lc);background:var(--card);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  font-family:"Jost",sans-serif;font-weight:600;font-size:17px;
+}
+.micro svg{width:26px;height:26px;color:var(--lc)}
+.micro.on{background:var(--lc);color:var(--card);border-color:var(--lc)}
+.micro.on svg{color:var(--card)}
+@keyframes onde{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.16);opacity:.75}}
+.micro.on svg{animation:onde 1.05s ease-in-out infinite}
+.entendu{font-style:italic}
+
+/* Frappe */
+.champ{
+  width:100%;min-height:60px;border-radius:12px;border:1.5px solid var(--rule);background:var(--card);color:var(--ink);
+  padding:12px 16px;font-family:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;font-weight:700;font-size:19px;
+  -webkit-appearance:none;appearance:none;
+}
+.champ::placeholder{color:var(--ink-soft);font-weight:400;opacity:.7}
+.champ:focus{border-color:var(--bleu);outline:2px solid color-mix(in srgb,var(--bleu) 22%,transparent);outline-offset:0}
+.champ.bon{background:var(--ok-doux);border-color:var(--ok);color:var(--ok)}
+.champ.mauvais{background:var(--ko-doux);border-color:var(--ko);color:var(--ko)}
+.relu{display:flex;align-items:center;min-height:60px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3}
+.faute{color:var(--ko);text-decoration:underline wavy var(--ko);text-decoration-thickness:2px;text-underline-offset:4px}
+.manque{color:var(--ko);font-weight:800;padding-inline:1px}
+.gabarit{font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;letter-spacing:.18em;color:var(--ink-soft);font-size:15px}
+
+/* ══ Bilan ═══════════════════════════════════════════════ */
+.bilan{flex:1;display:flex;flex-direction:column;gap:13px;padding-top:6px}
+.bilan h2{font-size:clamp(26px,7.5vw,34px)}
+.etoiles-gd{font-size:34px;letter-spacing:6px;color:var(--rule);line-height:1}
+.etoiles-gd i{font-style:normal}
+.etoiles-gd i.on{color:var(--or)}
+.score{font-size:15px;color:var(--ink-soft)}
+.score b{color:var(--ink);font-variant-numeric:tabular-nums}
+.rates{display:grid;gap:8px;margin-top:2px}
+.rates h3{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ko);font-weight:600}
+.rates-liste{display:flex;gap:9px;flex-wrap:wrap}
+.rate{display:grid;gap:5px;justify-items:center;width:86px}
+.rate .cadre{width:64px;height:64px;border-radius:50%;border:3px solid var(--lc);background:var(--card);
+  display:grid;place-items:center;padding:9px}
+.rate span{font-size:11.5px;line-height:1.2;text-align:center;color:var(--ink-soft)}
+.rate b{font-family:"Jost",sans-serif;font-size:12.5px;font-weight:600;text-align:center;line-height:1.15}
+.actions{margin-top:auto;display:grid;gap:9px;padding-top:16px}
+
+/* ══ Carnet ══════════════════════════════════════════════ */
+.carnet-tete{display:flex;align-items:center;gap:11px;padding-block:4px 12px}
+.carnet-tete h2{font-size:22px;flex:1}
+.groupe{font-family:"Jost",sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lc);font-weight:600;padding-top:14px;padding-bottom:6px;display:flex;align-items:center;gap:8px}
+.groupe::before{content:"";width:16px;height:6px;border-radius:99px;background:var(--lc)}
+.fiches{display:grid;gap:8px}
+@media (min-width:560px){.fiches{grid-template-columns:1fr 1fr}}
+.fiche{display:flex;align-items:center;gap:11px;padding:9px 11px;background:var(--card);
+  border:1.5px solid var(--rule);border-radius:11px}
+.fiche .rond{flex:none;width:46px;height:46px;border-radius:50%;border:3px solid var(--lc);
+  display:grid;place-items:center;padding:6px;background:var(--card)}
+.fiche .txt{flex:1;min-width:0}
+.fiche .txt b{font-family:"Jost",sans-serif;font-weight:600;font-size:15.5px;display:block;line-height:1.2}
+.fiche .txt small{color:var(--ink-soft);font-size:12.5px;display:block;line-height:1.25}
+.pastilles{flex:none;display:flex;gap:3px}
+.pastilles i{width:8px;height:8px;border-radius:50%;background:var(--rule);display:block}
+.pastilles i.on{background:var(--lc)}
+.hp{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--rule);background:var(--paper);
+  display:grid;place-items:center;font-size:15px}
+
+/* ══ Dessins au trait ════════════════════════════════════ */
+.dess .ln{fill:none;stroke:var(--draw);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.dess .tn{fill:none;stroke:var(--draw);stroke-width:3;stroke-linecap:round}
+.dess .ep{fill:none;stroke:var(--draw);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.dess .sl{fill:var(--paper-2);stroke:var(--draw);stroke-width:4.6;stroke-linejoin:round;stroke-linecap:round}
+.dess .wh{fill:var(--card);stroke:var(--draw);stroke-width:4.6;stroke-linejoin:round;stroke-linecap:round}
+.dess .gl{fill:var(--card);fill-opacity:.88;stroke:var(--draw);stroke-width:5;stroke-linejoin:round}
+.dess .dk{fill:var(--draw);stroke:none}
+.dess .fl{fill:var(--draw-soft);stroke:var(--draw);stroke-width:4.6;stroke-linejoin:round}
+.dess .hi{fill:var(--jaune);stroke:var(--draw);stroke-width:4;stroke-linejoin:round}
+.dess .hr{fill:var(--rouge);stroke:var(--draw);stroke-width:4.6;stroke-linejoin:round}
+.dess .c1{fill:var(--rouge);stroke:var(--draw);stroke-width:4;stroke-linejoin:round}
+.dess .c2{fill:var(--l1);stroke:var(--draw);stroke-width:4;stroke-linejoin:round}
+.dess .c3{fill:var(--jaune);stroke:var(--draw);stroke-width:4;stroke-linejoin:round}
+.dess .txt{fill:var(--draw);stroke:none;font-family:"Jost",sans-serif;font-weight:700;font-size:30px;text-anchor:middle}
+.dess .txt.gr{font-size:38px}
+
+/* ══ Thème sombre ════════════════════════════════════════ */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f1419; --paper-2:#161e26; --card:#1a222b;
+    --ink:#e9eef3; --ink-soft:#96a4b0; --rule:#2d3742;
+    --bleu:#7ea1ef; --bar-txt:#0f1419; --rouge:#ff5f52;
+    --ok:#4fb37a; --ok-doux:#15251c;
+    --ko:#e5786b; --ko-doux:#2a1815;
+    --or:#d8b13f; --jaune:#e8cf2a;
+    --draw:#c9d4de; --draw-soft:#57646f;
+    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l0:#e9eef3;
+    --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f1419; --paper-2:#161e26; --card:#1a222b;
+  --ink:#e9eef3; --ink-soft:#96a4b0; --rule:#2d3742;
+  --bleu:#7ea1ef; --bar-txt:#0f1419; --rouge:#ff5f52;
+  --ok:#4fb37a; --ok-doux:#15251c;
+  --ko:#e5786b; --ko-doux:#2a1815;
+  --or:#d8b13f; --jaune:#e8cf2a;
+  --draw:#c9d4de; --draw-soft:#57646f;
+  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l0:#e9eef3;
+  --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
+}
+
+@keyframes secousse{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-4px)}}
+.secoue{animation:secousse .34s}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .tampon.vu{transform:rotate(7deg) scale(1)}
+}
+@media (orientation:landscape) and (max-height:560px){
+  .corps{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:center;gap:18px}
+  .quai{height:100%;padding-block:2px 30px}
+  .info{min-height:0}
+}
+</style>
+
+<main id="app">
+
+  <!-- ════ ACCUEIL ════════════════════════════════════════ -->
+  <section class="ecran" id="ecran-accueil">
+    <div class="tete">
+      <p class="eyebrow">Anglais &middot; Lessons 1 &agrave; 3</p>
+      <div class="logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rouge)" stroke-width="13"></circle>
+          <rect x="4" y="42" width="92" height="16" fill="var(--bleu)"></rect>
+        </svg>
+        <h1>Mind the Gap</h1>
+      </div>
+      <p class="sous">36 mots &agrave; ramasser sur trois lignes. On choisit, on le dit, puis on l&rsquo;&eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
+    </div>
+
+    <div class="oyster">
+      <div class="l"><b>Mots ma&icirc;tris&eacute;s</b><small id="glob-n">0 / 36</small></div>
+      <div class="barre-glob"><i id="glob-bar"></i></div>
+      <small id="glob-txt" style="color:var(--ink-soft);font-size:12.5px">Un mot est ma&icirc;tris&eacute; quand il est juste dans les trois modes.</small>
+    </div>
+
+    <div class="plan" id="plan"></div>
+
+    <div class="liens">
+      <button class="lien" type="button" data-go="carnet">Le carnet des 36 mots &rarr;</button>
+    </div>
+
+    <div class="pied">
+      <span>Greetings &middot; School stuff &middot; Instructions</span>
+      <button type="button" id="btn-reset">Tout effacer</button>
+    </div>
+  </section>
+
+  <!-- ════ JEU ════════════════════════════════════════════ -->
+  <section class="ecran" id="ecran-jeu" hidden>
+    <div class="barre">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au plan">&larr;</button>
+      <div class="trajet" id="trajet"><u id="trajet-fait"></u></div>
+      <p class="compte" id="compte">1/10</p>
+      <button class="ico" type="button" id="btn-son" aria-label="Couper le son">&#128266;</button>
+    </div>
+
+    <div class="corps">
+      <div class="quai">
+        <div class="roundel" id="roundel">
+          <div class="dess-box" id="dess"></div>
+          <p class="bar" id="bar-fr"></p>
+          <p class="note" id="note"></p>
+          <p class="tampon" id="tampon" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="zone">
+        <p class="info" id="info" aria-live="polite"></p>
+        <div id="controles"></div>
+        <button class="principal invisible" type="button" id="btn-suite">Station suivante &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ BILAN ══════════════════════════════════════════ -->
+  <section class="ecran" id="ecran-bilan" hidden>
+    <div class="bilan">
+      <p class="eyebrow" id="bilan-ligne"></p>
+      <div class="etoiles-gd" id="bilan-etoiles"></div>
+      <h2 id="bilan-titre"></h2>
+      <p class="score" id="bilan-score"></p>
+      <div class="rates" id="bilan-rates" hidden>
+        <h3>Mind the gap &mdash; &agrave; revoir</h3>
+        <div class="rates-liste" id="rates-liste"></div>
+      </div>
+      <div class="actions">
+        <button class="principal" type="button" id="btn-bilan-1"></button>
+        <button class="secondaire" type="button" id="btn-bilan-2"></button>
+        <button class="secondaire" type="button" data-go="accueil">Retour au plan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CARNET ═════════════════════════════════════════ -->
+  <section class="ecran" id="ecran-carnet" hidden>
+    <div class="carnet-tete">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au plan">&larr;</button>
+      <h2>Le carnet</h2>
+    </div>
+    <p style="color:var(--ink-soft);font-size:13.5px;line-height:1.45;max-width:60ch">
+      Les 36 mots des trois le&ccedil;ons. Appuie sur le haut-parleur pour entendre la prononciation
+      britannique&nbsp;; les trois pastilles disent ce qui est acquis&nbsp;: choisir, dire, &eacute;crire.
+    </p>
+    <div id="carnet"></div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════
+   LES 36 MOTS
+   Trois le&ccedil;ons du cahier d'anglais : les salutations, le
+   mat&eacute;riel scolaire, les consignes &eacute;crites. Les dessins
+   reprennent les pictogrammes de la fiche « Instructions ».
+   Ajouter un mot = ajouter une ligne ici ; tout le reste
+   (stations, QCM, carnet, comptes) s'y adapte tout seul.
+   ═══════════════════════════════════════════════════════════ */
+
+function d(inner){ return '<svg class="dess" viewBox="0 0 120 120" aria-hidden="true">'+inner+'</svg>'; }
+
+var MOTS = [
+
+/* ── Ligne 1 · Greetings ─────────────────────────────── */
+{id:'hello', l:1, en:'Hello', fr:'Bonjour', svg:d(
+  '<path class="sl" d="M40 104 C28 94 24 78 24 64 V52 a7 7 0 0 1 14 0 v6 V34 a7 7 0 0 1 14 0 v22 V28 a7 7 0 0 1 14 0 v28 V38 a7 7 0 0 1 14 0 v30 c0 22-10 34-22 38 z"/>'+
+  '<path class="ln" d="M92 42 q9 18 0 36 M104 30 q15 30 0 60"/>')},
+
+{id:'morning', l:1, en:'Good morning', fr:'Bonjour', note:'le matin', svg:d(
+  '<path class="ln" d="M10 88 h100"/>'+
+  '<path class="sl" d="M34 88 a26 26 0 0 1 52 0 z"/>'+
+  '<path class="ln" d="M60 36 V22 M88 48 l9-9 M32 48 l-9-9 M96 70 h12 M12 70 h12"/>'+
+  '<path class="tn" d="M30 104 h24 M66 104 h24"/>')},
+
+{id:'afternoon', l:1, en:'Good afternoon', fr:'Bonjour', note:"l'apr&egrave;s-midi", svg:d(
+  '<circle class="sl" cx="60" cy="50" r="22"/>'+
+  '<path class="ln" d="M60 18 V6 M94 50 h12 M14 50 h12 M84 26 l8-8 M28 74 l-8 8 M84 74 l8 8 M28 26 l-8-8"/>'+
+  '<path class="ln" d="M10 104 h100"/>')},
+
+{id:'goodbye', l:1, en:'Goodbye', alt:['good bye'], fr:'Au revoir', svg:d(
+  '<rect class="sl" x="62" y="14" width="44" height="92" rx="4"/>'+
+  '<circle class="dk" cx="73" cy="60" r="4.5"/>'+
+  '<path class="ep" d="M14 60 h36 m-13-13 l13 13 -13 13"/>')},
+
+{id:'soon', l:1, en:'See you soon', fr:'&Agrave; bient&ocirc;t', svg:d(
+  '<path class="ln" d="M32 14 h56 M32 106 h56"/>'+
+  '<path class="sl" d="M38 14 v12 c0 16 22 28 22 34 s-22 18-22 34 v12 h44 v-12 c0-16-22-18-22-34 s22-18 22-34 V14 z"/>'+
+  '<path class="dk" d="M46 24 h28 c0 9-14 20-14 20 s-14-11-14-20 z"/>'+
+  '<path class="dk" d="M44 94 c0-11 16-16 16-16 s16 5 16 16 z"/>')},
+
+{id:'tomorrow', l:1, en:'See you tomorrow', fr:'&Agrave; demain', svg:d(
+  '<rect class="sl" x="14" y="26" width="92" height="80" rx="6"/>'+
+  '<path class="ln" d="M14 50 h92 M38 26 V12 M82 26 V12"/>'+
+  '<rect class="dk" x="68" y="62" width="24" height="22" rx="4"/>'+
+  '<path class="ln" d="M30 73 h22 m-7-7 l7 7 -7 7"/>')},
+
+{id:'later', l:1, en:'See you later', fr:'&Agrave; plus tard', svg:d(
+  '<circle class="sl" cx="54" cy="64" r="34"/>'+
+  '<path class="ln" d="M54 42 v22 h18"/>'+
+  '<path class="ln" d="M84 16 a30 30 0 0 1 16 24"/>'+
+  '<path class="dk" d="M100 44 l-11-6 13-5 z"/>')},
+
+{id:'niceday', l:1, en:'Have a nice day', fr:'Bonne journ&eacute;e', svg:d(
+  '<circle class="sl" cx="60" cy="58" r="26"/>'+
+  '<circle class="dk" cx="51" cy="52" r="3.6"/><circle class="dk" cx="69" cy="52" r="3.6"/>'+
+  '<path class="ln" d="M48 66 q12 12 24 0"/>'+
+  '<path class="ln" d="M60 20 V8 M60 108 V96 M98 58 h12 M10 58 h12 M87 31 l8-8 M25 85 l-8 8 M87 85 l8 8 M25 31 l-8-8"/>')},
+
+{id:'thanks', l:1, en:'Thank you', fr:'Merci', svg:d(
+  '<path class="hr" d="M60 40 c-8-13-30-9-30 8 0 15 19 25 30 36 11-11 30-21 30-36 0-17-22-21-30-8 z"/>'+
+  '<path class="ln" d="M18 82 q11 28 42 28 t42-28"/>')},
+
+{id:'please', l:1, en:'Please', fr:"S'il vous pla&icirc;t", svg:d(
+  '<path class="sl" d="M57 12 c-17 15-27 35-27 53 v27 h27 z"/>'+
+  '<path class="sl" d="M63 12 c17 15 27 35 27 53 v27 H63 z"/>'+
+  '<path class="ln" d="M22 92 h76"/>')},
+
+/* ── Ligne 2 · School stuff ──────────────────────────── */
+{id:'copybook', l:2, en:'a copy book', fr:'un cahier', svg:d(
+  '<rect class="sl" x="22" y="12" width="76" height="96" rx="4"/>'+
+  '<path class="ln" d="M36 12 V108"/>'+
+  '<rect class="wh" x="48" y="28" width="38" height="24" rx="2"/>'+
+  '<path class="tn" d="M48 72 h38 M48 86 h24"/>')},
+
+{id:'pen', l:2, en:'a pen', fr:'un stylo', svg:d(
+  '<g transform="rotate(35 60 60)">'+
+  '<path class="sl" d="M48 14 h24 v66 l-12 24 -12-24 z"/>'+
+  '<path class="ln" d="M48 80 h24"/>'+
+  '<path class="dk" d="M56 92 l4 12 4-12 z"/>'+
+  '<rect class="fl" x="72" y="20" width="8" height="30" rx="4"/>'+
+  '</g>')},
+
+{id:'pencil', l:2, en:'a pencil', fr:'un crayon &agrave; papier', svg:d(
+  '<g transform="rotate(35 60 60)">'+
+  '<path class="hr" d="M48 10 h24 v12 H48 z"/>'+
+  '<path class="sl" d="M48 22 h24 v56 H48 z"/>'+
+  '<path class="wh" d="M48 78 l12 26 12-26 z"/>'+
+  '<path class="dk" d="M55 94 l5 10 5-10 z"/>'+
+  '</g>')},
+
+{id:'rubber', l:2, en:'a rubber', fr:'une gomme', svg:d(
+  '<path class="wh" d="M18 54 L42 38 L102 38 L78 54 Z"/>'+
+  '<path class="sl" d="M18 54 h60 v32 H18 z"/>'+
+  '<path class="fl" d="M78 54 L102 38 V70 L78 86 Z"/>'+
+  '<path class="ln" d="M18 68 h60"/>')},
+
+{id:'glue', l:2, en:'a glue stick', fr:'un b&acirc;ton de colle', svg:d(
+  '<rect class="sl" x="42" y="10" width="36" height="26" rx="4"/>'+
+  '<rect class="wh" x="42" y="36" width="36" height="72" rx="4"/>'+
+  '<path class="fl" d="M42 56 h36 v30 H42 z"/>'+
+  '<path class="ln" d="M42 36 h36"/>')},
+
+{id:'scissors', l:2, en:'a pair of scissors', fr:'une paire de ciseaux', svg:d(
+  '<path class="ep" d="M34 16 L78 82 M86 16 L42 82"/>'+
+  '<circle class="ln" cx="36" cy="94" r="13"/><circle class="ln" cx="84" cy="94" r="13"/>'+
+  '<circle class="dk" cx="60" cy="52" r="5"/>')},
+
+{id:'highlighter', l:2, en:'a highlighter', fr:'un surligneur', svg:d(
+  '<g transform="rotate(28 60 60)">'+
+  '<rect class="sl" x="42" y="8" width="34" height="24" rx="4"/>'+
+  '<rect class="wh" x="42" y="32" width="34" height="42" rx="3"/>'+
+  '<path class="hi" d="M44 74 h30 l-7 22 h-16 z"/>'+
+  '</g>')},
+
+{id:'ruler', l:2, en:'a ruler', fr:'une r&egrave;gle', svg:d(
+  '<g transform="rotate(-11 60 60)">'+
+  '<rect class="sl" x="8" y="44" width="104" height="30" rx="3"/>'+
+  '<path class="ln" d="M24 44 v13 M38 44 v8 M52 44 v13 M66 44 v8 M80 44 v13 M94 44 v8"/>'+
+  '</g>')},
+
+{id:'coloured', l:2, en:'a coloured pencil', fr:'un crayon de couleur', svg:d(
+  '<g transform="rotate(-14 60 70)">'+
+  '<path class="c1" d="M20 26 h18 v52 l-9 16 -9-16 z"/>'+
+  '<path class="c2" d="M51 20 h18 v58 l-9 16 -9-16 z"/>'+
+  '<path class="c3" d="M82 26 h18 v52 l-9 16 -9-16 z"/>'+
+  '</g>')},
+
+{id:'pencilcase', l:2, en:'a pencil case', fr:'une trousse', svg:d(
+  '<path class="sl" d="M26 40 h68 a17 17 0 0 1 0 46 H26 a17 17 0 0 1 0-46 z"/>'+
+  '<path class="ln" d="M22 54 h76"/>'+
+  '<path class="tn" d="M34 47 v7 M44 47 v7 M54 47 v7 M64 47 v7 M74 47 v7 M84 47 v7"/>'+
+  '<circle class="dk" cx="96" cy="47" r="7"/>')},
+
+/* ── Ligne 3 · Written instructions ──────────────────── */
+{id:'write', l:3, en:'write', fr:'&eacute;cris', svg:d(
+  '<g transform="translate(2,-8) rotate(38 60 54)">'+
+  '<path class="sl" d="M48 8 h22 v54 H48 z"/>'+
+  '<path class="wh" d="M48 62 l11 22 11-22 z"/>'+
+  '<path class="dk" d="M54 76 l5 8 5-8 z"/>'+
+  '</g>'+
+  '<path class="ln" d="M14 100 q12-12 24 0 t24 0 t24 0"/>')},
+
+{id:'read', l:3, en:'read', fr:'lis', svg:d(
+  '<path class="sl" d="M10 30 q24-11 48 0 v56 q-24-11-48 0 z"/>'+
+  '<path class="sl" d="M110 30 q-24-11-48 0 v56 q24-11 48 0 z"/>'+
+  '<path class="ln" d="M60 30 V86"/>'+
+  '<path class="tn" d="M20 48 h28 M20 60 h22 M72 48 h28 M72 60 h22"/>')},
+
+{id:'speak', l:3, en:'speak', alt:['talk'], fr:'parle', svg:d(
+  '<path class="sl" d="M36 104 V78 c-10-6-16-18-16-30 0-20 16-34 34-34 17 0 30 12 32 26 l4 16 -8 3 v12 q0 7-8 7 h-8 v26 z"/>'+
+  '<circle class="dk" cx="44" cy="46" r="4"/>'+
+  '<path class="ln" d="M88 46 q9 16 0 32 M102 36 q15 26 0 52"/>')},
+
+{id:'watch', l:3, en:'watch', fr:'regarde', note:'une vid&eacute;o', svg:d(
+  '<path class="sl" d="M14 26 h92 v20 H14 z"/>'+
+  '<path class="dk" d="M28 26 l11 20 h11 l-11-20 z M54 26 l11 20 h11 l-11-20 z M80 26 l11 20 h11 l-11-20 z"/>'+
+  '<rect class="wh" x="14" y="46" width="92" height="52" rx="4"/>'+
+  '<path class="dk" d="M50 60 l24 14 -24 14 z"/>')},
+
+{id:'listen', l:3, en:'listen', fr:'&eacute;coute', svg:d(
+  '<path class="sl" d="M50 108 c-12 0-16-10-16-20 0-16-10-16-10-32 0-17 14-30 32-30 18 0 30 13 30 29 0 14-9 20-17 22-6 2-9 6-9 13 0 10-4 18-10 18 z"/>'+
+  '<path class="ln" d="M46 46 a14 14 0 0 1 19 14"/>'+
+  '<path class="ln" d="M96 40 q10 20 0 40 M108 30 q14 30 0 60"/>')},
+
+{id:'answer', l:3, en:'answer', fr:'r&eacute;ponds', svg:d(
+  '<path class="sl" d="M10 18 h52 a7 7 0 0 1 7 7 v26 a7 7 0 0 1-7 7 H34 l-14 13 v-13 h-10 a7 7 0 0 1-7-7 V25 a7 7 0 0 1 7-7 z"/>'+
+  '<circle class="dk" cx="24" cy="38" r="4"/><circle class="dk" cx="36" cy="38" r="4"/><circle class="dk" cx="48" cy="38" r="4"/>'+
+  '<path class="wh" d="M58 56 h44 a8 8 0 0 1 8 8 v28 a8 8 0 0 1-8 8 h-6 v14 l-15-14 H58 a8 8 0 0 1-8-8 V64 a8 8 0 0 1 8-8 z"/>'+
+  '<text class="txt" x="80" y="90">?</text>')},
+
+{id:'lookfor', l:3, en:'look for', alt:['find'], fr:'cherche', note:'trouve', svg:d(
+  '<path class="sl" d="M8 42 q24-11 46 0 v48 q-22-10-46 0 z"/>'+
+  '<path class="sl" d="M112 42 q-24-11-46 0 v48 q22-10 46 0 z"/>'+
+  '<path class="ln" d="M60 42 V90"/>'+
+  '<circle class="gl" cx="68" cy="50" r="24"/>'+
+  '<path class="ep" d="M86 68 L102 84"/>')},
+
+{id:'lookat', l:3, en:'look at', fr:'regarde', note:'observe', svg:d(
+  '<path class="sl" d="M6 58 q26-30 54 0 q-26 30-54 0 z"/>'+
+  '<circle class="dk" cx="33" cy="58" r="10"/>'+
+  '<path class="ep" d="M72 58 h32 m-13-13 l13 13 -13 13"/>')},
+
+{id:'highlight', l:3, en:'highlight', fr:'surligne', svg:d(
+  '<path class="hi" d="M10 50 h64 v22 H10 z"/>'+
+  '<path class="tn" d="M18 61 h48"/>'+
+  '<g transform="rotate(26 92 40)">'+
+  '<rect class="wh" x="78" y="14" width="26" height="32" rx="3"/>'+
+  '<path class="hi" d="M79 46 h24 l-6 16 h-12 z"/>'+
+  '</g>')},
+
+{id:'tick', l:3, en:'tick', fr:'coche', svg:d(
+  '<path class="ep" d="M20 62 L46 90 L100 24"/>')},
+
+{id:'crossout', l:3, en:'cross out', fr:'barre', note:'raye', svg:d(
+  '<path class="ep" d="M26 26 L94 94 M94 26 L26 94"/>')},
+
+{id:'match', l:3, en:'match', fr:'relie', note:'associe', svg:d(
+  '<rect class="sl" x="10" y="16" width="26" height="26" rx="3"/>'+
+  '<rect class="sl" x="10" y="48" width="26" height="26" rx="3"/>'+
+  '<rect class="sl" x="10" y="80" width="26" height="26" rx="3"/>'+
+  '<rect class="sl" x="84" y="16" width="26" height="26" rx="3"/>'+
+  '<rect class="sl" x="84" y="48" width="26" height="26" rx="3"/>'+
+  '<rect class="sl" x="84" y="80" width="26" height="26" rx="3"/>'+
+  '<circle class="dk" cx="23" cy="29" r="6"/><path class="dk" d="M23 55 l7 12 h-14 z"/>'+
+  '<rect class="dk" x="17" y="87" width="12" height="12"/>'+
+  '<path class="dk" d="M97 23 l7 12 h-14 z"/><rect class="dk" x="91" y="55" width="12" height="12"/>'+
+  '<circle class="dk" cx="97" cy="93" r="6"/>'+
+  '<path class="ln" d="M42 62 C62 62 58 30 78 30"/>'+
+  '<path class="dk" d="M78 30 l-13-6 v12 z"/>')},
+
+{id:'underline', l:3, en:'underline', fr:'souligne', svg:d(
+  '<text class="txt gr" x="60" y="62">YES</text>'+
+  '<path class="ep" d="M18 84 h84"/>')},
+
+{id:'circle', l:3, en:'circle', fr:'entoure', svg:d(
+  '<text class="txt" x="60" y="70">word</text>'+
+  '<ellipse class="ep" cx="60" cy="60" rx="46" ry="30" transform="rotate(-5 60 60)"/>')},
+
+{id:'colour', l:3, en:'colour', fr:'colorie', svg:d(
+  '<g stroke="var(--draw)" stroke-width="3">'+
+  '<path fill="#e32017" d="M60 60 L60 26 A34 34 0 0 1 89.4 43 Z"/>'+
+  '<path fill="#f2a01d" d="M60 60 L89.4 43 A34 34 0 0 1 89.4 77 Z"/>'+
+  '<path fill="#f5d400" d="M60 60 L89.4 77 A34 34 0 0 1 60 94 Z"/>'+
+  '<path fill="#1d7a46" d="M60 60 L60 94 A34 34 0 0 1 30.6 77 Z"/>'+
+  '<path fill="#0098d4" d="M60 60 L30.6 77 A34 34 0 0 1 30.6 43 Z"/>'+
+  '<path fill="#6950a1" d="M60 60 L30.6 43 A34 34 0 0 1 60 26 Z"/>'+
+  '</g>'+
+  '<circle class="wh" cx="60" cy="60" r="11"/>')},
+
+{id:'draw', l:3, en:'draw', fr:'dessine', svg:d(
+  '<rect class="wh" x="12" y="14" width="76" height="78" rx="3"/>'+
+  '<circle class="ln" cx="48" cy="36" r="9"/>'+
+  '<path class="ln" d="M48 45 v22 M48 52 l-13 8 M48 52 l13 8 M48 67 l-11 17 M48 67 l11 17"/>'+
+  '<g transform="rotate(42 86 78)">'+
+  '<path class="sl" d="M76 40 h20 v42 H76 z"/>'+
+  '<path class="wh" d="M76 82 l10 20 10-20 z"/>'+
+  '<path class="dk" d="M81 94 l5 8 5-8 z"/>'+
+  '</g>')}
+];
+
+var LIGNES = [
+  {id:1, nom:'Greetings',     sous:'Se dire bonjour, merci, au revoir'},
+  {id:2, nom:'School stuff',  sous:'Ce qu&rsquo;il y a dans la trousse'},
+  {id:3, nom:'Instructions',  sous:'Les consignes des exercices'},
+  {id:0, nom:'All change',    sous:'Douze mots au hasard, toutes lignes'}
+];
+
+var MODES = [
+  {id:'qcm',   nom:'Je choisis',      sous:'Trois propositions.'},
+  {id:'oral',  nom:'Je le dis',       sous:'&Agrave; voix haute, en anglais.'},
+  {id:'ecrit', nom:"Je l'&eacute;cris",     sous:'Au clavier. Z&eacute;ro faute admise.'}
+];
+
+var BRAVOS = ['Brilliant!','Spot on!','Smashing!','Well done!','Jolly good!','Lovely!','Top marks!','Bang on!'];
+
+/* ═══ &Eacute;tat ═══════════════════════════════════════════════ */
+var CLE = 'mind-the-gap-v1';
+var P = {};        /* &eacute;toiles par ligne+mode : "1-qcm" -> 0..3 */
+var M = {};        /* acquis par mot : id -> {qcm:1,oral:1,ecrit:1} */
+var son = true;
+var partie = null;
+var ecranActuel = 'accueil';
+var ligneOuverte = 1;
+var microKO = false;
+
+function charger(){
+  try{
+    var r = JSON.parse(localStorage.getItem(CLE) || '{}');
+    P = (r && typeof r.p === 'object' && r.p) ? r.p : {};
+    M = (r && typeof r.m === 'object' && r.m) ? r.m : {};
+    son = r.son !== false;
+  }catch(e){ P = {}; M = {}; son = true; }
+}
+function sauver(){
+  try{ localStorage.setItem(CLE, JSON.stringify({p:P, m:M, son:son})); }catch(e){}
+}
+
+function $(s){ return document.querySelector(s); }
+function cle(l,m){ return l + '-' + m; }
+function fait(l,m){ return Object.prototype.hasOwnProperty.call(P, cle(l,m)); }
+function etoilesDe(l,m){ return fait(l,m) ? (P[cle(l,m)]|0) : 0; }
+function debloque(l,m){
+  if(m !== 'qcm') return fait(l,'qcm');
+  if(l === 1) return true;
+  if(l === 0) return fait(1,'qcm') && fait(2,'qcm') && fait(3,'qcm');
+  return fait(l-1,'qcm');
+}
+function motsDe(l){
+  if(l === 0) return MOTS.slice();
+  return MOTS.filter(function(m){ return m.l === l; });
+}
+function parId(id){
+  for(var i=0;i<MOTS.length;i++){ if(MOTS[i].id === id) return MOTS[i]; }
+  return null;
+}
+function acquis(id, m){ return !!(M[id] && M[id][m]); }
+function niveau(id){
+  var n = 0;
+  if(acquis(id,'qcm')) n++;
+  if(acquis(id,'oral')) n++;
+  if(acquis(id,'ecrit')) n++;
+  return n;
+}
+function noterMot(id, m, bon){
+  if(!M[id]) M[id] = {};
+  M[id][m] = bon ? 1 : 0;
+}
+function totalMaitrises(){
+  var n = 0;
+  MOTS.forEach(function(x){ if(niveau(x.id) === 3) n++; });
+  return n;
+}
+
+/* ═══ Petits outils ══════════════════════════════════════ */
+function melange(a){
+  a = a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function auHasard(a){ return a[Math.floor(Math.random()*a.length)]; }
+function etoilesHTML(n){
+  var h='';
+  for(var i=1;i<=3;i++) h += '<i class="'+(i<=n?'on':'')+'">'+(i<=n?'★':'☆')+'</i>';
+  return h;
+}
+function echapper(t){
+  return String(t).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+  });
+}
+/* Le libell&eacute; fran&ccedil;ais contient des entit&eacute;s HTML : pour la synth&egrave;se
+   vocale et les comparaisons, on veut le texte nu. */
+function nu(html){
+  var t = document.createElement('div');
+  t.innerHTML = String(html || '');
+  return t.textContent || '';
+}
+var ICONES = {
+  qcm:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h10M4 17h6"/><path d="M15.5 17.5 18 20l4.5-5"/></svg>',
+  oral:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+  ecrit:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9.5 14h5"/></svg>',
+  cadenas:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>',
+  micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="pastille" x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>'
+};
+
+/* ═══ Comparer ce qui est &eacute;crit ══════════════════════════
+   &Agrave; l'&eacute;crit, la consigne est claire : z&eacute;ro faute. On ne
+   normalise que ce qui n'est pas de l'orthographe &mdash; la casse,
+   les espaces en trop, l'apostrophe courbe, un point final. Une
+   lettre manquante reste une lettre manquante.            */
+function normFrappe(t){
+  return String(t || '')
+    .replace(/[‘’ʼ]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim().toLowerCase()
+    .replace(/[.!?]+$/, '');
+}
+function formes(it){ return [it.en].concat(it.alt || []); }
+function justeFrappe(saisie, it){
+  var n = normFrappe(saisie);
+  return formes(it).some(function(v){ return normFrappe(v) === n; });
+}
+/* Sans l'article : sert &agrave; reconna&icirc;tre « pencil » pour « a pencil »
+   et &agrave; le dire pr&eacute;cis&eacute;ment plut&ocirc;t que « faux ». */
+function sansArticle(t){ return normFrappe(t).replace(/^(a|an|the) /, ''); }
+
+/* Distance de Levenshtein, sur des cha&icirc;nes courtes. */
+function lev(a, b){
+  if(a === b) return 0;
+  var m=a.length, n=b.length, i, j;
+  if(!m) return n;
+  if(!n) return m;
+  var prec=new Array(n+1), cour=new Array(n+1);
+  for(j=0;j<=n;j++) prec[j]=j;
+  for(i=1;i<=m;i++){
+    cour[0]=i;
+    for(j=1;j<=n;j++){
+      var co = (a.charCodeAt(i-1) === b.charCodeAt(j-1)) ? 0 : 1;
+      cour[j] = Math.min(cour[j-1]+1, prec[j]+1, prec[j-1]+co);
+    }
+    for(j=0;j<=n;j++) prec[j]=cour[j];
+  }
+  return prec[n];
+}
+
+/* Montrer o&ugrave; est la faute : on aligne la saisie sur le mot attendu,
+   lettre &agrave; lettre. Ce qui est en trop ou faux est soulign&eacute; ; ce qui
+   manque appara&icirc;t comme un point rouge &mdash; le « gap » &agrave; combler. */
+function diffHTML(saisie, cible){
+  /* brut est ce qu'on affiche ; a en est la copie comparable, lettre pour
+     lettre (m&ecirc;me longueur), sans quoi les marques se d&eacute;caleraient. */
+  var brut = String(saisie).replace(/\s+/g,' ').trim();
+  var a = brut.toLowerCase().replace(/[‘’ʼ]/g, "'");
+  var b = normFrappe(cible);
+  var m=a.length, n=b.length, i, j;
+  var D=[];
+  for(i=0;i<=m;i++){ D[i]=[i]; }
+  for(j=0;j<=n;j++){ D[0][j]=j; }
+  for(i=1;i<=m;i++){
+    for(j=1;j<=n;j++){
+      var co = (a.charAt(i-1) === b.charAt(j-1)) ? 0 : 1;
+      D[i][j] = Math.min(D[i-1][j]+1, D[i][j-1]+1, D[i-1][j-1]+co);
+    }
+  }
+  var marque={}, manque={};
+  i=m; j=n;
+  while(i>0 || j>0){
+    var co2 = (i>0 && j>0 && a.charAt(i-1) === b.charAt(j-1)) ? 0 : 1;
+    if(i>0 && j>0 && D[i][j] === D[i-1][j-1]+co2){
+      if(co2) marque[i-1] = true;
+      i--; j--;
+    } else if(i>0 && D[i][j] === D[i-1][j]+1){
+      marque[i-1] = true; i--;
+    } else {
+      manque[i] = (manque[i]||0)+1; j--;
+    }
+  }
+  var h='', k, r;
+  for(k=0;k<=brut.length;k++){
+    for(r=0;r<(manque[k]||0);r++) h += '<span class="manque">&middot;</span>';
+    if(k < brut.length){
+      var ch = echapper(brut.charAt(k));
+      h += marque[k] ? '<span class="faute">'+ch+'</span>' : ch;
+    }
+  }
+  return h || '<span class="manque">&middot;&middot;&middot;</span>';
+}
+/* Le gabarit d'aide : premi&egrave;re lettre de chaque mot, le reste en tirets. */
+function gabarit(mot){
+  return String(mot).split(' ').map(function(w){
+    if(w.length <= 1) return w;
+    return w.charAt(0) + ' ' + new Array(w.length).join('_ ').trim();
+  }).join('   ');
+}
+
+/* ═══ &Eacute;couter ══════════════════════════════════════════════
+   Le mot mod&egrave;le est dit par la synth&egrave;se vocale du navigateur, en
+   anglais britannique quand une voix GB existe.            */
+var voixEn = null;
+function choisirVoix(){
+  try{
+    var vs = window.speechSynthesis.getVoices() || [];
+    voixEn = vs.filter(function(v){ return /^en[-_]GB/i.test(v.lang); })[0]
+          || vs.filter(function(v){ return /^en/i.test(v.lang); })[0] || null;
+  }catch(e){}
+}
+function dire(texte, apres){
+  try{
+    var s = window.speechSynthesis;
+    if(!s || !son){ if(apres) apres(); return; }
+    s.cancel();
+    var u = new SpeechSynthesisUtterance(String(texte));
+    u.lang = 'en-GB'; u.rate = .88; u.pitch = 1;
+    if(!voixEn) choisirVoix();
+    if(voixEn) u.voice = voixEn;
+    if(apres){ u.onend = apres; u.onerror = apres; }
+    setTimeout(function(){ try{ s.speak(u); }catch(e){ if(apres) apres(); } }, 80);
+  }catch(e){ if(apres) apres(); }
+}
+var ac = null;
+function bip(bon){
+  if(!son) return;
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!ac) ac = new AC();
+    if(ac.state === 'suspended') ac.resume();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime;
+    o.type='sine'; o.connect(g); g.connect(ac.destination);
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.exponentialRampToValueAtTime(.15,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+.3);
+    if(bon){ o.frequency.setValueAtTime(620,t); o.frequency.setValueAtTime(880,t+.09); }
+    else   { o.frequency.setValueAtTime(240,t); o.frequency.setValueAtTime(180,t+.1); }
+    o.start(t); o.stop(t+.32);
+  }catch(e){}
+}
+function majSon(){
+  var b = $('#btn-son');
+  b.innerHTML = son ? '🔊' : '🔇';
+  b.setAttribute('aria-label', son ? 'Couper le son' : 'Remettre le son');
+}
+
+/* ═══ Reconnaissance vocale ══════════════════════════════
+   Si le micro n'est pas accessible (permission refus&eacute;e, navigateur
+   sans API, page embarqu&eacute;e), on bascule sur l'auto-&eacute;valuation :
+   on &eacute;coute le mod&egrave;le, on r&eacute;p&egrave;te, on se juge. La consigne stricte
+   ne portait que sur l'&eacute;crit.                              */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var reco = null, ecoute = false;
+
+function normOral(t){
+  return String(t||'').toLowerCase()
+    .replace(/[‘’ʼ]/g,"'")
+    .replace(/[^a-z' ]/g,' ')
+    .replace(/\s+/g,' ').trim()
+    .replace(/^(a|an|the) /,'');
+}
+function justeOral(dit, it){
+  var s = normOral(dit);
+  if(!s) return false;
+  return formes(it).some(function(v){
+    var c = normOral(v);
+    if(!c) return false;
+    if(s === c) return true;
+    if(s.indexOf(c) >= 0) return true;              /* « it's a pencil » */
+    return c.length > 4 && lev(s, c) <= 1;          /* l'oreille de la machine n'est pas parfaite */
+  });
+}
+function arreterEcoute(){
+  ecoute = false;
+  try{ if(reco) reco.abort(); }catch(e){}
+}
+
+/* ═══ Navigation ═════════════════════════════════════════ */
+function montrer(nom){
+  ecranActuel = nom;
+  arreterEcoute();
+  try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+  document.body.classList.toggle('en-jeu', nom === 'jeu');
+  ['accueil','jeu','bilan','carnet'].forEach(function(n){
+    $('#ecran-'+n).hidden = (n !== nom);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ═══ Accueil ════════════════════════════════════════════ */
+function construireAccueil(){
+  var h = '';
+  LIGNES.forEach(function(L){
+    var ouvrable = debloque(L.id,'qcm');
+    var mots = motsDe(L.id);
+    var tot = Math.min(etoilesDe(L.id,'qcm') + etoilesDe(L.id,'oral') + etoilesDe(L.id,'ecrit'), 3);
+    var apercu = ouvrable
+      ? mots.length + ' mots &middot; ' + mots.slice(0,3).map(function(m){ return m.en.toLowerCase(); }).join(', ') + '&hellip;'
+      : L.sous;
+    h += '<div class="ligne l'+L.id+(ouvrable?'':' verrou')+(ligneOuverte===L.id?' ouvert':'')+'">';
+    h +=   '<button class="ligne-tete" type="button" data-ouvrir="'+L.id+'"'+(ouvrable?'':' disabled')+'>';
+    h +=     '<span class="ligne-txt"><b>'+L.nom+'</b><small>'+apercu+'</small></span>';
+    h +=     '<span class="etoiles">'+(ouvrable ? etoilesHTML(tot) : ICONES.cadenas)+'</span>';
+    h +=   '</button>';
+    h +=   '<div class="ligne-corps">';
+    h +=     '<div class="stations">';
+    mots.forEach(function(m){
+      var n = niveau(m.id);
+      h += '<b class="'+(n===3?'m':(n>0?'p':''))+'" title="'+echapper(m.en)+'"></b>';
+    });
+    h +=     '</div>';
+    MODES.forEach(function(md){
+      var ok = debloque(L.id, md.id);
+      h += '<button class="mode" type="button" data-jouer="'+L.id+'" data-mode="'+md.id+'"'+(ok?'':' disabled')+'>';
+      h +=   '<span class="pic">'+(ok ? ICONES[md.id] : ICONES.cadenas)+'</span>';
+      h +=   '<span class="lbl"><b>'+md.nom+'</b><small>'+(ok ? md.sous : 'Apr&egrave;s &laquo;&nbsp;Je choisis&nbsp;&raquo;.')+'</small></span>';
+      if(ok) h += '<span class="etoiles">'+etoilesHTML(etoilesDe(L.id, md.id))+'</span>';
+      h += '</button>';
+    });
+    h +=   '</div>';
+    h += '</div>';
+  });
+  $('#plan').innerHTML = h;
+
+  var n = totalMaitrises();
+  $('#glob-n').textContent = n + ' / ' + MOTS.length;
+  $('#glob-bar').style.width = Math.round(n / MOTS.length * 100) + '%';
+  $('#glob-txt').innerHTML = n === MOTS.length
+    ? 'Terminus&nbsp;: les 36 mots sont sus dans les trois modes. <b>Mind the gap&nbsp;!</b>'
+    : 'Un mot est ma&icirc;tris&eacute; quand il est juste dans les trois modes.';
+}
+
+/* ═══ Carnet ═════════════════════════════════════════════ */
+function construireCarnet(){
+  var h = '';
+  LIGNES.forEach(function(L){
+    if(L.id === 0) return;
+    h += '<div class="l'+L.id+'">';
+    h +=   '<p class="groupe">Lesson '+L.id+' &middot; '+L.nom+'</p>';
+    h +=   '<div class="fiches">';
+    motsDe(L.id).forEach(function(m){
+      h += '<div class="fiche">';
+      h +=   '<span class="rond">'+m.svg+'</span>';
+      h +=   '<span class="txt"><b>'+echapper(m.en)+(m.alt?' <span style="opacity:.6">/ '+echapper(m.alt[0])+'</span>':'')+'</b>'+
+             '<small>'+m.fr+(m.note?' <i>('+m.note+')</i>':'')+'</small></span>';
+      h +=   '<span class="pastilles" aria-hidden="true">'+
+               '<i class="'+(acquis(m.id,'qcm')?'on':'')+'"></i>'+
+               '<i class="'+(acquis(m.id,'oral')?'on':'')+'"></i>'+
+               '<i class="'+(acquis(m.id,'ecrit')?'on':'')+'"></i></span>';
+      h +=   '<button class="hp" type="button" data-dire="'+m.id+'" aria-label="&Eacute;couter '+echapper(m.en)+'">🔊</button>';
+      h += '</div>';
+    });
+    h +=   '</div>';
+    h += '</div>';
+  });
+  $('#carnet').innerHTML = h;
+}
+
+/* ═══ La partie ══════════════════════════════════════════ */
+function demarrer(l, mode, liste){
+  var file;
+  if(liste) file = melange(liste);
+  else if(l === 0) file = melange(MOTS).slice(0,12);
+  else file = melange(motsDe(l));
+  partie = {l:l, mode:mode, file:file, i:0, justes:0, aides:0, rates:[], repondu:false, reprise:!!liste, essais:0};
+  $('#ecran-jeu').className = 'ecran l' + l;
+  montrer('jeu');
+  poser();
+}
+
+function poser(){
+  var it = partie.file[partie.i];
+  partie.repondu = false;
+  partie.essais = 0;
+  arreterEcoute();
+
+  $('#dess').innerHTML = it.svg;
+  $('#bar-fr').innerHTML = it.fr;
+  $('#note').innerHTML = it.note ? '(' + it.note + ')' : '';
+  var t = $('#tampon'); t.className = 'tampon'; t.textContent = '';
+  $('#btn-suite').classList.add('invisible');
+
+  var n = partie.i + 1, tot = partie.file.length;
+  $('#compte').textContent = n + '/' + tot;
+  dessinerTrajet();
+
+  if(partie.mode === 'qcm') rendreQcm(it);
+  else if(partie.mode === 'oral') rendreOral(it);
+  else rendreEcrit(it);
+}
+
+function dessinerTrajet(){
+  var h = '<u id="trajet-fait"></u>';
+  partie.file.forEach(function(m, k){
+    var c = '';
+    if(k < partie.i) c = (partie.rates.indexOf(m.id) >= 0) ? 'ko' : 'ok';
+    else if(k === partie.i) c = 'now';
+    h += '<i class="'+c+'"></i>';
+  });
+  $('#trajet').innerHTML = h;
+  var p = partie.file.length > 1 ? (partie.i / (partie.file.length - 1)) * 100 : 0;
+  $('#trajet-fait').style.width = p + '%';
+}
+
+/* ── Mode 1 : choisir parmi trois ────────────────────── */
+function rendreQcm(it){
+  $('#info').innerHTML = 'Comment &ccedil;a se dit en anglais&nbsp;?';
+  var pool = (partie.l === 0 ? MOTS : motsDe(it.l)).filter(function(x){ return x.id !== it.id; });
+  var autres = melange(pool).slice(0,2);
+  var opts = melange([it].concat(autres));
+  var lettres = ['1','2','3'];
+  var h = '<div class="choix-liste">';
+  opts.forEach(function(o, k){
+    h += '<button class="choix" type="button" data-rep="'+o.id+'">'+
+         '<span class="lettre">'+lettres[k]+'</span><span>'+echapper(o.en)+'</span></button>';
+  });
+  h += '</div>';
+  $('#controles').innerHTML = h;
+}
+
+/* ── Mode 2 : le dire &agrave; voix haute ────────────────────── */
+function rendreOral(it){
+  var h = '';
+  if(SR && !microKO){
+    $('#info').innerHTML = 'Dis-le en anglais, puis rel&acirc;che. <b>Le mot est cach&eacute;&nbsp;: &agrave; toi de le retrouver.</b>';
+    h += '<button class="micro" type="button" id="btn-micro">'+ICONES.micro+'<span>Appuie et dis-le</span></button>';
+  } else {
+    $('#info').innerHTML = '&Eacute;coute le mod&egrave;le, r&eacute;p&egrave;te &agrave; voix haute, puis dis si c&rsquo;&eacute;tait bon.';
+    h += '<button class="micro" type="button" id="btn-modele">'+ICONES.micro+'<span>&Eacute;couter le mod&egrave;le</span></button>';
+  }
+  h += '<div class="duo" style="margin-top:9px">';
+  h +=   '<button class="secondaire" type="button" id="btn-aide">Voir la r&eacute;ponse</button>';
+  h +=   '<button class="secondaire" type="button" id="btn-passe">Je l&rsquo;ai dit ✓</button>';
+  h += '</div>';
+  $('#controles').innerHTML = h;
+}
+
+function ecouter(it){
+  if(!SR || microKO || ecoute || partie.repondu) return;
+  var b = $('#btn-micro');
+  try{
+    reco = new SR();
+  }catch(e){ microKO = true; rendreOral(it); return; }
+  reco.lang = 'en-GB';
+  reco.interimResults = false;
+  reco.maxAlternatives = 5;
+  ecoute = true;
+  if(b){ b.classList.add('on'); b.querySelector('span').textContent = 'J’écoute…'; }
+  $('#info').innerHTML = 'Parle maintenant.';
+
+  reco.onresult = function(ev){
+    var dits = [], r = ev.results[0], k;
+    for(k=0;k<r.length;k++) dits.push(r[k].transcript);
+    ecoute = false;
+    var bon = dits.some(function(t){ return justeOral(t, it); });
+    if(bon){ repondre(true, it, 'oral'); }
+    else {
+      partie.essais++;
+      bip(false);
+      if(b){ b.classList.remove('on'); b.querySelector('span').textContent = 'Encore une fois'; }
+      $('#info').innerHTML = 'J&rsquo;ai entendu <b class="entendu">&laquo;&nbsp;'+echapper(dits[0])+'&nbsp;&raquo;</b>. '+
+        (partie.essais >= 2 ? 'Appuie sur <b>Voir la r&eacute;ponse</b>.' : 'R&eacute;essaie, ou fais-toi aider.');
+    }
+  };
+  reco.onerror = function(ev){
+    ecoute = false;
+    if(b){ b.classList.remove('on'); b.querySelector('span').textContent = 'Appuie et dis-le'; }
+    if(ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture'){
+      microKO = true;
+      rendreOral(it);
+      $('#info').innerHTML = 'Pas de micro ici. On passe &agrave; l&rsquo;auto-&eacute;valuation&nbsp;: &eacute;coute, r&eacute;p&egrave;te, juge-toi.';
+    } else if(ev.error === 'no-speech'){
+      $('#info').innerHTML = 'Je n&rsquo;ai rien entendu. Approche-toi et recommence.';
+    } else {
+      $('#info').innerHTML = 'Le micro n&rsquo;a pas r&eacute;pondu. R&eacute;essaie.';
+    }
+  };
+  reco.onend = function(){
+    ecoute = false;
+    if(b && b.classList.contains('on')){ b.classList.remove('on'); b.querySelector('span').textContent = 'Appuie et dis-le'; }
+  };
+  try{ reco.start(); }catch(e){ ecoute = false; }
+}
+
+/* ── Mode 3 : l'&eacute;crire, sans faute ──────────────────── */
+function rendreEcrit(it){
+  $('#info').innerHTML = '&Eacute;cris-le en anglais. <b>Chaque lettre compte</b>, l&rsquo;article aussi.';
+  var h = '';
+  h += '<form id="form-ecrit" style="display:grid;gap:9px">';
+  h +=   '<input class="champ" id="saisie" type="text" autocomplete="off" autocapitalize="off" '+
+         'autocorrect="off" spellcheck="false" placeholder="en anglais…" aria-label="&Eacute;cris le mot en anglais">';
+  h +=   '<div class="duo">';
+  h +=     '<button class="secondaire" type="button" id="btn-indice">Un indice</button>';
+  h +=     '<button class="principal" type="submit">V&eacute;rifier</button>';
+  h +=   '</div>';
+  h += '</form>';
+  $('#controles').innerHTML = h;
+  var c = $('#saisie');
+  setTimeout(function(){ try{ c.focus({preventScroll:true}); }catch(e){ c.focus(); } }, 60);
+}
+
+function verifierEcrit(it){
+  if(partie.repondu) return;
+  var c = $('#saisie');
+  var saisie = c.value;
+  if(!normFrappe(saisie)){ c.classList.add('secoue'); setTimeout(function(){ c.classList.remove('secoue'); },400); return; }
+  if(justeFrappe(saisie, it)){
+    repondre(true, it, 'ecrit');
+    return;
+  }
+  /* Faux. On dit pr&eacute;cis&eacute;ment o&ugrave; &ccedil;a coince plut&ocirc;t que « non ». */
+  var msg = '';
+  var cible = it.en;
+  if(sansArticle(saisie) === sansArticle(cible) && normFrappe(saisie) !== normFrappe(cible)){
+    msg = /^(a|an|the) /.test(normFrappe(cible))
+      ? 'Presque&nbsp;: il manque l&rsquo;article <b>&laquo;&nbsp;'+echapper(normFrappe(cible).split(' ')[0])+'&nbsp;&raquo;</b>.'
+      : 'Presque&nbsp;: il y a un article en trop.';
+  } else if(normFrappe(saisie).replace(/or/g,'our') === normFrappe(cible)){
+    msg = 'Presque&nbsp;: ici c&rsquo;est l&rsquo;anglais britannique, <b>-our</b>.';
+  } else if(lev(normFrappe(saisie), normFrappe(cible)) <= 2){
+    msg = 'Tout pr&egrave;s, mais l&rsquo;orthographe doit &ecirc;tre exacte.';
+  }
+  repondre(false, it, 'ecrit', msg, saisie);
+}
+
+/* ── R&eacute;ponse, tampon, suite ───────────────────────── */
+function repondre(bon, it, mode, msgSup, saisie){
+  if(partie.repondu) return;
+  partie.repondu = true;
+  arreterEcoute();
+
+  var aide = !!partie.aideEnCours;
+  partie.aideEnCours = false;
+  if(bon && aide) partie.aides++;
+  if(bon && !aide) partie.justes++;
+  if(!bon) partie.rates.push(it.id);
+  noterMot(it.id, mode, bon && !aide);
+
+  var t = $('#tampon');
+  t.className = 'tampon' + (bon ? '' : ' ko');
+  t.textContent = bon ? (aide ? 'With a hint' : auHasard(BRAVOS)) : 'Mind the gap!';
+  setTimeout(function(){ t.classList.add('vu'); }, 40);
+  bip(bon);
+
+  /* Le mot juste appara&icirc;t sur la barre du roundel : c'est lui qu'on
+     doit garder en t&ecirc;te, pas la faute. */
+  $('#bar-fr').innerHTML = echapper(it.en);
+  $('#note').innerHTML = nu(it.fr) + (it.note ? ' (' + nu(it.note) + ')' : '');
+
+  var h = '';
+  if(bon){
+    h = '<b class="ok">' + (mode === 'ecrit' ? 'Pas une lettre de travers.' : 'C&rsquo;est &ccedil;a.') + '</b> ';
+  } else {
+    h = '<b class="ko">' + echapper(it.en) + '</b> ';
+    if(msgSup) h += msgSup + ' ';
+  }
+  if(mode === 'ecrit' && !bon && saisie){
+    h += '<br>Tu as &eacute;crit&nbsp;: <span class="relu" style="display:inline">'+diffHTML(saisie, it.en)+'</span>';
+  }
+  $('#info').innerHTML = h;
+
+  /* Verrouiller les commandes */
+  if(mode === 'qcm'){
+    var btns = $('#controles').querySelectorAll('.choix');
+    for(var k=0;k<btns.length;k++){
+      btns[k].disabled = true;
+      if(btns[k].getAttribute('data-rep') === it.id) btns[k].classList.add('bon');
+    }
+  } else if(mode === 'ecrit'){
+    var c = $('#saisie');
+    if(c){ c.disabled = true; c.classList.add(bon ? 'bon' : 'mauvais'); }
+    var ind = $('#btn-indice'); if(ind) ind.disabled = true;
+  } else {
+    $('#controles').innerHTML = '';
+  }
+
+  dire(it.en);
+  var s = $('#btn-suite');
+  s.classList.remove('invisible');
+  s.textContent = (partie.i + 1 >= partie.file.length) ? 'Voir le trajet →' : 'Station suivante →';
+  setTimeout(function(){ try{ s.focus({preventScroll:true}); }catch(e){} }, 120);
+}
+
+function suite(){
+  partie.i++;
+  if(partie.i >= partie.file.length){ bilan(); return; }
+  poser();
+}
+
+/* ═══ Bilan ══════════════════════════════════════════════ */
+function bilan(){
+  var tot = partie.file.length;
+  var j = partie.justes;
+  var part = j / tot;
+  var et = (j === tot) ? 3 : (part >= .8 ? 2 : (part >= .6 ? 1 : 0));
+  var L = LIGNES.filter(function(x){ return x.id === partie.l; })[0];
+
+  if(!partie.reprise){
+    var anc = etoilesDe(partie.l, partie.mode);
+    if(!fait(partie.l, partie.mode) || et > anc) P[cle(partie.l, partie.mode)] = et;
+  }
+  sauver();
+
+  $('#bilan-ligne').innerHTML = L.nom + ' &middot; ' +
+    MODES.filter(function(m){ return m.id === partie.mode; })[0].nom;
+  $('#bilan-etoiles').innerHTML = etoilesHTML(et);
+  $('#bilan-titre').textContent = et === 3 ? 'This is your final stop.'
+    : (et === 2 ? 'Presque au terminus.' : (et === 1 ? 'Il reste du trajet.' : 'On refait la ligne.'));
+  var txt = '<b>'+j+'</b> sur <b>'+tot+'</b> du premier coup';
+  if(partie.aides) txt += ' &middot; '+partie.aides+' avec un indice';
+  if(partie.rates.length) txt += ' &middot; '+partie.rates.length+' rat&eacute;'+(partie.rates.length>1?'s':'');
+  $('#bilan-score').innerHTML = txt + '.';
+
+  var rates = [];
+  partie.rates.forEach(function(id){ if(rates.indexOf(id)<0) rates.push(id); });
+  $('#bilan-rates').hidden = rates.length === 0;
+  if(rates.length){
+    $('#rates-liste').innerHTML = rates.map(function(id){
+      var m = parId(id);
+      return '<div class="rate l'+m.l+'"><span class="cadre">'+m.svg+'</span>'+
+             '<b>'+echapper(m.en)+'</b><span>'+m.fr+'</span></div>';
+    }).join('');
+  }
+
+  var b1 = $('#btn-bilan-1'), b2 = $('#btn-bilan-2');
+  if(rates.length){
+    b1.textContent = 'Revoir les ' + rates.length + ' raté' + (rates.length>1?'s':'');
+    b1.setAttribute('data-revoir','1');
+  } else {
+    b1.textContent = 'Rejouer la ligne';
+    b1.removeAttribute('data-revoir');
+  }
+  var suivant = MODES[MODES.map(function(m){ return m.id; }).indexOf(partie.mode) + 1];
+  if(suivant && j > 0){
+    b2.hidden = false;
+    b2.textContent = 'Passer à « ' + nu(suivant.nom) + ' »';
+    b2.setAttribute('data-suivant', suivant.id);
+  } else {
+    b2.hidden = true;
+  }
+
+  ligneOuverte = partie.l;
+  construireAccueil();
+  montrer('bilan');
+}
+
+/* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
+document.addEventListener('click', function(ev){
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
+  if(!el) return;
+
+  if(el.hasAttribute('data-go')){
+    var ou = el.getAttribute('data-go');
+    if(ou === 'carnet') construireCarnet();
+    if(ou === 'accueil') construireAccueil();
+    montrer(ou); return;
+  }
+  if(el.hasAttribute('data-ouvrir')){
+    var id = parseInt(el.getAttribute('data-ouvrir'),10);
+    ligneOuverte = (ligneOuverte === id) ? -1 : id;
+    construireAccueil(); return;
+  }
+  if(el.hasAttribute('data-jouer')){
+    demarrer(parseInt(el.getAttribute('data-jouer'),10), el.getAttribute('data-mode')); return;
+  }
+  if(el.hasAttribute('data-dire')){
+    var m = parId(el.getAttribute('data-dire'));
+    if(m) dire(m.en); return;
+  }
+  if(el.id === 'btn-suite'){ suite(); return; }
+  if(el.id === 'btn-son'){ son = !son; majSon(); sauver(); if(son) dire('OK'); return; }
+  if(el.id === 'btn-reset'){
+    if(window.confirm('Effacer toutes les étoiles et repartir de zéro ?')){
+      P = {}; M = {}; sauver(); ligneOuverte = 1; construireAccueil();
+    }
+    return;
+  }
+
+  var it = partie ? partie.file[partie.i] : null;
+
+  if(el.hasAttribute('data-rep')){
+    if(!it || partie.repondu) return;
+    var bon = el.getAttribute('data-rep') === it.id;
+    if(!bon) el.classList.add('mauvais');
+    repondre(bon, it, 'qcm'); return;
+  }
+  if(el.id === 'btn-micro'){ if(it) ecouter(it); return; }
+  if(el.id === 'btn-modele'){ if(it) dire(it.en); return; }
+  if(el.id === 'btn-aide'){
+    if(!it || partie.repondu) return;
+    arreterEcoute();
+    partie.aideEnCours = true;
+    $('#info').innerHTML = 'On dit <b>&laquo;&nbsp;'+echapper(it.en)+'&nbsp;&raquo;</b>. R&eacute;p&egrave;te-le, puis&nbsp;: &laquo;&nbsp;Je l&rsquo;ai dit&nbsp;&raquo;.';
+    dire(it.en); return;
+  }
+  if(el.id === 'btn-passe'){ if(it && !partie.repondu) repondre(true, it, 'oral'); return; }
+  if(el.id === 'btn-indice'){
+    if(!it || partie.repondu) return;
+    partie.aideEnCours = true;
+    $('#info').innerHTML = '<span class="gabarit">'+echapper(gabarit(it.en))+'</span><br>'+
+      '<b>'+it.en.split(' ').length+'</b> mot(s), '+it.en.replace(/ /g,'').length+' lettres. Avec un indice, le mot ne compte pas comme acquis.';
+    return;
+  }
+  if(el.hasAttribute('data-revoir')){
+    var rates = [];
+    partie.rates.forEach(function(x){ if(rates.indexOf(x)<0) rates.push(x); });
+    demarrer(partie.l, partie.mode, rates.map(parId)); return;
+  }
+  if(el.id === 'btn-bilan-1'){ demarrer(partie.l, partie.mode); return; }
+  if(el.hasAttribute('data-suivant')){ demarrer(partie.l, el.getAttribute('data-suivant')); return; }
+});
+
+document.addEventListener('submit', function(ev){
+  if(ev.target && ev.target.id === 'form-ecrit'){
+    ev.preventDefault();
+    var it = partie ? partie.file[partie.i] : null;
+    if(it) verifierEcrit(it);
+  }
+});
+
+document.addEventListener('keydown', function(ev){
+  if(ecranActuel !== 'jeu') return;
+  var dansChamp = ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA');
+  if(ev.key === 'Enter' && partie && partie.repondu && !dansChamp && ev.target !== $('#btn-suite')){ ev.preventDefault(); suite(); return; }
+  if(dansChamp) return;
+  if(partie && !partie.repondu && partie.mode === 'qcm' && /^[123]$/.test(ev.key)){
+    var b = $('#controles').querySelectorAll('.choix')[parseInt(ev.key,10)-1];
+    if(b && !b.disabled) b.click();
+  }
+});
+
+/* ═══ D&eacute;marrage ═════════════════════════════════════════ */
+function lancer(etat){
+  charger();
+  majSon();
+  construireAccueil();
+  if(etat && etat.ecran === 'carnet'){ construireCarnet(); montrer('carnet'); }
+  try{
+    if(window.speechSynthesis){
+      choisirVoix();
+      window.speechSynthesis.onvoiceschanged = choisirVoix;
+    }
+  }catch(e){}
+}
+try{
+  if(window.claude && window.claude.hot && window.claude.hot.snapshot){
+    window.claude.hot.snapshot(function(){ return {ecran: ecranActuel === 'carnet' ? 'carnet' : 'accueil'}; });
+  }
+}catch(e){}
+if(window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(lancer);
+else lancer((window.claude && window.claude.hot && window.claude.hot.data) || {});
+
+})();
+</script>
