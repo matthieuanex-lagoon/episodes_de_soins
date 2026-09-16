@@ -23,6 +23,15 @@ Un mot n'est « maîtrisé » que lorsqu'il est juste dans les trois modes, sans
 indice. La barre en segments de la carte d'évaluation — un segment par groupe,
 large comme son nombre de mots — ne remplit que ceux-là.
 
+## Code parent
+
+Un lien discret en bas de l'accueil ouvre un champ : le code **PARENTS** lève
+tous les cadenas d'un coup — groupes et modes — et le même lien les remet.
+C'est un garde-fou d'enfant, pas un secret : le code est écrit dans la page, et
+c'est très bien ainsi. Il sert à réviser un groupe juste avant l'évaluation sans
+avoir à repasser par les précédents. Le choix est gardé dans le navigateur, avec
+le reste des progrès ; « Tout effacer » ne le remet pas.
+
 ## Ajouter une évaluation
 
 Une entrée dans `EVALS`, puis ses groupes dans `LIGNES` avec le numéro de

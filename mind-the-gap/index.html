@@ -148,6 +148,24 @@ button.evz:active{transform:scale(.993)}
   border-top:1px solid var(--rule);color:var(--ink-soft);font-size:12px}
 .pied button{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
 
+/* ── Le code parent : discret, sous le pied de page ── */
+.parent{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding-top:2px}
+.mini{background:none;border:0;padding:8px 0;color:var(--ink-soft);font-size:12px;
+  text-decoration:underline;text-underline-offset:3px}
+.parent-form{display:flex;align-items:center;gap:9px}
+.champ-mini{
+  width:128px;min-height:40px;border-radius:9px;border:1.5px solid var(--rule);
+  background:var(--card);color:var(--ink);padding:6px 11px;
+  font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:.12em;text-transform:uppercase;-webkit-appearance:none;appearance:none;
+}
+.champ-mini:focus{border-color:var(--bleu);outline:2px solid color-mix(in srgb,var(--bleu) 22%,transparent)}
+.mini.fort{border:1.5px solid var(--bleu);border-radius:9px;color:var(--bleu);padding:9px 13px;
+  text-decoration:none;font-family:"Jost",sans-serif;font-weight:600;font-size:13.5px}
+.parent-msg{flex-basis:100%;font-size:12px;line-height:1.35;color:var(--ink-soft);min-height:1px}
+.parent-msg.ok{color:var(--ok)}
+.parent-msg.ko{color:var(--ko)}
+
 /* ══ Barre de jeu ════════════════════════════════════════ */
 .barre{display:flex;align-items:center;gap:11px;padding-block:4px 10px}
 .ico{flex:none;width:42px;height:42px;border-radius:11px;border:1.5px solid var(--rule);background:var(--card);
@@ -382,6 +400,18 @@ button.evz:active{transform:scale(.993)}
     <div class="pied">
       <span id="pied-txt">Le cahier d&rsquo;anglais, &eacute;valuation par &eacute;valuation</span>
       <button type="button" id="btn-reset">Tout effacer</button>
+    </div>
+
+    <div class="parent">
+      <button class="mini" type="button" id="btn-parent">Code parent</button>
+      <form class="parent-form" id="form-parent" hidden>
+        <input class="champ-mini" id="code-parent" type="text" autocomplete="off"
+               autocapitalize="characters" autocorrect="off" spellcheck="false"
+               placeholder="code" aria-label="Code parent">
+        <button class="mini fort" type="submit">Ouvrir</button>
+        <button class="mini" type="button" id="btn-parent-annule">Annuler</button>
+      </form>
+      <p class="parent-msg" id="parent-msg" role="status"></p>
     </div>
   </section>
 
@@ -811,6 +841,7 @@ var CLE = 'mind-the-gap-v1';
 var P = {};        /* &eacute;toiles par ligne+mode : "1-qcm" -> 0..3 */
 var M = {};        /* acquis par mot : id -> {qcm:1,oral:1,ecrit:1} */
 var son = true;
+var libre = false;     /* cadenas lev&eacute;s par le code parent */
 var partie = null;
 var ecranActuel = 'accueil';
 var ligneOuverte = 1;
@@ -823,10 +854,11 @@ function charger(){
     P = (r && typeof r.p === 'object' && r.p) ? r.p : {};
     M = (r && typeof r.m === 'object' && r.m) ? r.m : {};
     son = r.son !== false;
-  }catch(e){ P = {}; M = {}; son = true; }
+    libre = r.libre === true;
+  }catch(e){ P = {}; M = {}; son = true; libre = false; }
 }
 function sauver(){
-  try{ localStorage.setItem(CLE, JSON.stringify({p:P, m:M, son:son})); }catch(e){}
+  try{ localStorage.setItem(CLE, JSON.stringify({p:P, m:M, son:son, libre:libre})); }catch(e){}
 }
 
 function $(s){ return document.querySelector(s); }
@@ -839,6 +871,7 @@ function etoilesDe(l,m){ return fait(l,m) ? (P[cle(l,m)]|0) : 0; }
 function debloque(l,m){
   var L = ligneDe(l);
   if(!L) return false;
+  if(libre) return true;          /* code parent : tous les cadenas sont lev&eacute;s */
   if(m !== 'qcm') return fait(l,'qcm');
   if(L.tout) return groupesDe(L.ev).every(function(g){ return fait(g.id,'qcm'); });
   var g = groupesDe(L.ev), i = g.indexOf(L);
@@ -1161,6 +1194,7 @@ function construireAccueil(){
   h += '</div>';
   $('#evals').innerHTML = h;
 
+  majParent();
   var tot = totalMaitrises();
   $('#pied-txt').innerHTML = tot === MOTS.length
     ? 'Terminus&nbsp;: les '+MOTS.length+' mots sont sus.'
@@ -1183,9 +1217,9 @@ function construireEval(e){
     var ouvrable = debloque(L.id,'qcm');
     var m = motsDe(L.id);
     var tot = Math.min(etoilesDe(L.id,'qcm') + etoilesDe(L.id,'oral') + etoilesDe(L.id,'ecrit'), 3);
-    var apercu = ouvrable
-      ? m.length + ' mots &middot; ' + m.slice(0,3).map(function(x){ return x.en.toLowerCase(); }).join(', ') + '&hellip;'
-      : L.sous;
+    var apercu = !ouvrable ? L.sous
+      : (L.tout ? 'Douze mots tir&eacute;s au hasard parmi les ' + m.length
+                : m.length + ' mots &middot; ' + m.slice(0,3).map(function(x){ return x.en.toLowerCase(); }).join(', ') + '&hellip;');
     h += '<div class="ligne'+(ouvrable?'':' verrou')+(ligneOuverte===L.id?' ouvert':'')+
          '" style="--lc:'+couleurDe(L.id)+'">';
     h +=   '<button class="ligne-tete" type="button" data-ouvrir="'+L.id+'"'+(ouvrable?'':' disabled')+'>';
@@ -1213,6 +1247,41 @@ function construireEval(e){
     h += '</div>';
   });
   $('#plan').innerHTML = h;
+}
+
+/* ═══ Code parent ════════════════════════════════════════
+   Un garde-fou d'enfant, pas un secret : le code est dans la
+   page, et c'est tr&egrave;s bien ainsi. Il sert &agrave; ouvrir d'un coup
+   ce que la progression garde ferm&eacute; &mdash; pour r&eacute;viser un groupe
+   avant l'&eacute;valuation sans avoir &agrave; repasser par les pr&eacute;c&eacute;dents. */
+var CODE_PARENT = 'PARENTS';
+
+function majParent(){
+  var b = $('#btn-parent'), msg = $('#parent-msg');
+  $('#form-parent').hidden = true;
+  b.hidden = false;
+  b.textContent = libre ? 'Remettre les cadenas' : 'Code parent';
+  msg.className = 'parent-msg' + (libre ? ' ok' : '');
+  msg.textContent = libre ? 'Tout est ouvert : les groupes et les trois modes.' : '';
+}
+
+function ouvrirTout(saisie){
+  var msg = $('#parent-msg');
+  if(String(saisie || '').trim().toUpperCase() === CODE_PARENT){
+    libre = true;
+    sauver();
+    construireAccueil();
+    construireEval(evalOuvert);
+    return true;
+  }
+  msg.className = 'parent-msg ko';
+  msg.textContent = 'Ce n’est pas le bon code.';
+  var c = $('#code-parent');
+  c.value = '';
+  c.classList.add('secoue');
+  setTimeout(function(){ c.classList.remove('secoue'); }, 400);
+  c.focus();
+  return false;
 }
 
 /* ═══ Carnet ═════════════════════════════════════════════ */
@@ -1537,7 +1606,7 @@ function bilan(){
 
 /* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
   if(!el) return;
 
   if(el.hasAttribute('data-go')){
@@ -1565,6 +1634,17 @@ document.addEventListener('click', function(ev){
   }
   if(el.id === 'btn-suite'){ suite(); return; }
   if(el.id === 'btn-son'){ son = !son; majSon(); sauver(); if(son) dire('OK'); return; }
+  if(el.id === 'btn-parent'){
+    if(libre){ libre = false; sauver(); construireAccueil(); construireEval(evalOuvert); return; }
+    el.hidden = true;
+    $('#parent-msg').className = 'parent-msg';
+    $('#parent-msg').textContent = '';
+    $('#form-parent').hidden = false;
+    $('#code-parent').value = '';
+    $('#code-parent').focus();
+    return;
+  }
+  if(el.id === 'btn-parent-annule'){ majParent(); return; }
   if(el.id === 'btn-reset'){
     if(window.confirm('Effacer toutes les étoiles et repartir de zéro ?')){
       P = {}; M = {}; sauver(); ligneOuverte = 1; construireAccueil(); construireEval(evalOuvert);
@@ -1607,6 +1687,11 @@ document.addEventListener('click', function(ev){
 });
 
 document.addEventListener('submit', function(ev){
+  if(ev.target && ev.target.id === 'form-parent'){
+    ev.preventDefault();
+    ouvrirTout($('#code-parent').value);
+    return;
+  }
   if(ev.target && ev.target.id === 'form-ecrit'){
     ev.preventDefault();
     var it = partie ? partie.file[partie.i] : null;
