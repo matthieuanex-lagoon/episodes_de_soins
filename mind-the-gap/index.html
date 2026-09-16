@@ -20,7 +20,7 @@
   --ko:#c4271c; --ko-doux:#f9e6e4;
   --or:#c9a227; --jaune:#f5d400;
   --draw:#2a323a; --draw-soft:#aebbc6;
-  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l0:#10161c;
+  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l0:#10161c;
   --lc:var(--l1);
   --ombre:0 1px 0 rgba(16,22,28,.05), 0 12px 28px -18px rgba(16,22,28,.55);
 }
@@ -73,7 +73,7 @@ body.en-jeu #app{height:100svh;min-height:0}
   background:linear-gradient(90deg,var(--l1),var(--l2) 55%,var(--l3));transition:width .4s ease}
 
 .plan{display:grid;gap:12px}
-.l1{--lc:var(--l1)} .l2{--lc:var(--l2)} .l3{--lc:var(--l3)} .l0{--lc:var(--l0)}
+.l1{--lc:var(--l1)} .l2{--lc:var(--l2)} .l3{--lc:var(--l3)} .l4{--lc:var(--l4)} .l0{--lc:var(--l0)}
 .ligne{background:var(--card);border:1.5px solid var(--rule);border-radius:12px;box-shadow:var(--ombre);overflow:hidden}
 .ligne.verrou{opacity:.55;box-shadow:none}
 .ligne-tete{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;background:none;border:0;text-align:left}
@@ -251,6 +251,9 @@ body.en-jeu #app{height:100svh;min-height:0}
 .groupe{font-family:"Jost",sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--lc);font-weight:600;padding-top:14px;padding-bottom:6px;display:flex;align-items:center;gap:8px}
 .groupe::before{content:"";width:16px;height:6px;border-radius:99px;background:var(--lc)}
+.rem{font-size:12.5px;line-height:1.4;color:var(--ink-soft);padding-bottom:8px;max-width:62ch}
+.rem b{color:var(--ink);font-weight:700}
+.revu{opacity:.75}
 .fiches{display:grid;gap:8px}
 @media (min-width:560px){.fiches{grid-template-columns:1fr 1fr}}
 .fiche{display:flex;align-items:center;gap:11px;padding:9px 11px;background:var(--card);
@@ -293,7 +296,7 @@ body.en-jeu #app{height:100svh;min-height:0}
     --ko:#e5786b; --ko-doux:#2a1815;
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
-    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l0:#e9eef3;
+    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l0:#e9eef3;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
 }
@@ -305,7 +308,7 @@ body.en-jeu #app{height:100svh;min-height:0}
   --ko:#e5786b; --ko-doux:#2a1815;
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
-  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l0:#e9eef3;
+  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l0:#e9eef3;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
 
@@ -327,7 +330,7 @@ body.en-jeu #app{height:100svh;min-height:0}
   <!-- ════ ACCUEIL ════════════════════════════════════════ -->
   <section class="ecran" id="ecran-accueil">
     <div class="tete">
-      <p class="eyebrow">Anglais &middot; Lessons 1 &agrave; 3</p>
+      <p class="eyebrow">Anglais &middot; Lessons 1 &agrave; 4</p>
       <div class="logo">
         <svg viewBox="0 0 100 100" aria-hidden="true">
           <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rouge)" stroke-width="13"></circle>
@@ -335,7 +338,7 @@ body.en-jeu #app{height:100svh;min-height:0}
         </svg>
         <h1>Mind the Gap</h1>
       </div>
-      <p class="sous">36 mots &agrave; ramasser sur trois lignes. On choisit, on le dit, puis on l&rsquo;&eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
+      <p class="sous"><span id="nb-mots">45</span> mots &agrave; ramasser sur <span id="nb-lignes">quatre</span> lignes. On choisit, on le dit, puis on l&rsquo;&eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
     </div>
 
     <div class="oyster">
@@ -351,7 +354,7 @@ body.en-jeu #app{height:100svh;min-height:0}
     </div>
 
     <div class="pied">
-      <span>Greetings &middot; School stuff &middot; Instructions</span>
+      <span>Quatre le&ccedil;ons du cahier d&rsquo;anglais</span>
       <button type="button" id="btn-reset">Tout effacer</button>
     </div>
   </section>
@@ -408,7 +411,7 @@ body.en-jeu #app{height:100svh;min-height:0}
       <h2>Le carnet</h2>
     </div>
     <p style="color:var(--ink-soft);font-size:13.5px;line-height:1.45;max-width:60ch">
-      Les 36 mots des trois le&ccedil;ons. Appuie sur le haut-parleur pour entendre la prononciation
+      Tous les mots des quatre le&ccedil;ons. Appuie sur le haut-parleur pour entendre la prononciation
       britannique&nbsp;; les trois pastilles disent ce qui est acquis&nbsp;: choisir, dire, &eacute;crire.
     </p>
     <div id="carnet"></div>
@@ -657,13 +660,85 @@ var MOTS = [
   '<path class="sl" d="M76 40 h20 v42 H76 z"/>'+
   '<path class="wh" d="M76 82 l10 20 10-20 z"/>'+
   '<path class="dk" d="M81 94 l5 8 5-8 z"/>'+
-  '</g>')}
+  '</g>')},
+
+/* ── Ligne 4 · Oral instructions ─────────────────────── */
+/* Les consignes que le professeur donne &agrave; voix haute. read, listen
+   et write figurent aussi sur cette fiche : ils sont d&eacute;j&agrave; en
+   le&ccedil;on 3 et rejou&eacute;s ici par r&eacute;f&eacute;rence (LIGNES.aussi), jamais
+   dupliqu&eacute;s &mdash; un mot, un seul compteur.                      */
+
+{id:'standup', l:4, en:'stand up', fr:'L&egrave;ve-toi', svg:d(
+  '<path class="ln" d="M26 30 V78 M26 78 H66 M30 78 v26 M64 78 v26"/>'+
+  '<circle class="ln" cx="76" cy="26" r="10"/>'+
+  '<path class="ln" d="M76 36 v30 M76 44 l-12 8 M76 44 l12 8 M76 66 l-8 38 M76 66 l8 38"/>'+
+  '<path class="ep" d="M104 98 V46 m-9 11 l9-11 9 11"/>')},
+
+{id:'sitdown', l:4, en:'sit down', fr:'Assieds-toi', svg:d(
+  '<path class="ln" d="M26 22 V70 M26 70 H66 M30 70 v30 M64 70 v30"/>'+
+  '<circle class="ln" cx="36" cy="30" r="10"/>'+
+  '<path class="ln" d="M36 40 v28 h24 v28 M36 48 l16 10"/>'+
+  '<path class="ep" d="M96 40 V92 m-9-11 l9 11 9-11"/>')},
+
+{id:'lookatboard', l:4, en:'look at the board', fr:'Regarde le tableau', svg:d(
+  '<rect class="dk" x="12" y="18" width="80" height="58" rx="3"/>'+
+  '<path d="M24 36 h48 M24 50 h34 M24 62 h22" fill="none" stroke="var(--card)" stroke-width="3.6" stroke-linecap="round"/>'+
+  '<rect class="ln" x="12" y="18" width="80" height="58" rx="3"/>'+
+  '<path class="ln" d="M8 82 h88"/>'+
+  '<path class="ep" d="M108 106 L90 84 M90 84 l14 2 M90 84 l2 14"/>')},
+
+{id:'bequiet', l:4, en:'be quiet', fr:'Tais-toi', note:'silence', svg:d(
+  '<circle class="sl" cx="56" cy="48" r="34"/>'+
+  '<circle class="dk" cx="44" cy="40" r="4"/><circle class="dk" cx="68" cy="40" r="4"/>'+
+  '<path class="ln" d="M42 58 h28"/>'+
+  '<rect class="wh" x="50" y="54" width="12" height="40" rx="6"/>'+
+  '<path class="sl" d="M40 92 h32 q6 0 6 7 v6 q0 7-6 7 H40 q-6 0-6-7 v-6 q0-7 6-7 z"/>')},
+
+{id:'raisehand', l:4, en:'raise your hand', fr:'L&egrave;ve la main', svg:d(
+  '<path class="dk" d="M14 90 h92 l-10 12 H24 z"/>'+
+  '<circle class="ln" cx="48" cy="54" r="12"/>'+
+  '<path class="ln" d="M48 66 v24"/>'+
+  '<path class="ep" d="M58 62 L76 32"/>'+
+  '<path class="sl" d="M72 30 q-2-7 4-8 l2 6 3-12 q1-7 7-5 t4 8 l-3 12 4-9 q3-6 8-3 t2 8 l-6 14 q-4 9-13 6 z"/>'+
+  '<path class="tn" d="M100 8 l7-4 M102 22 h9"/>')},
+
+{id:'opennotebook', l:4, en:'open your notebook', fr:'Ouvre ton cahier', svg:d(
+  '<path class="sl" d="M60 92 L16 74 V26 L60 44 Z"/>'+
+  '<path class="sl" d="M60 92 L104 74 V26 L60 44 Z"/>'+
+  '<path class="ln" d="M34 16 H12 m8-8 l-8 8 8 8"/>'+
+  '<path class="ln" d="M86 16 h22 m-8-8 l8 8 -8 8"/>')},
+
+{id:'closenotebook', l:4, en:'close your notebook', fr:'Ferme ton cahier', svg:d(
+  '<path class="sl" d="M60 96 L34 84 V28 L60 40 Z"/>'+
+  '<path class="sl" d="M60 96 L86 84 V28 L60 40 Z"/>'+
+  '<path class="ln" d="M14 20 h20 m-8-8 l8 8 -8 8"/>'+
+  '<path class="ln" d="M106 20 H86 m8-8 l-8 8 8 8"/>')},
+
+{id:'takepen', l:4, en:'take a pen', fr:'Prends un stylo', svg:d(
+  '<path class="ln" d="M8 98 h104"/>'+
+  '<path class="sl" d="M26 76 h44 v16 H26 z"/>'+
+  '<path class="wh" d="M70 76 l16 8 -16 8 z"/>'+
+  '<g transform="translate(98,70) rotate(180) scale(.5)">'+
+  '<path class="sl" d="M40 104 C28 94 24 78 24 64 V52 a7 7 0 0 1 14 0 v6 V34 a7 7 0 0 1 14 0 v22 V28 a7 7 0 0 1 14 0 v28 V38 a7 7 0 0 1 14 0 v30 c0 22-10 34-22 38 z"/>'+
+  '</g>'+
+  '<path class="ln" d="M106 28 V58 m-8-8 l8 8 8-8"/>')},
+
+{id:'takenotebook', l:4, en:'take your notebook', fr:'Prends ton cahier', svg:d(
+  '<rect class="wh" x="62" y="12" width="34" height="48" rx="2"/>'+
+  '<path class="ln" d="M70 12 V60"/>'+
+  '<path class="sl" d="M22 54 h60 q7 0 7 8 v36 q0 7-7 7 H22 q-7 0-7-7 V62 q0-8 7-8 z"/>'+
+  '<path class="fl" d="M15 62 h74 v16 H15 z"/>'+
+  '<path class="ln" d="M30 54 V44 q0-12 12-12 t12 12 v10"/>'+
+  '<path class="ln" d="M106 54 V22 m-8 8 l8-8 8 8"/>')}
 ];
 
 var LIGNES = [
   {id:1, nom:'Greetings',     sous:'Se dire bonjour, merci, au revoir'},
   {id:2, nom:'School stuff',  sous:'Ce qu&rsquo;il y a dans la trousse'},
-  {id:3, nom:'Instructions',  sous:'Les consignes des exercices'},
+  {id:3, nom:'Written instructions', sous:'Les consignes &eacute;crites des exercices'},
+  {id:4, nom:'Oral instructions',    sous:'Ce que le prof demande &agrave; voix haute',
+   aussi:['read','listen','write'],
+   rem:'Le prof dit <b>notebook</b> ici et <b>copy book</b> en le&ccedil;on 2&nbsp;: les deux veulent dire &laquo;&nbsp;cahier&nbsp;&raquo;. Les trois derniers mots reviennent de la le&ccedil;on 3.'},
   {id:0, nom:'All change',    sous:'Douze mots au hasard, toutes lignes'}
 ];
 
@@ -704,12 +779,24 @@ function etoilesDe(l,m){ return fait(l,m) ? (P[cle(l,m)]|0) : 0; }
 function debloque(l,m){
   if(m !== 'qcm') return fait(l,'qcm');
   if(l === 1) return true;
-  if(l === 0) return fait(1,'qcm') && fait(2,'qcm') && fait(3,'qcm');
+  if(l === 0) return LIGNES.every(function(L){ return L.id === 0 || fait(L.id,'qcm'); });
   return fait(l-1,'qcm');
 }
+function ligneDe(l){
+  for(var i=0;i<LIGNES.length;i++){ if(LIGNES[i].id === l) return LIGNES[i]; }
+  return null;
+}
+/* Les mots d'une ligne : les siens, plus ceux qu'elle rejoue d'une
+   le&ccedil;on pr&eacute;c&eacute;dente (champ « aussi »). Un mot n'existe qu'une fois
+   dans MOTS : il ne compte donc jamais deux fois. */
 function motsDe(l){
   if(l === 0) return MOTS.slice();
-  return MOTS.filter(function(m){ return m.l === l; });
+  var liste = MOTS.filter(function(m){ return m.l === l; });
+  var L = ligneDe(l);
+  if(L && L.aussi){
+    L.aussi.forEach(function(id){ var m = parId(id); if(m) liste.push(m); });
+  }
+  return liste;
 }
 function parId(id){
   for(var i=0;i<MOTS.length;i++){ if(MOTS[i].id === id) return MOTS[i]; }
@@ -982,6 +1069,8 @@ function construireAccueil(){
   $('#plan').innerHTML = h;
 
   var n = totalMaitrises();
+  $('#nb-mots').textContent = MOTS.length;
+  $('#nb-lignes').textContent = ['une','deux','trois','quatre','cinq','six'][LIGNES.length - 2] || (LIGNES.length - 1);
   $('#glob-n').textContent = n + ' / ' + MOTS.length;
   $('#glob-bar').style.width = Math.round(n / MOTS.length * 100) + '%';
   $('#glob-txt').innerHTML = n === MOTS.length
@@ -996,12 +1085,14 @@ function construireCarnet(){
     if(L.id === 0) return;
     h += '<div class="l'+L.id+'">';
     h +=   '<p class="groupe">Lesson '+L.id+' &middot; '+L.nom+'</p>';
+    if(L.rem) h += '<p class="rem">'+L.rem+'</p>';
     h +=   '<div class="fiches">';
     motsDe(L.id).forEach(function(m){
       h += '<div class="fiche">';
       h +=   '<span class="rond">'+m.svg+'</span>';
       h +=   '<span class="txt"><b>'+echapper(m.en)+(m.alt?' <span style="opacity:.6">/ '+echapper(m.alt[0])+'</span>':'')+'</b>'+
-             '<small>'+m.fr+(m.note?' <i>('+m.note+')</i>':'')+'</small></span>';
+             '<small>'+m.fr+(m.note?' <i>('+m.note+')</i>':'')+
+             (m.l !== L.id ? ' <i class="revu">&middot; le&ccedil;on '+m.l+'</i>' : '')+'</small></span>';
       h +=   '<span class="pastilles" aria-hidden="true">'+
                '<i class="'+(acquis(m.id,'qcm')?'on':'')+'"></i>'+
                '<i class="'+(acquis(m.id,'oral')?'on':'')+'"></i>'+
