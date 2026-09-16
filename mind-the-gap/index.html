@@ -61,19 +61,51 @@ body.en-jeu #app{height:100svh;min-height:0}
 .tete h1{font-size:clamp(32px,9.5vw,44px);line-height:1;letter-spacing:-.02em}
 .tete .sous{color:var(--ink-soft);font-size:15px;max-width:38ch}
 
-.oyster{
-  display:grid;gap:8px;padding:13px 15px;margin-bottom:16px;
-  background:var(--card);border:1.5px solid var(--rule);border-radius:12px;box-shadow:var(--ombre);
-}
-.oyster .l{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.oyster b{font-family:"Jost",sans-serif;font-weight:600;font-size:15px}
-.oyster small{color:var(--ink-soft);font-size:12.5px;font-variant-numeric:tabular-nums}
-.barre-glob{height:7px;border-radius:99px;background:var(--paper-2);overflow:hidden}
-.barre-glob i{display:block;height:100%;width:0;border-radius:99px;
-  background:linear-gradient(90deg,var(--l1),var(--l2) 55%,var(--l3));transition:width .4s ease}
-
 .plan{display:grid;gap:12px}
-.l1{--lc:var(--l1)} .l2{--lc:var(--l2)} .l3{--lc:var(--l3)} .l4{--lc:var(--l4)} .l0{--lc:var(--l0)}
+
+/* ── Les grandes cartes de l'accueil : une par &eacute;valuation ── */
+.evals{display:grid;gap:14px}
+.evz{
+  display:grid;gap:13px;width:100%;text-align:left;padding:17px 17px 15px;
+  background:var(--card);border:1.5px solid var(--rule);border-radius:16px;box-shadow:var(--ombre);
+  transition:transform .1s ease;
+}
+button.evz:active{transform:scale(.993)}
+.evz-tete{display:flex;align-items:flex-start;gap:13px}
+.evz .num{position:relative;flex:none;width:48px;height:48px;display:block}
+.evz .num svg{width:100%;height:100%;display:block}
+.evz .num b{position:absolute;inset:0;display:grid;place-items:center;color:var(--bar-txt);
+  font-family:"Jost",sans-serif;font-weight:700;font-size:13px;line-height:1}
+.evz-t{flex:1;min-width:0;display:grid;gap:3px}
+.evz-t b{font-family:"Jost",sans-serif;font-weight:700;font-size:clamp(21px,5.6vw,25px);
+  letter-spacing:-.015em;line-height:1.05;display:block}
+.evz-t small{color:var(--ink-soft);font-size:13px;line-height:1.35;display:block}
+.zbar{display:flex;gap:4px;height:11px}
+.zbar > span{
+  position:relative;overflow:hidden;border-radius:99px;
+  background:var(--paper-2);
+  background:color-mix(in srgb, var(--lc) 20%, var(--card));
+}
+.zbar i{position:absolute;inset:0 auto 0 0;background:var(--lc);border-radius:99px;
+  transition:width .4s ease}
+.chips{display:flex;flex-wrap:wrap;gap:5px 13px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);line-height:1.3}
+.chip::before{content:"";flex:none;width:9px;height:9px;border-radius:50%;background:var(--lc)}
+.evz-pied{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.evz .compteur{font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.evz .compteur b{color:var(--ink);font-weight:700}
+.evz .cta{font-family:"Jost",sans-serif;font-weight:600;font-size:14.5px;color:var(--bleu);flex:none}
+.evz.vide{border-style:dashed;box-shadow:none;background:none;cursor:default}
+.evz.vide .num{display:grid;place-items:center;border:3px dashed var(--rule);border-radius:50%;
+  color:var(--ink-soft);font-family:"Jost",sans-serif;font-weight:700;font-size:17px}
+.evz.vide .evz-t b{color:var(--ink-soft);font-size:19px}
+
+/* ── L'en-t&ecirc;te d'une &eacute;valuation ── */
+.eval-tete{display:flex;align-items:center;gap:12px;padding-block:4px 6px}
+.eval-titre{flex:1;min-width:0}
+.eval-titre h2{font-size:clamp(23px,6.2vw,28px);line-height:1.05}
+.eval-sous{color:var(--ink-soft);font-size:13.5px;line-height:1.45;max-width:58ch;padding-bottom:14px}
+.carnet-eval{font-family:"Jost",sans-serif;font-weight:700;font-size:19px;padding-top:18px}
 .ligne{background:var(--card);border:1.5px solid var(--rule);border-radius:12px;box-shadow:var(--ombre);overflow:hidden}
 .ligne.verrou{opacity:.55;box-shadow:none}
 .ligne-tete{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;background:none;border:0;text-align:left}
@@ -330,7 +362,7 @@ body.en-jeu #app{height:100svh;min-height:0}
   <!-- ════ ACCUEIL ════════════════════════════════════════ -->
   <section class="ecran" id="ecran-accueil">
     <div class="tete">
-      <p class="eyebrow">Anglais &middot; Lessons 1 &agrave; 4</p>
+      <p class="eyebrow">Anglais &middot; Vocabulaire</p>
       <div class="logo">
         <svg viewBox="0 0 100 100" aria-hidden="true">
           <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rouge)" stroke-width="13"></circle>
@@ -338,31 +370,43 @@ body.en-jeu #app{height:100svh;min-height:0}
         </svg>
         <h1>Mind the Gap</h1>
       </div>
-      <p class="sous"><span id="nb-mots">45</span> mots &agrave; ramasser sur <span id="nb-lignes">quatre</span> lignes. On choisit, on le dit, puis on l&rsquo;&eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
+      <p class="sous">Les mots du cahier, une &eacute;valuation &agrave; la fois. On les reconna&icirc;t, on les dit, puis on les &eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
     </div>
 
-    <div class="oyster">
-      <div class="l"><b>Mots ma&icirc;tris&eacute;s</b><small id="glob-n">0 / 36</small></div>
-      <div class="barre-glob"><i id="glob-bar"></i></div>
-      <small id="glob-txt" style="color:var(--ink-soft);font-size:12.5px">Un mot est ma&icirc;tris&eacute; quand il est juste dans les trois modes.</small>
+    <div class="evals" id="evals"></div>
+
+    <div class="liens">
+      <button class="lien" type="button" data-go="carnet">Le carnet des mots &rarr;</button>
     </div>
+
+    <div class="pied">
+      <span id="pied-txt">Le cahier d&rsquo;anglais, &eacute;valuation par &eacute;valuation</span>
+      <button type="button" id="btn-reset">Tout effacer</button>
+    </div>
+  </section>
+
+  <!-- ════ UNE &Eacute;VALUATION ════════════════════════════════ -->
+  <section class="ecran" id="ecran-eval" hidden>
+    <div class="eval-tete">
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir aux &eacute;valuations">&larr;</button>
+      <div class="eval-titre">
+        <p class="eyebrow" id="eval-zone"></p>
+        <h2 id="eval-nom"></h2>
+      </div>
+    </div>
+    <p class="eval-sous" id="eval-sous"></p>
 
     <div class="plan" id="plan"></div>
 
     <div class="liens">
-      <button class="lien" type="button" data-go="carnet">Le carnet des 36 mots &rarr;</button>
-    </div>
-
-    <div class="pied">
-      <span>Quatre le&ccedil;ons du cahier d&rsquo;anglais</span>
-      <button type="button" id="btn-reset">Tout effacer</button>
+      <button class="lien" type="button" data-go="carnet">Le carnet des mots &rarr;</button>
     </div>
   </section>
 
   <!-- ════ JEU ════════════════════════════════════════════ -->
   <section class="ecran" id="ecran-jeu" hidden>
     <div class="barre">
-      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au plan">&larr;</button>
+      <button class="ico" type="button" data-go="eval" aria-label="Revenir au plan">&larr;</button>
       <div class="trajet" id="trajet"><u id="trajet-fait"></u></div>
       <p class="compte" id="compte">1/10</p>
       <button class="ico" type="button" id="btn-son" aria-label="Couper le son">&#128266;</button>
@@ -399,7 +443,7 @@ body.en-jeu #app{height:100svh;min-height:0}
       <div class="actions">
         <button class="principal" type="button" id="btn-bilan-1"></button>
         <button class="secondaire" type="button" id="btn-bilan-2"></button>
-        <button class="secondaire" type="button" data-go="accueil">Retour au plan</button>
+        <button class="secondaire" type="button" data-go="eval">Retour au plan</button>
       </div>
     </div>
   </section>
@@ -407,11 +451,11 @@ body.en-jeu #app{height:100svh;min-height:0}
   <!-- ════ CARNET ═════════════════════════════════════════ -->
   <section class="ecran" id="ecran-carnet" hidden>
     <div class="carnet-tete">
-      <button class="ico" type="button" data-go="accueil" aria-label="Revenir au plan">&larr;</button>
+      <button class="ico" type="button" data-go="accueil" aria-label="Revenir &agrave; l&rsquo;accueil">&larr;</button>
       <h2>Le carnet</h2>
     </div>
     <p style="color:var(--ink-soft);font-size:13.5px;line-height:1.45;max-width:60ch">
-      Tous les mots des quatre le&ccedil;ons. Appuie sur le haut-parleur pour entendre la prononciation
+      Tous les mots, &eacute;valuation par &eacute;valuation. Appuie sur le haut-parleur pour entendre la prononciation
       britannique&nbsp;; les trois pastilles disent ce qui est acquis&nbsp;: choisir, dire, &eacute;crire.
     </p>
     <div id="carnet"></div>
@@ -732,14 +776,26 @@ var MOTS = [
   '<path class="ln" d="M106 54 V22 m-8 8 l8-8 8 8"/>')}
 ];
 
+/* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
+   la suivante s'ajoute ici, avec ses propres groupes dans LIGNES. */
+var EVALS = [
+  {id:1, nom:'&Eacute;valuation 1', zone:'Zone 1',
+   sous:'Les quatre premiers groupes du cahier&nbsp;: se saluer, nommer ses affaires, comprendre les consignes &eacute;crites puis celles que le prof donne &agrave; voix haute.'}
+];
+
+/* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
+   il rel&egrave;ve, « tok » sa couleur, « tout » la ligne de r&eacute;vision qui
+   rebat tous les mots de son &eacute;valuation. Les identifiants ne se
+   r&eacute;utilisent jamais d'une &eacute;valuation &agrave; l'autre : ils servent de cl&eacute;
+   aux &eacute;toiles d&eacute;j&agrave; gagn&eacute;es. */
 var LIGNES = [
-  {id:1, nom:'Greetings',     sous:'Se dire bonjour, merci, au revoir'},
-  {id:2, nom:'School stuff',  sous:'Ce qu&rsquo;il y a dans la trousse'},
-  {id:3, nom:'Written instructions', sous:'Les consignes &eacute;crites des exercices'},
-  {id:4, nom:'Oral instructions',    sous:'Ce que le prof demande &agrave; voix haute',
+  {id:1, ev:1, tok:'--l1', nom:'Greetings',     sous:'Se dire bonjour, merci, au revoir'},
+  {id:2, ev:1, tok:'--l2', nom:'School stuff',  sous:'Ce qu&rsquo;il y a dans la trousse'},
+  {id:3, ev:1, tok:'--l3', nom:'Written instructions', sous:'Les consignes &eacute;crites des exercices'},
+  {id:4, ev:1, tok:'--l4', nom:'Oral instructions',    sous:'Ce que le prof demande &agrave; voix haute',
    aussi:['read','listen','write'],
-   rem:'Le prof dit <b>notebook</b> ici et <b>copy book</b> en le&ccedil;on 2&nbsp;: les deux veulent dire &laquo;&nbsp;cahier&nbsp;&raquo;. Les trois derniers mots reviennent de la le&ccedil;on 3.'},
-  {id:0, nom:'All change',    sous:'Douze mots au hasard, toutes lignes'}
+   rem:'Le prof dit <b>notebook</b> ici et <b>copy book</b> dans <i>School stuff</i>&nbsp;: les deux veulent dire &laquo;&nbsp;cahier&nbsp;&raquo;. Les trois derniers mots reviennent de <i>Written instructions</i>.'},
+  {id:901, ev:1, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'}
 ];
 
 var MODES = [
@@ -758,6 +814,7 @@ var son = true;
 var partie = null;
 var ecranActuel = 'accueil';
 var ligneOuverte = 1;
+var evalOuvert = 1;
 var microKO = false;
 
 function charger(){
@@ -776,27 +833,57 @@ function $(s){ return document.querySelector(s); }
 function cle(l,m){ return l + '-' + m; }
 function fait(l,m){ return Object.prototype.hasOwnProperty.call(P, cle(l,m)); }
 function etoilesDe(l,m){ return fait(l,m) ? (P[cle(l,m)]|0) : 0; }
+/* Chaque &eacute;valuation s'ouvre &agrave; son premier groupe : la prof peut les
+   donner dans l'ordre qu'elle veut. &Agrave; l'int&eacute;rieur, un groupe attend le
+   pr&eacute;c&eacute;dent, et la r&eacute;vision attend qu'ils soient tous pass&eacute;s. */
 function debloque(l,m){
+  var L = ligneDe(l);
+  if(!L) return false;
   if(m !== 'qcm') return fait(l,'qcm');
-  if(l === 1) return true;
-  if(l === 0) return LIGNES.every(function(L){ return L.id === 0 || fait(L.id,'qcm'); });
-  return fait(l-1,'qcm');
+  if(L.tout) return groupesDe(L.ev).every(function(g){ return fait(g.id,'qcm'); });
+  var g = groupesDe(L.ev), i = g.indexOf(L);
+  return i <= 0 || fait(g[i-1].id,'qcm');
 }
 function ligneDe(l){
   for(var i=0;i<LIGNES.length;i++){ if(LIGNES[i].id === l) return LIGNES[i]; }
   return null;
 }
-/* Les mots d'une ligne : les siens, plus ceux qu'elle rejoue d'une
-   le&ccedil;on pr&eacute;c&eacute;dente (champ « aussi »). Un mot n'existe qu'une fois
-   dans MOTS : il ne compte donc jamais deux fois. */
+function evalDe(e){
+  for(var i=0;i<EVALS.length;i++){ if(EVALS[i].id === e) return EVALS[i]; }
+  return null;
+}
+function lignesDe(e){ return LIGNES.filter(function(L){ return L.ev === e; }); }
+function groupesDe(e){ return lignesDe(e).filter(function(L){ return !L.tout; }); }
+function couleurDe(l){ var L = ligneDe(l); return 'var(' + (L && L.tok ? L.tok : '--l1') + ')'; }
+
+/* Les mots d'un groupe : les siens, plus ceux qu'il rejoue d'un groupe
+   pr&eacute;c&eacute;dent (champ « aussi »). Un mot n'existe qu'une fois dans MOTS :
+   il ne compte donc jamais deux fois, m&ecirc;me s'il se rejoue. */
 function motsDe(l){
-  if(l === 0) return MOTS.slice();
-  var liste = MOTS.filter(function(m){ return m.l === l; });
   var L = ligneDe(l);
-  if(L && L.aussi){
-    L.aussi.forEach(function(id){ var m = parId(id); if(m) liste.push(m); });
+  if(!L) return [];
+  if(L.tout) return motsDeEval(L.ev);
+  var liste = MOTS.filter(function(m){ return m.l === l; });
+  if(L.aussi){
+    L.aussi.forEach(function(id){
+      var m = parId(id);
+      if(m && liste.indexOf(m) < 0) liste.push(m);
+    });
   }
   return liste;
+}
+/* Tous les mots d'une &eacute;valuation, sans doublon. */
+function motsDeEval(e){
+  var out = [];
+  groupesDe(e).forEach(function(L){
+    motsDe(L.id).forEach(function(m){ if(out.indexOf(m) < 0) out.push(m); });
+  });
+  return out;
+}
+function susDans(liste){
+  var n = 0;
+  liste.forEach(function(m){ if(niveau(m.id) === 3) n++; });
+  return n;
 }
 function parId(id){
   for(var i=0;i<MOTS.length;i++){ if(MOTS[i].id === id) return MOTS[i]; }
@@ -1027,39 +1114,98 @@ function montrer(nom){
   arreterEcoute();
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
   document.body.classList.toggle('en-jeu', nom === 'jeu');
-  ['accueil','jeu','bilan','carnet'].forEach(function(n){
+  ['accueil','eval','jeu','bilan','carnet'].forEach(function(n){
     $('#ecran-'+n).hidden = (n !== nom);
   });
   window.scrollTo(0,0);
 }
 
 /* ═══ Accueil ════════════════════════════════════════════ */
+function roundelNum(n){
+  return '<span class="num"><svg viewBox="0 0 100 100" aria-hidden="true">'+
+         '<circle cx="50" cy="50" r="36" fill="none" stroke="var(--rouge)" stroke-width="14"></circle>'+
+         '<rect x="1" y="32" width="98" height="36" fill="var(--bleu)"></rect>'+
+         '</svg><b>'+n+'</b></span>';
+}
+
+/* L'accueil : une grande carte par &eacute;valuation. La barre en quatre
+   segments est le plan de l'&eacute;valuation en petit &mdash; un segment par
+   groupe, large comme son nombre de mots, rempli de ce qui est su. */
 function construireAccueil(){
   var h = '';
-  LIGNES.forEach(function(L){
+  EVALS.forEach(function(E){
+    var mots = motsDeEval(E.id), n = susDans(mots);
+    h += '<button class="evz" type="button" data-eval="'+E.id+'">';
+    h +=   '<span class="evz-tete">'+roundelNum(E.id)+
+           '<span class="evz-t"><b>'+E.nom+'</b><small>'+E.sous+'</small></span></span>';
+    h +=   '<span class="zbar">';
+    groupesDe(E.id).forEach(function(g){
+      var mg = motsDe(g.id);
+      var pc = mg.length ? Math.round(susDans(mg) / mg.length * 100) : 0;
+      h += '<span style="--lc:'+couleurDe(g.id)+';flex:'+mg.length+'"><i style="width:'+pc+'%"></i></span>';
+    });
+    h +=   '</span>';
+    h +=   '<span class="chips">';
+    groupesDe(E.id).forEach(function(g){
+      h += '<span class="chip" style="--lc:'+couleurDe(g.id)+'">'+g.nom+'</span>';
+    });
+    h +=   '</span>';
+    h +=   '<span class="evz-pied"><span class="compteur"><b>'+n+'</b> / '+mots.length+
+           ' mots ma&icirc;tris&eacute;s</span><span class="cta">Ouvrir &rarr;</span></span>';
+    h += '</button>';
+  });
+  h += '<div class="evz vide">';
+  h +=   '<span class="evz-tete"><span class="num">?</span>';
+  h +=     '<span class="evz-t"><b>&Eacute;valuation '+(EVALS.length+1)+'</b>'+
+           '<small>Les prochains groupes de mots, quand la prof les donnera.</small></span></span>';
+  h += '</div>';
+  $('#evals').innerHTML = h;
+
+  var tot = totalMaitrises();
+  $('#pied-txt').innerHTML = tot === MOTS.length
+    ? 'Terminus&nbsp;: les '+MOTS.length+' mots sont sus.'
+    : tot + ' mot' + (tot > 1 ? 's' : '') + ' ma&icirc;tris&eacute;' + (tot > 1 ? 's' : '') + ' sur ' + MOTS.length;
+}
+
+/* L'&eacute;cran d'une &eacute;valuation : ses groupes de mots, chacun d&eacute;pliable
+   sur ses trois modes. */
+function construireEval(e){
+  var E = evalDe(e);
+  if(!E) return;
+  evalOuvert = e;
+  $('#eval-zone').innerHTML = E.zone || ('&Eacute;valuation ' + e);
+  $('#eval-nom').innerHTML = E.nom;
+  var mots = motsDeEval(e);
+  $('#eval-sous').innerHTML = mots.length + ' mots, ' + groupesDe(e).length + ' groupes. ' + E.sous;
+
+  var h = '';
+  lignesDe(e).forEach(function(L){
     var ouvrable = debloque(L.id,'qcm');
-    var mots = motsDe(L.id);
+    var m = motsDe(L.id);
     var tot = Math.min(etoilesDe(L.id,'qcm') + etoilesDe(L.id,'oral') + etoilesDe(L.id,'ecrit'), 3);
     var apercu = ouvrable
-      ? mots.length + ' mots &middot; ' + mots.slice(0,3).map(function(m){ return m.en.toLowerCase(); }).join(', ') + '&hellip;'
+      ? m.length + ' mots &middot; ' + m.slice(0,3).map(function(x){ return x.en.toLowerCase(); }).join(', ') + '&hellip;'
       : L.sous;
-    h += '<div class="ligne l'+L.id+(ouvrable?'':' verrou')+(ligneOuverte===L.id?' ouvert':'')+'">';
+    h += '<div class="ligne'+(ouvrable?'':' verrou')+(ligneOuverte===L.id?' ouvert':'')+
+         '" style="--lc:'+couleurDe(L.id)+'">';
     h +=   '<button class="ligne-tete" type="button" data-ouvrir="'+L.id+'"'+(ouvrable?'':' disabled')+'>';
     h +=     '<span class="ligne-txt"><b>'+L.nom+'</b><small>'+apercu+'</small></span>';
     h +=     '<span class="etoiles">'+(ouvrable ? etoilesHTML(tot) : ICONES.cadenas)+'</span>';
     h +=   '</button>';
     h +=   '<div class="ligne-corps">';
     h +=     '<div class="stations">';
-    mots.forEach(function(m){
-      var n = niveau(m.id);
-      h += '<b class="'+(n===3?'m':(n>0?'p':''))+'" title="'+echapper(m.en)+'"></b>';
+    m.forEach(function(x){
+      var n = niveau(x.id);
+      h += '<b class="'+(n===3?'m':(n>0?'p':''))+'" title="'+echapper(x.en)+'"></b>';
     });
     h +=     '</div>';
     MODES.forEach(function(md){
       var ok = debloque(L.id, md.id);
+      var att = L.tout ? 'Quand les quatre groupes sont pass&eacute;s.' : 'Apr&egrave;s le groupe pr&eacute;c&eacute;dent.';
       h += '<button class="mode" type="button" data-jouer="'+L.id+'" data-mode="'+md.id+'"'+(ok?'':' disabled')+'>';
       h +=   '<span class="pic">'+(ok ? ICONES[md.id] : ICONES.cadenas)+'</span>';
-      h +=   '<span class="lbl"><b>'+md.nom+'</b><small>'+(ok ? md.sous : 'Apr&egrave;s &laquo;&nbsp;Je choisis&nbsp;&raquo;.')+'</small></span>';
+      h +=   '<span class="lbl"><b>'+md.nom+'</b><small>'+
+             (ok ? md.sous : (md.id === 'qcm' ? att : 'Apr&egrave;s &laquo;&nbsp;Je choisis&nbsp;&raquo;.'))+'</small></span>';
       if(ok) h += '<span class="etoiles">'+etoilesHTML(etoilesDe(L.id, md.id))+'</span>';
       h += '</button>';
     });
@@ -1067,24 +1213,16 @@ function construireAccueil(){
     h += '</div>';
   });
   $('#plan').innerHTML = h;
-
-  var n = totalMaitrises();
-  $('#nb-mots').textContent = MOTS.length;
-  $('#nb-lignes').textContent = ['une','deux','trois','quatre','cinq','six'][LIGNES.length - 2] || (LIGNES.length - 1);
-  $('#glob-n').textContent = n + ' / ' + MOTS.length;
-  $('#glob-bar').style.width = Math.round(n / MOTS.length * 100) + '%';
-  $('#glob-txt').innerHTML = n === MOTS.length
-    ? 'Terminus&nbsp;: les 36 mots sont sus dans les trois modes. <b>Mind the gap&nbsp;!</b>'
-    : 'Un mot est ma&icirc;tris&eacute; quand il est juste dans les trois modes.';
 }
 
 /* ═══ Carnet ═════════════════════════════════════════════ */
 function construireCarnet(){
   var h = '';
-  LIGNES.forEach(function(L){
-    if(L.id === 0) return;
-    h += '<div class="l'+L.id+'">';
-    h +=   '<p class="groupe">Lesson '+L.id+' &middot; '+L.nom+'</p>';
+  EVALS.forEach(function(E){
+    h += '<p class="carnet-eval">'+E.nom+'</p>';
+  groupesDe(E.id).forEach(function(L){
+    h += '<div style="--lc:'+couleurDe(L.id)+'">';
+    h +=   '<p class="groupe">'+L.nom+'</p>';
     if(L.rem) h += '<p class="rem">'+L.rem+'</p>';
     h +=   '<div class="fiches">';
     motsDe(L.id).forEach(function(m){
@@ -1092,7 +1230,7 @@ function construireCarnet(){
       h +=   '<span class="rond">'+m.svg+'</span>';
       h +=   '<span class="txt"><b>'+echapper(m.en)+(m.alt?' <span style="opacity:.6">/ '+echapper(m.alt[0])+'</span>':'')+'</b>'+
              '<small>'+m.fr+(m.note?' <i>('+m.note+')</i>':'')+
-             (m.l !== L.id ? ' <i class="revu">&middot; le&ccedil;on '+m.l+'</i>' : '')+'</small></span>';
+             (m.l !== L.id ? ' <i class="revu">&middot; '+nu(ligneDe(m.l).nom)+'</i>' : '')+'</small></span>';
       h +=   '<span class="pastilles" aria-hidden="true">'+
                '<i class="'+(acquis(m.id,'qcm')?'on':'')+'"></i>'+
                '<i class="'+(acquis(m.id,'oral')?'on':'')+'"></i>'+
@@ -1103,17 +1241,18 @@ function construireCarnet(){
     h +=   '</div>';
     h += '</div>';
   });
+  });
   $('#carnet').innerHTML = h;
 }
 
 /* ═══ La partie ══════════════════════════════════════════ */
 function demarrer(l, mode, liste){
-  var file;
+  var L = ligneDe(l), file;
   if(liste) file = melange(liste);
-  else if(l === 0) file = melange(MOTS).slice(0,12);
+  else if(L && L.tout) file = melange(motsDe(l)).slice(0,12);
   else file = melange(motsDe(l));
   partie = {l:l, mode:mode, file:file, i:0, justes:0, aides:0, rates:[], repondu:false, reprise:!!liste, essais:0};
-  $('#ecran-jeu').className = 'ecran l' + l;
+  $('#ecran-jeu').style.setProperty('--lc', couleurDe(l));
   montrer('jeu');
   poser();
 }
@@ -1367,7 +1506,7 @@ function bilan(){
   if(rates.length){
     $('#rates-liste').innerHTML = rates.map(function(id){
       var m = parId(id);
-      return '<div class="rate l'+m.l+'"><span class="cadre">'+m.svg+'</span>'+
+      return '<div class="rate" style="--lc:'+couleurDe(m.l)+'"><span class="cadre">'+m.svg+'</span>'+
              '<b>'+echapper(m.en)+'</b><span>'+m.fr+'</span></div>';
     }).join('');
   }
@@ -1390,25 +1529,32 @@ function bilan(){
   }
 
   ligneOuverte = partie.l;
+  if(L) evalOuvert = L.ev;
   construireAccueil();
+  construireEval(evalOuvert);
   montrer('bilan');
 }
 
 /* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest ? ev.target.closest('[data-go],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
   if(!el) return;
 
   if(el.hasAttribute('data-go')){
     var ou = el.getAttribute('data-go');
     if(ou === 'carnet') construireCarnet();
     if(ou === 'accueil') construireAccueil();
+    if(ou === 'eval') construireEval(evalOuvert);
     montrer(ou); return;
+  }
+  if(el.hasAttribute('data-eval')){
+    construireEval(parseInt(el.getAttribute('data-eval'),10));
+    montrer('eval'); return;
   }
   if(el.hasAttribute('data-ouvrir')){
     var id = parseInt(el.getAttribute('data-ouvrir'),10);
     ligneOuverte = (ligneOuverte === id) ? -1 : id;
-    construireAccueil(); return;
+    construireEval(evalOuvert); return;
   }
   if(el.hasAttribute('data-jouer')){
     demarrer(parseInt(el.getAttribute('data-jouer'),10), el.getAttribute('data-mode')); return;
@@ -1421,7 +1567,7 @@ document.addEventListener('click', function(ev){
   if(el.id === 'btn-son'){ son = !son; majSon(); sauver(); if(son) dire('OK'); return; }
   if(el.id === 'btn-reset'){
     if(window.confirm('Effacer toutes les étoiles et repartir de zéro ?')){
-      P = {}; M = {}; sauver(); ligneOuverte = 1; construireAccueil();
+      P = {}; M = {}; sauver(); ligneOuverte = 1; construireAccueil(); construireEval(evalOuvert);
     }
     return;
   }
@@ -1484,7 +1630,9 @@ function lancer(etat){
   charger();
   majSon();
   construireAccueil();
+  if(etat && etat.ev) evalOuvert = etat.ev;
   if(etat && etat.ecran === 'carnet'){ construireCarnet(); montrer('carnet'); }
+  else if(etat && etat.ecran === 'eval'){ construireEval(evalOuvert); montrer('eval'); }
   try{
     if(window.speechSynthesis){
       choisirVoix();
@@ -1494,7 +1642,9 @@ function lancer(etat){
 }
 try{
   if(window.claude && window.claude.hot && window.claude.hot.snapshot){
-    window.claude.hot.snapshot(function(){ return {ecran: ecranActuel === 'carnet' ? 'carnet' : 'accueil'}; });
+    window.claude.hot.snapshot(function(){
+      return {ecran: (ecranActuel === 'carnet' || ecranActuel === 'eval') ? ecranActuel : 'accueil', ev: evalOuvert};
+    });
   }
 }catch(e){}
 if(window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(lancer);
