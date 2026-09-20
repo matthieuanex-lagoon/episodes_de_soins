@@ -5,8 +5,10 @@ Un mini-jeu de vocabulaire anglais calé sur la façon dont la prof interroge :
 
 *Évaluation 1* réunit les quatre premiers groupes du cahier — *Greetings*,
 *School stuff*, *Written instructions*, *Oral instructions* — soit 45 mots.
-L'accueil montre une grande carte par évaluation ; on l'ouvre pour trouver ses
-groupes, et chaque groupe se déplie sur les trois modes.
+*Évaluation 2* ouvre sur *Everyday needs*, les 13 phrases de classe du
+*classroom English*. L'accueil montre une grande carte par évaluation ; on
+l'ouvre pour trouver ses groupes, et chaque groupe se déplie sur les trois
+modes.
 
 Page unique, sans dépendance, sans réseau : `index.html`. Les progrès restent
 dans le navigateur (`localStorage`), rien n'est envoyé nulle part.
@@ -18,6 +20,13 @@ dans le navigateur (`localStorage`), rien n'est envoyé nulle part.
 | **Je choisis** | reconnaître le mot parmi trois | — |
 | **Je le dis** | le dire à voix haute (micro, ou auto-évaluation si le micro n'est pas accessible) | l'article est facultatif, la phrase entière est acceptée |
 | **Je l'écris** | le taper au clavier | **aucune** : casse, espaces et point final mis à part, chaque lettre compte, l'article compris |
+
+Les groupes de phrases (*Everyday needs*) suivent la même règle avec une seule
+souplesse : la virgule et le point d'interrogation sont facultatifs, mais
+l'apostrophe ne l'est pas — `I dont know` est refusé, `Sorry I'm late` passe.
+Une phrase longue s'affiche en minuscules sur la barre du roundel plutôt qu'en
+capitales de signalétique, et la reconnaissance vocale desserre sa tolérance à
+proportion de la longueur.
 
 Un mot n'est « maîtrisé » que lorsqu'il est juste dans les trois modes, sans
 indice. La barre en segments de la carte d'évaluation — un segment par groupe,
@@ -46,7 +55,9 @@ EVALS.push({id:2, nom:'Évaluation 2', zone:'Zone 2', sous:'…'});
 
 `tok` désigne un jeton de couleur (`--l1` à `--l4`, `--l0` pour la révision) ;
 les cinq se réutilisent d'une évaluation à l'autre. `tout:true` marque la ligne
-de révision, qui rebat douze mots au hasard parmi ceux de **son** évaluation.
+de révision, qui rebat douze mots au hasard parmi ceux de **son** évaluation —
+elle reste cachée tant que l'évaluation n'a qu'un seul groupe, où elle ferait
+doublon, et apparaît d'elle-même au deuxième.
 
 Les identifiants de groupe ne se réutilisent jamais : ce sont les clés des
 étoiles déjà gagnées. Chaque évaluation s'ouvre à son premier groupe — la prof
