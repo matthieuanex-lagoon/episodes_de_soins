@@ -1,0 +1,96 @@
+{
+ "id": "cell-theory",
+ "titre": "Cell Theory",
+ "matiere": "Anglais — la même leçon, pour s'entraîner",
+ "langue": "en",
+ "voix": "en_GB-jenny_dioco-medium",
+ "duree": 65.55,
+ "mots": 161,
+ "audio": "audio/cell-theory.mp3",
+ "phrases": [
+  {
+   "t": "Since Antiquity, people believed in spontaneous generation: living things could appear on their own, out of non-living matter.",
+   "b": 0,
+   "k": "p",
+   "d": 1.559,
+   "f": 9.535
+  },
+  {
+   "t": "The microscope was invented at the end of the sixteenth century by Janssen.",
+   "b": 1,
+   "k": "p",
+   "d": 10.085,
+   "f": 14.149
+  },
+  {
+   "t": "In the seventeenth century, Hooke looked at a thin slice of cork and called the empty boxes he saw cells.",
+   "b": 1,
+   "k": "p",
+   "d": 14.429,
+   "f": 21.429
+  },
+  {
+   "t": "His microscope was weak, and the cork cells were dead and empty, so he could not describe them precisely.",
+   "b": 1,
+   "k": "p",
+   "d": 21.709,
+   "f": 27.689
+  },
+  {
+   "t": "Soon after, Van Leeuwenhoek became the first person to observe living cells.",
+   "b": 1,
+   "k": "p",
+   "d": 27.969,
+   "f": 33.1
+  },
+  {
+   "t": "During the nineteenth century, Schleiden and Schwann concluded that every living thing is made of cells, and that every cell has a nucleus.",
+   "b": 2,
+   "k": "p",
+   "d": 33.65,
+   "f": 41.464
+  },
+  {
+   "t": "Pasteur's experiments finally disproved spontaneous generation.",
+   "b": 2,
+   "k": "p",
+   "d": 41.744,
+   "f": 45.854
+  },
+  {
+   "t": "The cell theory says three things:",
+   "b": 3,
+   "k": "p",
+   "d": 46.404,
+   "f": 48.377
+  },
+  {
+   "t": "– every living thing is made of one or more cells;",
+   "b": 4,
+   "k": "li",
+   "d": 48.927,
+   "f": 51.609
+  },
+  {
+   "t": "– the cell is the unit of structure and function of life;",
+   "b": 5,
+   "k": "li",
+   "d": 52.159,
+   "f": 55.155
+  },
+  {
+   "t": "– every cell comes from another cell.",
+   "b": 6,
+   "k": "li",
+   "d": 55.704,
+   "f": 57.678
+  },
+  {
+   "t": "From 1940 onwards, electron microscopes revealed the inside of the cell in great detail.",
+   "b": 7,
+   "k": "p",
+   "d": 58.228,
+   "f": 64.997
+  }
+ ]
+}

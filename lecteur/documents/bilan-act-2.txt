@@ -1,0 +1,26 @@
+titre: Bilan Act 2
+matiere: SVT — La théorie cellulaire
+langue: fr
+voix: fr_FR-siwis-medium
+---
+Depuis l’Antiquité, la théorie de la génération spontanée est admise : les êtres vivants apparaissent à partir des matériaux non-vivants.
+
+L’invention du microscope date de la fin du 16ème siècle par Janssen.
+
+Les premières observations de cellules ont lieu à la fin du 17ème siècle : Hook nomme « cellule » les cavités d’un morceau de liège. Toutefois le faible grossissement (50x) de son microscope et le fait que les cellules de liège sont mortes, vides, ne lui a pas permis d’être très précis. Peu après, Van Leeuwenhoek est le premier à observer des cellules vivantes à l’aide d’un appareil un peu plus performant.
+
+Au 18ème siècle, Dollon révolutionne la qualité d’image en inventant les lentilles achromatiques. Cela permet à Schleiden et Schwann d’observer au début du 19ème siècle, que tous les êtres vivants sont constitués de cellules et qu’elles possèdent toutes un noyau.
+
+Cependant de nombreux scientifiques se basent encore sur la théorie de la génération spontanée selon laquelle de la matière inerte peut donner naissance à un être vivant.
+
+Au milieu du 19ème siècle, la génération spontanée est réfutée grâce aux travaux de Pasteur, et la division cellulaire est découverte par Remake, grâce à l’amélioration des microscopes, grossissant jusqu’à 500x.
+
+Après des années de controverse et de débats, la communauté scientifique admet la théorie cellulaire à la fin du 19ème siècle. Elle stipule que :
+
+– tous les êtres vivants sont constitués de cellules (une ou plusieurs),
+
+– la cellule est l’unité de structure et de fonction du vivant ;
+
+– toute cellule provient d’une autre cellule.
+
+Dès 1940 l’invention des microscopes électroniques révèle de façon très précise l’ultrastructure cellulaire (l’intérieur des cellules).

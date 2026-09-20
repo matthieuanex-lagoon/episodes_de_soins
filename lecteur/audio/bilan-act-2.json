@@ -1,0 +1,117 @@
+{
+ "id": "bilan-act-2",
+ "titre": "Bilan Act 2",
+ "matiere": "SVT — La théorie cellulaire",
+ "langue": "fr",
+ "voix": "fr_FR-siwis-medium",
+ "duree": 105.24,
+ "mots": 275,
+ "audio": "audio/bilan-act-2.mp3",
+ "phrases": [
+  {
+   "t": "Depuis l’Antiquité, la théorie de la génération spontanée est admise : les êtres vivants apparaissent à partir des matériaux non-vivants.",
+   "b": 0,
+   "k": "p",
+   "d": 2.035,
+   "f": 9.547
+  },
+  {
+   "t": "L’invention du microscope date de la fin du 16ème siècle par Janssen.",
+   "b": 1,
+   "k": "p",
+   "d": 10.097,
+   "f": 14.044
+  },
+  {
+   "t": "Les premières observations de cellules ont lieu à la fin du 17ème siècle : Hook nomme « cellule » les cavités d’un morceau de liège.",
+   "b": 2,
+   "k": "p",
+   "d": 14.594,
+   "f": 21.885
+  },
+  {
+   "t": "Toutefois le faible grossissement (50x) de son microscope et le fait que les cellules de liège sont mortes, vides, ne lui a pas permis d’être très précis.",
+   "b": 2,
+   "k": "p",
+   "d": 22.165,
+   "f": 30.269
+  },
+  {
+   "t": "Peu après, Van Leeuwenhoek est le premier à observer des cellules vivantes à l’aide d’un appareil un peu plus performant.",
+   "b": 2,
+   "k": "p",
+   "d": 30.549,
+   "f": 37.19
+  },
+  {
+   "t": "Au 18ème siècle, Dollon révolutionne la qualité d’image en inventant les lentilles achromatiques.",
+   "b": 3,
+   "k": "p",
+   "d": 37.74,
+   "f": 43.87
+  },
+  {
+   "t": "Cela permet à Schleiden et Schwann d’observer au début du 19ème siècle, que tous les êtres vivants sont constitués de cellules et qu’elles possèdent toutes un noyau.",
+   "b": 3,
+   "k": "p",
+   "d": 44.15,
+   "f": 53.008
+  },
+  {
+   "t": "Cependant de nombreux scientifiques se basent encore sur la théorie de la génération spontanée selon laquelle de la matière inerte peut donner naissance à un être vivant.",
+   "b": 4,
+   "k": "p",
+   "d": 53.558,
+   "f": 63.067
+  },
+  {
+   "t": "Au milieu du 19ème siècle, la génération spontanée est réfutée grâce aux travaux de Pasteur, et la division cellulaire est découverte par Remake, grâce à l’amélioration des microscopes, grossissant jusqu’à 500x.",
+   "b": 5,
+   "k": "p",
+   "d": 63.617,
+   "f": 76.016
+  },
+  {
+   "t": "Après des années de controverse et de débats, la communauté scientifique admet la théorie cellulaire à la fin du 19ème siècle.",
+   "b": 6,
+   "k": "p",
+   "d": 76.566,
+   "f": 83.927
+  },
+  {
+   "t": "Elle stipule que :",
+   "b": 6,
+   "k": "p",
+   "d": 84.207,
+   "f": 85.391
+  },
+  {
+   "t": "– tous les êtres vivants sont constitués de cellules (une ou plusieurs),",
+   "b": 7,
+   "k": "li",
+   "d": 85.941,
+   "f": 89.087
+  },
+  {
+   "t": "– la cellule est l’unité de structure et de fonction du vivant ;",
+   "b": 8,
+   "k": "li",
+   "d": 89.637,
+   "f": 93.097
+  },
+  {
+   "t": "– toute cellule provient d’une autre cellule.",
+   "b": 9,
+   "k": "li",
+   "d": 93.647,
+   "f": 95.83
+  },
+  {
+   "t": "Dès 1940 l’invention des microscopes électroniques révèle de façon très précise l’ultrastructure cellulaire (l’intérieur des cellules).",
+   "b": 10,
+   "k": "p",
+   "d": 96.38,
+   "f": 104.693
+  }
+ ]
+}

@@ -36,7 +36,7 @@ html,body{margin:0}
 body{
   background:var(--ground); color:var(--ink);
   font-family:var(--sans); font-size:15px; line-height:1.5;
-  padding:0 16px 132px;
+  padding:0 16px 134px;
   -webkit-font-smoothing:antialiased;
 }
 main{max-width:800px;margin:0 auto}
@@ -60,11 +60,12 @@ body.lecture .vu i:nth-child(4){animation-delay:.06s}
 body.lecture .vu i:nth-child(5){animation-delay:.2s}
 @keyframes vu{from{height:5px}to{height:22px}}
 h1{font-family:var(--serif);font-size:1.22rem;font-weight:700;letter-spacing:-.015em;margin:0;line-height:1.15}
-.tag{margin:1px 0 0;font-size:.735rem;color:var(--ink-soft);letter-spacing:.005em}
+.tag{margin:1px 0 0;font-size:.735rem;color:var(--ink-soft)}
 #statut{
   margin-left:auto;font-size:.7rem;color:var(--ink-soft);text-align:right;
-  max-width:42%;line-height:1.3;
+  max-width:44%;line-height:1.3;margin-block:0;
 }
+#statut.alerte{color:var(--danger)}
 
 /* ---- blocs ---- */
 section{margin-block:18px}
@@ -77,63 +78,33 @@ section{margin-block:18px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
   font:inherit;font-size:.82rem;font-weight:500;
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 13px;border-radius:999px;cursor:pointer;
-  background:var(--surface);color:var(--ink);
-  border:1px solid var(--rule);
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 14px 7px 11px;border-radius:999px;cursor:pointer;
+  background:var(--surface);color:var(--ink);border:1px solid var(--rule);
 }
 .chip:hover{border-color:var(--accent-line)}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.chip .kind{font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;opacity:.62}
-.chip.ghost{background:transparent;border-style:dashed;color:var(--ink-soft)}
-.chip.ghost:hover{color:var(--ink)}
-
-/* ---- panneau coller ---- */
-.panneau{
-  background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);
-  padding:14px;display:grid;gap:10px;
+.chip .kind{
+  font-size:.62rem;font-weight:700;letter-spacing:.07em;
+  border:1px solid currentColor;border-radius:4px;padding:0 4px;opacity:.6;
 }
-.panneau textarea{
-  font-family:var(--serif);font-size:.95rem;line-height:1.6;
-  width:100%;min-height:130px;resize:vertical;
-  color:var(--ink);background:var(--paper);
-  border:1px solid var(--rule);border-radius:8px;padding:10px 12px;
-}
-.panneau .actions{display:flex;gap:8px;flex-wrap:wrap}
+.chip .min{font-variant-numeric:tabular-nums;opacity:.6;font-size:.76rem}
 
-/* ---- réglages ---- */
+/* ---- vitesse ---- */
 .reglages{
   background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);
-  display:grid;grid-template-columns:auto 1fr;gap:16px 22px;padding:15px 16px;
-  align-items:start;
+  padding:14px 16px 15px;
 }
-@media (max-width:620px){.reglages{grid-template-columns:1fr}}
-.reg{min-width:0}
-.reg.large{grid-column:1/-1}
-.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
-.seg button{
-  font:inherit;font-size:.82rem;font-weight:600;
-  padding:7px 16px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;
-}
-.seg button+button{border-left:1px solid var(--rule)}
-.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
-select{
-  font:inherit;font-size:.82rem;width:100%;max-width:340px;
-  padding:7px 10px;border-radius:8px;border:1px solid var(--rule);
-  background:var(--surface);color:var(--ink);
-}
-.vit-ligne{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-input[type=range]{
-  flex:1 1 180px;min-width:150px;accent-color:var(--accent);height:22px;
-}
+.vit-ligne{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+input[type=range].vit{flex:1 1 200px;min-width:160px;accent-color:var(--accent);height:22px}
 .vit-val{
-  font-variant-numeric:tabular-nums;font-weight:700;font-size:.95rem;
-  min-width:3.1em;color:var(--ink);
+  font-variant-numeric:tabular-nums;font-weight:700;font-size:.98rem;
+  min-width:3.2em;color:var(--ink);
 }
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .presets button{
   font:inherit;font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums;
-  padding:4px 9px;border-radius:6px;cursor:pointer;
+  padding:4px 10px;border-radius:6px;cursor:pointer;
   border:1px solid var(--rule);background:transparent;color:var(--ink-soft);
 }
 .presets button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
@@ -146,10 +117,12 @@ input[type=range]{
 @media (max-width:620px){.paper{padding:20px 17px 24px}}
 .paper h2{
   font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:-.02em;
-  margin:0;text-wrap:balance;
+  margin:0;text-wrap:balance;border-radius:4px;padding:.02em .12em;margin-left:-.12em;
+  transition:background-color .15s ease;
 }
+.paper h2.on{background:var(--mark);box-shadow:0 0 0 1px var(--mark-edge) inset}
 .doc-meta{
-  margin:6px 0 0;font-size:.71rem;letter-spacing:.06em;text-transform:uppercase;
+  margin:7px 0 0;font-size:.71rem;letter-spacing:.06em;text-transform:uppercase;
   color:var(--ink-faint);font-variant-numeric:tabular-nums;
 }
 .doc-meta b{color:var(--ink-soft);font-weight:600}
@@ -160,16 +133,15 @@ input[type=range]{
 }
 #texte p{margin:0 0 1.05em}
 #texte p.li{margin:0 0 .35em;padding-left:1.15em;text-indent:-1.15em}
-#texte p.li:last-child{margin-bottom:1.05em}
+#texte p.li + p:not(.li){margin-top:1.05em}
 .s{
   border-radius:3px;padding:.05em .1em;margin:0 -.1em;
-  cursor:pointer;transition:background-color .12s ease,opacity .18s ease;
+  cursor:pointer;transition:background-color .12s ease,opacity .2s ease;
 }
 .s:hover{background:var(--accent-soft)}
 .s.on{background:var(--mark);box-shadow:0 0 0 1px var(--mark-edge) inset}
-body.lecture #texte .s{opacity:.48}
+body.lecture #texte .s{opacity:.46}
 body.lecture #texte .s.on{opacity:1}
-.vide{color:var(--ink-faint);font-family:var(--sans);font-size:.9rem}
 
 /* ---- transport ---- */
 .transport{
@@ -178,8 +150,23 @@ body.lecture #texte .s.on{opacity:1}
   padding:0 16px calc(11px + env(safe-area-inset-bottom,0px));
 }
 .transport .inner{max-width:800px;margin:0 auto}
-.rail{height:3px;background:var(--rule-soft);margin:0 -16px 11px;position:relative;overflow:hidden}
-.rail i{position:absolute;inset:0 auto 0 0;width:0;background:var(--accent);transition:width .25s ease}
+.scrub{
+  -webkit-appearance:none;appearance:none;display:block;
+  width:calc(100% + 32px);margin:0 -16px 9px;height:13px;
+  background:transparent;cursor:pointer;
+}
+.scrub::-webkit-slider-runnable-track{
+  height:3px;
+  background:linear-gradient(var(--accent),var(--accent)) 0/var(--p,0%) 100% no-repeat,var(--rule-soft);
+}
+.scrub::-webkit-slider-thumb{
+  -webkit-appearance:none;width:11px;height:11px;border-radius:50%;
+  background:var(--accent);margin-top:-4px;
+}
+.scrub::-moz-range-track{height:3px;background:var(--rule-soft)}
+.scrub::-moz-range-progress{height:3px;background:var(--accent)}
+.scrub::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--accent)}
+.scrub:disabled{cursor:default;opacity:.5}
 .tr-row{display:flex;align-items:center;gap:8px}
 .tbtn{
   font:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -193,11 +180,17 @@ body.lecture #texte .s.on{opacity:1}
   background:var(--accent);color:var(--accent-ink);border-color:var(--accent);
   font-weight:600;font-size:.88rem;padding:0 19px;min-width:112px;
 }
+.temps{
+  font-size:.76rem;color:var(--ink-soft);font-variant-numeric:tabular-nums;
+  margin-left:4px;white-space:nowrap;
+}
 .pos{
-  margin-left:auto;font-size:.74rem;color:var(--ink-soft);
+  margin-left:auto;font-size:.73rem;color:var(--ink-soft);
   font-variant-numeric:tabular-nums;text-align:right;line-height:1.25;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .pos b{display:block;color:var(--ink);font-weight:600}
+@media (max-width:520px){.temps{display:none}}
 
 /* ---- aide ---- */
 .aide{
@@ -212,7 +205,6 @@ kbd{
   border:1px solid var(--rule);border-bottom-width:2px;border-radius:5px;
   padding:1px 6px;background:var(--surface);color:var(--ink);
 }
-.alerte{color:var(--danger)}
 
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){
@@ -228,44 +220,22 @@ kbd{
       <p class="tag">Les cours de Chloé, lus à haute voix</p>
     </div>
   </div>
-  <p id="statut" role="status" aria-live="polite">Choisis un document, puis appuie sur Lire.</p>
+  <p id="statut" role="status" aria-live="polite">Choisis un cours, puis appuie sur Écouter.</p>
 </header>
 
 <main>
   <section>
-    <span class="lab">Documents</span>
+    <span class="lab">Cours enregistrés</span>
     <div class="chips" id="chips"></div>
   </section>
 
-  <section class="panneau" id="panneau" hidden>
-    <label class="lab" for="colle">Colle ton texte ici</label>
-    <textarea id="colle" placeholder="Colle un paragraphe, une leçon, un exercice…"></textarea>
-    <div class="actions">
-      <button class="chip" id="colle-lire" type="button">Mettre dans le lecteur</button>
-      <button class="chip ghost" id="colle-vider" type="button">Effacer</button>
-    </div>
-  </section>
-
   <section class="reglages">
-    <div class="reg">
-      <span class="lab" id="lab-langue">Langue de lecture</span>
-      <div class="seg" role="group" aria-labelledby="lab-langue">
-        <button type="button" id="lang-fr" data-lang="fr" aria-pressed="true">Français</button>
-        <button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button>
-      </div>
+    <span class="lab" id="lab-vitesse">Vitesse d’écoute</span>
+    <div class="vit-ligne">
+      <output class="vit-val" id="vitesse-val" for="vitesse">1,0×</output>
+      <input type="range" class="vit" id="vitesse" min="0.5" max="2" step="0.05" value="1" aria-labelledby="lab-vitesse">
     </div>
-    <div class="reg">
-      <label class="lab" for="voix">Voix</label>
-      <select id="voix"><option>Chargement des voix…</option></select>
-    </div>
-    <div class="reg large">
-      <span class="lab" id="lab-vitesse">Vitesse de lecture</span>
-      <div class="vit-ligne">
-        <output class="vit-val" id="vitesse-val" for="vitesse">1,0×</output>
-        <input type="range" id="vitesse" min="0.5" max="2" step="0.05" value="1" aria-labelledby="lab-vitesse">
-      </div>
-      <div class="presets" id="presets"></div>
-    </div>
+    <div class="presets" id="presets"></div>
   </section>
 
   <article class="paper">
@@ -277,582 +247,587 @@ kbd{
   <section class="aide">
     <div>
       <h3>Au clavier</h3>
-      <p><kbd>Espace</kbd> lire ou mettre en pause</p>
+      <p><kbd>Espace</kbd> écouter ou mettre en pause</p>
       <p><kbd>←</kbd> <kbd>→</kbd> phrase précédente / suivante</p>
       <p><kbd>−</kbd> <kbd>+</kbd> ralentir / accélérer</p>
-      <p><kbd>Échap</kbd> arrêter</p>
+      <p><kbd>Échap</kbd> revenir au début</p>
     </div>
     <div>
       <h3>À la souris</h3>
-      <p>Clique sur n'importe quelle phrase du texte : la lecture repart à partir de là.</p>
-      <p>Le lecteur retient où tu t'es arrêtée dans chaque document.</p>
+      <p>Clique sur une phrase du texte : l’écoute reprend exactement à cet endroit.</p>
+      <p>Le Lecteur retient où tu t’es arrêtée dans chaque cours.</p>
     </div>
     <div>
       <h3>Ajouter un cours</h3>
-      <p>Donne le document à Claude, il l'ajoute dans la liste.</p>
-      <p>Ou colle le texte toi-même avec « Coller un texte ».</p>
+      <p>Donne le document à Claude : il enregistre le fichier son et l’ajoute ici.</p>
     </div>
   </section>
 </main>
 
 <div class="transport">
-  <div class="rail"><i id="rail"></i></div>
-  <div class="inner tr-row">
-    <button class="tbtn primary" id="btn-lire" type="button">
-      <svg id="icone-lire" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-      <span id="texte-lire">Lire</span>
-    </button>
-    <button class="tbtn" id="btn-prec" type="button" title="Phrase précédente" aria-label="Phrase précédente">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6h2v12H7zm3.5 6 8.5 6V6z"/></svg>
-    </button>
-    <button class="tbtn" id="btn-suiv" type="button" title="Phrase suivante" aria-label="Phrase suivante">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6h2v12h-2zM5 18l8.5-6L5 6z"/></svg>
-    </button>
-    <button class="tbtn" id="btn-stop" type="button" title="Arrêter" aria-label="Arrêter et revenir au début">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
-    </button>
-    <p class="pos" id="pos"><b>—</b>Aucun document</p>
+  <div class="inner">
+    <input type="range" class="scrub" id="scrub" min="0" max="1000" value="0" step="1"
+           aria-label="Position dans l’enregistrement" disabled>
+    <div class="tr-row">
+      <button class="tbtn primary" id="btn-lire" type="button" disabled>
+        <svg id="icone-lire" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <span id="texte-lire">Écouter</span>
+      </button>
+      <button class="tbtn" id="btn-prec" type="button" title="Phrase précédente" aria-label="Phrase précédente" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6h2v12H7zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="tbtn" id="btn-suiv" type="button" title="Phrase suivante" aria-label="Phrase suivante" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6h2v12h-2zM5 18l8.5-6L5 6z"/></svg>
+      </button>
+      <button class="tbtn" id="btn-stop" type="button" title="Revenir au début" aria-label="Revenir au début" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+      </button>
+      <span class="temps" id="temps">0:00 / 0:00</span>
+      <p class="pos" id="pos"><b>—</b>Aucun cours</p>
+    </div>
   </div>
 </div>
+
+<audio id="son" preload="metadata"></audio>
 
 <script>
 (function(){
 "use strict";
 
-/* =========================================================
-   Les documents. Pour en ajouter un : une entrée de plus.
-   ========================================================= */
+/* Les cours : texte, minutage et fichier son, produits par
+   lecteur/outils/fabrique.py. Ne pas modifier ce bloc à la main. */
+/* <<< DOCUMENTS */
 var DOCS = [
-  {
-    id:"bilan-act-2",
-    titre:"Bilan Act 2",
-    matiere:"SVT — La théorie cellulaire",
-    lang:"fr",
-    blocs:[
-      {t:"p", x:"Depuis l’Antiquité, la théorie de la génération spontanée est admise : les êtres vivants apparaissent à partir des matériaux non-vivants."},
-      {t:"p", x:"L’invention du microscope date de la fin du 16ème siècle par Janssen."},
-      {t:"p", x:"Les premières observations de cellules ont lieu à la fin du 17ème siècle : Hook nomme « cellule » les cavités d’un morceau de liège. Toutefois le faible grossissement (50x) de son microscope et le fait que les cellules de liège sont mortes, vides, ne lui a pas permis d’être très précis. Peu après, Van Leeuwenhoek est le premier à observer des cellules vivantes à l’aide d’un appareil un peu plus performant."},
-      {t:"p", x:"Au 18ème siècle, Dollon révolutionne la qualité d’image en inventant les lentilles achromatiques. Cela permet à Schleiden et Schwann d’observer au début du 19ème siècle, que tous les êtres vivants sont constitués de cellules et qu’elles possèdent toutes un noyau."},
-      {t:"p", x:"Cependant de nombreux scientifiques se basent encore sur la théorie de la génération spontanée selon laquelle de la matière inerte peut donner naissance à un être vivant."},
-      {t:"p", x:"Au milieu du 19ème siècle, la génération spontanée est réfutée grâce aux travaux de Pasteur, et la division cellulaire est découverte par Remake, grâce à l’amélioration des microscopes, grossissant jusqu’à 500x."},
-      {t:"p", x:"Après des années de controverse et de débats, la communauté scientifique admet la théorie cellulaire à la fin du 19ème siècle. Elle stipule que :"},
-      {t:"li", x:"– tous les êtres vivants sont constitués de cellules (une ou plusieurs),"},
-      {t:"li", x:"– la cellule est l’unité de structure et de fonction du vivant ;"},
-      {t:"li", x:"– toute cellule provient d’une autre cellule."},
-      {t:"p", x:"Dès 1940 l’invention des microscopes électroniques révèle de façon très précise l’ultrastructure cellulaire (l’intérieur des cellules)."}
-    ]
-  },
-  {
-    id:"cell-theory-en",
-    titre:"Cell Theory",
-    matiere:"Anglais — le même cours, pour s’entraîner",
-    lang:"en",
-    blocs:[
-      {t:"p", x:"Since Antiquity, people believed in spontaneous generation: living things could appear on their own, out of non-living matter."},
-      {t:"p", x:"The microscope was invented at the end of the sixteenth century by Janssen. In the seventeenth century, Hooke looked at a thin slice of cork and called the empty boxes he saw “cells”. His microscope was weak, and the cork cells were dead and empty, so he could not describe them precisely. Soon after, Van Leeuwenhoek became the first person to observe living cells."},
-      {t:"p", x:"During the nineteenth century, Schleiden and Schwann concluded that every living thing is made of cells, and that every cell has a nucleus. Pasteur’s experiments finally disproved spontaneous generation."},
-      {t:"p", x:"The cell theory says three things:"},
-      {t:"li", x:"– every living thing is made of one or more cells;"},
-      {t:"li", x:"– the cell is the unit of structure and function of life;"},
-      {t:"li", x:"– every cell comes from another cell."},
-      {t:"p", x:"From 1940 onwards, electron microscopes revealed the inside of the cell in great detail."}
-    ]
-  }
+ {
+  "id": "bilan-act-2",
+  "titre": "Bilan Act 2",
+  "matiere": "SVT — La théorie cellulaire",
+  "langue": "fr",
+  "voix": "fr_FR-siwis-medium",
+  "duree": 105.24,
+  "mots": 275,
+  "audio": "audio/bilan-act-2.mp3",
+  "phrases": [
+   {
+    "t": "Depuis l’Antiquité, la théorie de la génération spontanée est admise : les êtres vivants apparaissent à partir des matériaux non-vivants.",
+    "b": 0,
+    "k": "p",
+    "d": 2.035,
+    "f": 9.547
+   },
+   {
+    "t": "L’invention du microscope date de la fin du 16ème siècle par Janssen.",
+    "b": 1,
+    "k": "p",
+    "d": 10.097,
+    "f": 14.044
+   },
+   {
+    "t": "Les premières observations de cellules ont lieu à la fin du 17ème siècle : Hook nomme « cellule » les cavités d’un morceau de liège.",
+    "b": 2,
+    "k": "p",
+    "d": 14.594,
+    "f": 21.885
+   },
+   {
+    "t": "Toutefois le faible grossissement (50x) de son microscope et le fait que les cellules de liège sont mortes, vides, ne lui a pas permis d’être très précis.",
+    "b": 2,
+    "k": "p",
+    "d": 22.165,
+    "f": 30.269
+   },
+   {
+    "t": "Peu après, Van Leeuwenhoek est le premier à observer des cellules vivantes à l’aide d’un appareil un peu plus performant.",
+    "b": 2,
+    "k": "p",
+    "d": 30.549,
+    "f": 37.19
+   },
+   {
+    "t": "Au 18ème siècle, Dollon révolutionne la qualité d’image en inventant les lentilles achromatiques.",
+    "b": 3,
+    "k": "p",
+    "d": 37.74,
+    "f": 43.87
+   },
+   {
+    "t": "Cela permet à Schleiden et Schwann d’observer au début du 19ème siècle, que tous les êtres vivants sont constitués de cellules et qu’elles possèdent toutes un noyau.",
+    "b": 3,
+    "k": "p",
+    "d": 44.15,
+    "f": 53.008
+   },
+   {
+    "t": "Cependant de nombreux scientifiques se basent encore sur la théorie de la génération spontanée selon laquelle de la matière inerte peut donner naissance à un être vivant.",
+    "b": 4,
+    "k": "p",
+    "d": 53.558,
+    "f": 63.067
+   },
+   {
+    "t": "Au milieu du 19ème siècle, la génération spontanée est réfutée grâce aux travaux de Pasteur, et la division cellulaire est découverte par Remake, grâce à l’amélioration des microscopes, grossissant jusqu’à 500x.",
+    "b": 5,
+    "k": "p",
+    "d": 63.617,
+    "f": 76.016
+   },
+   {
+    "t": "Après des années de controverse et de débats, la communauté scientifique admet la théorie cellulaire à la fin du 19ème siècle.",
+    "b": 6,
+    "k": "p",
+    "d": 76.566,
+    "f": 83.927
+   },
+   {
+    "t": "Elle stipule que :",
+    "b": 6,
+    "k": "p",
+    "d": 84.207,
+    "f": 85.391
+   },
+   {
+    "t": "– tous les êtres vivants sont constitués de cellules (une ou plusieurs),",
+    "b": 7,
+    "k": "li",
+    "d": 85.941,
+    "f": 89.087
+   },
+   {
+    "t": "– la cellule est l’unité de structure et de fonction du vivant ;",
+    "b": 8,
+    "k": "li",
+    "d": 89.637,
+    "f": 93.097
+   },
+   {
+    "t": "– toute cellule provient d’une autre cellule.",
+    "b": 9,
+    "k": "li",
+    "d": 93.647,
+    "f": 95.83
+   },
+   {
+    "t": "Dès 1940 l’invention des microscopes électroniques révèle de façon très précise l’ultrastructure cellulaire (l’intérieur des cellules).",
+    "b": 10,
+    "k": "p",
+    "d": 96.38,
+    "f": 104.693
+   }
+  ]
+ },
+ {
+  "id": "cell-theory",
+  "titre": "Cell Theory",
+  "matiere": "Anglais — la même leçon, pour s'entraîner",
+  "langue": "en",
+  "voix": "en_GB-jenny_dioco-medium",
+  "duree": 65.55,
+  "mots": 161,
+  "audio": "audio/cell-theory.mp3",
+  "phrases": [
+   {
+    "t": "Since Antiquity, people believed in spontaneous generation: living things could appear on their own, out of non-living matter.",
+    "b": 0,
+    "k": "p",
+    "d": 1.559,
+    "f": 9.535
+   },
+   {
+    "t": "The microscope was invented at the end of the sixteenth century by Janssen.",
+    "b": 1,
+    "k": "p",
+    "d": 10.085,
+    "f": 14.149
+   },
+   {
+    "t": "In the seventeenth century, Hooke looked at a thin slice of cork and called the empty boxes he saw cells.",
+    "b": 1,
+    "k": "p",
+    "d": 14.429,
+    "f": 21.429
+   },
+   {
+    "t": "His microscope was weak, and the cork cells were dead and empty, so he could not describe them precisely.",
+    "b": 1,
+    "k": "p",
+    "d": 21.709,
+    "f": 27.689
+   },
+   {
+    "t": "Soon after, Van Leeuwenhoek became the first person to observe living cells.",
+    "b": 1,
+    "k": "p",
+    "d": 27.969,
+    "f": 33.1
+   },
+   {
+    "t": "During the nineteenth century, Schleiden and Schwann concluded that every living thing is made of cells, and that every cell has a nucleus.",
+    "b": 2,
+    "k": "p",
+    "d": 33.65,
+    "f": 41.464
+   },
+   {
+    "t": "Pasteur's experiments finally disproved spontaneous generation.",
+    "b": 2,
+    "k": "p",
+    "d": 41.744,
+    "f": 45.854
+   },
+   {
+    "t": "The cell theory says three things:",
+    "b": 3,
+    "k": "p",
+    "d": 46.404,
+    "f": 48.377
+   },
+   {
+    "t": "– every living thing is made of one or more cells;",
+    "b": 4,
+    "k": "li",
+    "d": 48.927,
+    "f": 51.609
+   },
+   {
+    "t": "– the cell is the unit of structure and function of life;",
+    "b": 5,
+    "k": "li",
+    "d": 52.159,
+    "f": 55.155
+   },
+   {
+    "t": "– every cell comes from another cell.",
+    "b": 6,
+    "k": "li",
+    "d": 55.704,
+    "f": 57.678
+   },
+   {
+    "t": "From 1940 onwards, electron microscopes revealed the inside of the cell in great detail.",
+    "b": 7,
+    "k": "p",
+    "d": 58.228,
+    "f": 64.997
+   }
+  ]
+ }
 ];
-
-/* ========================= état ========================= */
-var synth = window.speechSynthesis;
-var docs = DOCS.slice();
-var doc = null;          /* document courant */
-var phrases = [];        /* [{texte, el, morceaux:[]}] */
-var file = [];           /* [{ip, texte}] morceaux à dire */
-var fpos = 0;            /* position dans la file */
-var ip = 0;              /* index de la phrase courante */
-var gen = 0;             /* génération : invalide les callbacks d'une lecture annulée */
-var enLecture = false, enPause = false;
-var voix = [], voixChoisie = null, langue = "fr", vitesse = 1;
-var prefs = {vitesse:1, voix:{}};
+/* DOCUMENTS >>> */
 
 var $ = function(id){ return document.getElementById(id); };
-var chips=$("chips"), texteEl=$("texte"), statutEl=$("statut"), posEl=$("pos"), railEl=$("rail");
-var btnLire=$("btn-lire"), icLire=$("icone-lire"), txLire=$("texte-lire");
-var selVoix=$("voix"), rngVit=$("vitesse"), outVit=$("vitesse-val");
+var son = $("son"), chips = $("chips"), texteEl = $("texte"), statutEl = $("statut");
+var btnLire = $("btn-lire"), icLire = $("icone-lire"), txLire = $("texte-lire");
+var scrub = $("scrub"), tempsEl = $("temps"), posEl = $("pos");
+var rngVit = $("vitesse"), outVit = $("vitesse-val");
 
-/* ===================== préférences ====================== */
+var doc = null;      /* cours affiché */
+var spans = [];      /* un span par phrase */
+var ip = -1;         /* phrase surlignée, -1 = le titre */
+var vitesse = 1;
+var glisse = false;  /* l'utilisateur tient le curseur de position */
+var prefs = { vitesse: 1 };
+
+/* ----------------------- mémoire ----------------------- */
 function lire(cle, defaut){
-  try{ var v = localStorage.getItem(cle); return v===null ? defaut : JSON.parse(v); }
+  try{ var v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); }
   catch(e){ return defaut; }
 }
 function ecrire(cle, val){ try{ localStorage.setItem(cle, JSON.stringify(val)); }catch(e){} }
 
-prefs = lire("lecteur.prefs", prefs) || {vitesse:1, voix:{}};
+prefs = lire("lecteur.prefs", prefs) || { vitesse: 1 };
 if(typeof prefs.vitesse !== "number") prefs.vitesse = 1;
-if(!prefs.voix) prefs.voix = {};
 vitesse = Math.min(2, Math.max(0.5, prefs.vitesse));
 
-/* ============== découpage en phrases / morceaux ============== */
-var ABREV = /(?:\b(?:M|MM|Mme|Mlle|Dr|Pr|St|Ste|etc|cf|ex|env|av|ap|réf|fig|p|vol|n°|Mr|Mrs|Ms|Jr|Sr|vs|approx)|\b[A-ZÀ-Þ])\.$/;
-
-function decouperPhrases(t){
-  var out=[], cur="", i, suite, m, apres;
-  for(i=0;i<t.length;i++){
-    cur += t[i];
-    if(".!?…".indexOf(t[i]) === -1) continue;
-    while(i+1<t.length && "\"'»)]”’".indexOf(t[i+1]) !== -1){ cur += t[++i]; }
-    suite = t.slice(i+1);
-    m = suite.match(/^[ \t]+/);
-    if(!m) continue;
-    apres = suite.charAt(m[0].length);
-    if(!apres) continue;
-    if(ABREV.test(cur.trim())) continue;
-    if(!/[A-ZÀ-ÖØ-Þ«"“'(\d–—-]/.test(apres)) continue;
-    out.push(cur.trim()); cur = ""; i += m[0].length;
-  }
-  if(cur.trim()) out.push(cur.trim());
-  return out.length ? out : [t.trim()];
+/* ----------------------- affichage ----------------------- */
+function mmss(s){
+  if(!isFinite(s) || s < 0) s = 0;
+  var m = Math.floor(s / 60);
+  var r = Math.floor(s % 60);
+  return m + ":" + (r < 10 ? "0" : "") + r;
 }
-
-/* Les moteurs de synthèse coupent les énoncés trop longs :
-   on parle par morceaux de clause, sans casser le surlignage. */
-function decouperMorceaux(t, max){
-  max = max || 180;
-  if(t.length <= max) return [t];
-  var bouts = [], acc = "", j;
-  for(j=0;j<t.length;j++){
-    acc += t[j];
-    if(",;:".indexOf(t[j]) !== -1 && /\s/.test(t.charAt(j+1))){
-      while(j+1 < t.length && /\s/.test(t.charAt(j+1))) j++;
-      bouts.push(acc); acc = "";
-    }
-  }
-  if(acc) bouts.push(acc);
-  if(bouts.length === 1) bouts = t.split(/\s+/);
-  var out=[], cur="";
-  for(var i=0;i<bouts.length;i++){
-    if(cur && (cur + " " + bouts[i]).length > max){ out.push(cur); cur = bouts[i]; }
-    else { cur = cur ? cur + " " + bouts[i] : bouts[i]; }
-  }
-  if(cur) out.push(cur);
-  return out;
-}
-
-/* ============ prononciation : ce que le français écrit mal ============ */
-var ORDINAUX = {1:"premier",2:"deuxième",3:"troisième",4:"quatrième",5:"cinquième",
-  6:"sixième",7:"septième",8:"huitième",9:"neuvième",10:"dixième",11:"onzième",
-  12:"douzième",13:"treizième",14:"quatorzième",15:"quinzième",16:"seizième",
-  17:"dix-septième",18:"dix-huitième",19:"dix-neuvième",20:"vingtième",21:"vingt-et-unième"};
-
-function pourLaVoix(t, lg){
-  var s = t.replace(/^\s*[–—-]\s*/, "");
-  if(lg === "fr"){
-    s = s.replace(/(\d{1,2})\s*(?:ème|eme|e)\b/g, function(_, n){
-      return ORDINAUX[parseInt(n,10)] || (n + "ième");
-    });
-    s = s.replace(/(\d+)\s*x(?![a-zA-Zà-ÿ])/g, "$1 fois");
-    s = s.replace(/[«»“”]/g, "");
-  } else {
-    s = s.replace(/[“”«»]/g, "");
-  }
-  return s.trim() || t;
-}
-
-/* ======================= rendu du document ======================= */
-function texteBrut(d){
-  return d.blocs.map(function(b){ return b.x; }).join(" ");
-}
-
-function afficher(d){
-  arreter();
-  doc = d;
-  langue = d.lang;
-  phrases = [];
-  texteEl.textContent = "";
-
-  $("doc-titre").textContent = d.titre;
-  var mots = texteBrut(d).split(/\s+/).filter(Boolean).length;
-  d._mots = mots;
-
-  d.blocs.forEach(function(b){
-    var p = document.createElement("p");
-    if(b.t === "li") p.className = "li";
-    decouperPhrases(b.x).forEach(function(ph){
-      var sp = document.createElement("span");
-      sp.className = "s";
-      sp.textContent = ph;
-      sp.setAttribute("data-i", String(phrases.length));
-      sp.title = "Lire à partir d’ici";
-      p.appendChild(sp);
-      p.appendChild(document.createTextNode(" "));
-      phrases.push({ texte: ph, el: sp, morceaux: decouperMorceaux(pourLaVoix(ph, d.lang)) });
-    });
-    texteEl.appendChild(p);
-  });
-
-  construireFile();
-  ip = Math.min(lire("lecteur.pos." + d.id, 0) || 0, Math.max(0, phrases.length - 1));
-  majPhrase(ip, false);
-  majLangue(d.lang);
-  majMeta();
-  majChips();
-  synchroniser();
-  dire(phrases.length ? "Prêt. " + phrases.length + " phrases." : "Ce document est vide.");
-}
-
-function construireFile(){
-  file = [];
-  phrases.forEach(function(p, i){
-    p.morceaux.forEach(function(m){ file.push({ ip:i, texte:m }); });
-  });
-}
-function premierMorceau(i){
-  for(var k=0;k<file.length;k++){ if(file[k].ip === i) return k; }
-  return 0;
-}
-
-function majMeta(){
-  if(!doc){ $("doc-meta").textContent = ""; return; }
-  var min = doc._mots / (155 * vitesse);
-  var duree = min < 1 ? "moins d’une minute" : "≈ " + Math.round(min) + " min";
-  $("doc-meta").innerHTML = doc.matiere + " &nbsp;·&nbsp; <b>" + doc._mots + " mots</b> &nbsp;·&nbsp; " +
-    duree + " à " + fmtVitesse(vitesse);
-}
-
-function majChips(){
-  chips.textContent = "";
-  docs.forEach(function(d){
-    var b = document.createElement("button");
-    b.type = "button"; b.className = "chip";
-    b.setAttribute("aria-pressed", doc && doc.id === d.id ? "true" : "false");
-    var k = document.createElement("span");
-    k.className = "kind"; k.textContent = d.lang === "fr" ? "FR" : "EN";
-    b.appendChild(k);
-    b.appendChild(document.createTextNode(d.titre));
-    b.addEventListener("click", function(){ afficher(d); });
-    chips.appendChild(b);
-  });
-
-  var coller = document.createElement("button");
-  coller.type = "button"; coller.className = "chip ghost";
-  coller.textContent = "＋ Coller un texte";
-  coller.addEventListener("click", function(){
-    var p = $("panneau");
-    p.hidden = !p.hidden;
-    if(!p.hidden) $("colle").focus();
-  });
-  chips.appendChild(coller);
-
-  var lab = document.createElement("label");
-  lab.className = "chip ghost"; lab.setAttribute("for", "fichier");
-  lab.textContent = "＋ Ouvrir un fichier .txt";
-  chips.appendChild(lab);
-}
-
-/* ======================= la lecture ======================= */
-function majPhrase(i, defiler){
-  if(!phrases.length) return;
-  ip = Math.min(Math.max(0, i), phrases.length - 1);
-  phrases.forEach(function(p, k){ p.el.classList.toggle("on", k === ip); });
-  if(doc) ecrire("lecteur.pos." + doc.id, ip);
-  if(defiler) amener(phrases[ip].el);
-  synchroniser();
-}
-
-function amener(el){
-  var r = el.getBoundingClientRect();
-  var haut = 90, bas = window.innerHeight - 120;
-  if(r.top < haut || r.bottom > bas){
-    var doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollIntoView({ block:"center", behavior: doux ? "smooth" : "auto" });
-  }
-}
-
-function direSuite(){
-  if(fpos >= file.length){ fini(); return; }
-  var item = file[fpos], mien = gen;
-  majPhrase(item.ip, true);
-  var u = new SpeechSynthesisUtterance(item.texte);
-  if(voixChoisie){ u.voice = voixChoisie; u.lang = voixChoisie.lang; }
-  else { u.lang = langue === "fr" ? "fr-FR" : "en-GB"; }
-  u.rate = vitesse;
-  u.onend = function(){ if(mien !== gen) return; fpos++; direSuite(); };
-  u.onerror = function(e){
-    if(mien !== gen) return;
-    if(e && (e.error === "interrupted" || e.error === "canceled")) return;
-    enLecture = false; enPause = false;
-    document.body.classList.remove("lecture");
-    synchroniser();
-    dire("La lecture s’est interrompue. Appuie de nouveau sur Lire.", true);
-  };
-  synth.speak(u);
-}
-
-function lireDepuis(i){
-  if(!phrases.length) return;
-  gen++; try{ synth.cancel(); }catch(e){}
-  majPhrase(i, true);
-  fpos = premierMorceau(ip);
-  enLecture = true; enPause = false;
-  document.body.classList.add("lecture");
-  synchroniser();
-  setTimeout(function(){ if(enLecture && !enPause) direSuite(); }, 30);
-  dire("Lecture en cours.");
-}
-
-function basculer(){
-  if(!phrases.length) return;
-  if(!enLecture){ lireDepuis(ip); return; }
-  if(enPause){
-    enPause = false;
-    if(synth.paused){ try{ synth.resume(); }catch(e){} }
-    else { gen++; try{ synth.cancel(); }catch(e){} setTimeout(function(){ if(enLecture && !enPause) direSuite(); }, 30); }
-    document.body.classList.add("lecture");
-    synchroniser(); dire("Lecture en cours.");
-  } else {
-    enPause = true;
-    try{ synth.pause(); }catch(e){}
-    document.body.classList.remove("lecture");
-    synchroniser(); dire("En pause.");
-  }
-}
-
-function arreter(){
-  gen++; try{ synth.cancel(); }catch(e){}
-  enLecture = false; enPause = false;
-  document.body.classList.remove("lecture");
-  synchroniser();
-}
-
-function fini(){
-  enLecture = false; enPause = false;
-  document.body.classList.remove("lecture");
-  synchroniser();
-  dire("Lecture terminée.");
-}
-
-function sauter(d){
-  var cible = ip + d;
-  if(cible < 0) cible = 0;
-  if(cible > phrases.length - 1) cible = phrases.length - 1;
-  if(enLecture){ lireDepuis(cible); } else { majPhrase(cible, true); }
-}
-
-/* ======================= interface ======================= */
-function fmtVitesse(v){ return v.toFixed(2).replace(/0$/,"").replace(".", ",") + "×"; }
+function fmtVitesse(v){ return v.toFixed(2).replace(/0$/, "").replace(".", ",") + "×"; }
 
 function dire(msg, alerte){
   statutEl.textContent = msg;
   statutEl.classList.toggle("alerte", !!alerte);
 }
 
-function synchroniser(){
-  var actif = enLecture && !enPause;
-  icLire.innerHTML = actif
-    ? '<path d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z"/>'
-    : '<path d="M8 5v14l11-7z"/>';
-  txLire.textContent = actif ? "Pause" : (enPause ? "Reprendre" : "Lire");
+function afficher(d){
+  doc = d;
+  spans = [];
+  ip = -1;
+  texteEl.textContent = "";
+  $("doc-titre").textContent = d.titre;
+  $("doc-titre").classList.remove("on");
 
-  var vide = !phrases.length;
-  btnLire.disabled = vide;
-  $("btn-prec").disabled = vide || ip === 0;
-  $("btn-suiv").disabled = vide || ip >= phrases.length - 1;
-  $("btn-stop").disabled = vide || (!enLecture && ip === 0);
+  var bloc = null, blocCourant = -1;
+  d.phrases.forEach(function(ph, i){
+    if(ph.b !== blocCourant){
+      bloc = document.createElement("p");
+      if(ph.k === "li") bloc.className = "li";
+      texteEl.appendChild(bloc);
+      blocCourant = ph.b;
+    }
+    var sp = document.createElement("span");
+    sp.className = "s";
+    sp.textContent = ph.t;
+    sp.setAttribute("data-i", String(i));
+    sp.title = "Écouter à partir d’ici";
+    bloc.appendChild(sp);
+    bloc.appendChild(document.createTextNode(" "));
+    spans.push(sp);
+  });
 
+  var langue = d.langue === "fr" ? "français" : "anglais";
+  $("doc-meta").innerHTML = (d.matiere ? d.matiere + " &nbsp;·&nbsp; " : "") +
+    "<b>" + mmss(d.duree) + "</b> &nbsp;·&nbsp; " + d.mots + " mots &nbsp;·&nbsp; " +
+    "lu en " + langue;
+
+  son.src = d.audio;
+  son.playbackRate = vitesse;
+  son.load();
+
+  var repris = lire("lecteur.temps." + d.id, 0) || 0;
+  if(repris > 0 && repris < d.duree - 1){
+    son.currentTime = repris;
+    dire("Reprise à " + mmss(repris) + ".");
+  } else {
+    dire("Prêt. " + mmss(d.duree) + " d’écoute.");
+  }
+
+  scrub.disabled = false;
+  scrub.max = String(Math.max(1, Math.round(d.duree * 10)));
+  majChips();
+  majSurlignage(son.currentTime || 0, false);
+  synchroniser();
+}
+
+function majChips(){
+  chips.textContent = "";
+  DOCS.forEach(function(d){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.setAttribute("aria-pressed", doc && doc.id === d.id ? "true" : "false");
+
+    var k = document.createElement("span");
+    k.className = "kind"; k.textContent = d.langue === "fr" ? "FR" : "EN";
+    b.appendChild(k);
+    b.appendChild(document.createTextNode(d.titre));
+
+    var m = document.createElement("span");
+    m.className = "min"; m.textContent = mmss(d.duree);
+    b.appendChild(m);
+
+    b.addEventListener("click", function(){
+      if(doc && doc.id === d.id) return;
+      son.pause();
+      afficher(d);
+    });
+    chips.appendChild(b);
+  });
+}
+
+/* --------------------- suivi du texte --------------------- */
+function phraseA(t){
+  if(!doc) return -1;
+  var p = doc.phrases, lo = 0, hi = p.length - 1, res = -1;
+  while(lo <= hi){
+    var mi = (lo + hi) >> 1;
+    if(p[mi].d <= t){ res = mi; lo = mi + 1; } else { hi = mi - 1; }
+  }
+  return res;
+}
+
+function majSurlignage(t, defiler){
+  var i = phraseA(t);
+  if(i === ip) return;
+  if(ip >= 0 && spans[ip]) spans[ip].classList.remove("on");
+  ip = i;
+  $("doc-titre").classList.toggle("on", i < 0);
+  if(i >= 0 && spans[i]){
+    spans[i].classList.add("on");
+    if(defiler) amener(spans[i]);
+  }
+  majPosition();
+}
+
+function amener(el){
+  var r = el.getBoundingClientRect();
+  if(r.top < 90 || r.bottom > window.innerHeight - 125){
+    var doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ block: "center", behavior: doux ? "smooth" : "auto" });
+  }
+}
+
+function majPosition(){
   posEl.textContent = "";
   var fort = document.createElement("b");
-  if(vide){
-    fort.textContent = "\u2014";
+  if(!doc){
+    fort.textContent = "—";
     posEl.appendChild(fort);
-    posEl.appendChild(document.createTextNode("Aucun document"));
-    railEl.style.width = "0%";
-  } else {
-    fort.textContent = "Phrase " + (ip + 1) + " / " + phrases.length;
-    posEl.appendChild(fort);
-    posEl.appendChild(document.createTextNode(doc ? doc.titre : ""));
-    railEl.style.width = (((ip + 1) / phrases.length) * 100).toFixed(2) + "%";
-  }
-}
-
-function majLangue(lg){
-  langue = lg;
-  $("lang-fr").setAttribute("aria-pressed", lg === "fr" ? "true" : "false");
-  $("lang-en").setAttribute("aria-pressed", lg === "en" ? "true" : "false");
-  if(doc) doc.lang = lg;
-  phrases.forEach(function(p){ p.morceaux = decouperMorceaux(pourLaVoix(p.texte, lg)); });
-  construireFile();
-  remplirVoix();
-}
-
-/* ------------------------- voix ------------------------- */
-function chargerVoix(){
-  try{ voix = synth.getVoices() || []; }catch(e){ voix = []; }
-  remplirVoix();
-}
-
-function remplirVoix(){
-  var dispo = voix.filter(function(v){ return (v.lang || "").toLowerCase().indexOf(langue) === 0; });
-  if(!dispo.length && voix.length) dispo = voix.slice();
-  selVoix.textContent = "";
-
-  if(!dispo.length){
-    var o = document.createElement("option");
-    o.textContent = "Aucune voix installée";
-    selVoix.appendChild(o);
-    selVoix.disabled = true;
-    voixChoisie = null;
-    if(voix.length === 0){
-      dire("Aucune voix n’est installée sur cet appareil. Dans les réglages du système, ajoute une voix française ou anglaise.", true);
-    }
+    posEl.appendChild(document.createTextNode("Aucun cours"));
     return;
   }
-  selVoix.disabled = false;
-
-  dispo.sort(function(a, b){
-    if(a.localService !== b.localService) return a.localService ? -1 : 1;
-    return (a.name || "").localeCompare(b.name || "");
-  });
-
-  var voulue = prefs.voix[langue];
-  var trouvee = null;
-  dispo.forEach(function(v, i){
-    var o = document.createElement("option");
-    o.value = String(i);
-    o.textContent = v.name + " (" + v.lang + ")";
-    selVoix.appendChild(o);
-    if(v.name === voulue) trouvee = i;
-  });
-  var idx = trouvee === null ? 0 : trouvee;
-  selVoix.value = String(idx);
-  voixChoisie = dispo[idx];
-  selVoix._dispo = dispo;
+  fort.textContent = ip < 0 ? "Titre" : "Phrase " + (ip + 1) + " / " + doc.phrases.length;
+  posEl.appendChild(fort);
+  posEl.appendChild(document.createTextNode(doc.titre));
 }
 
-selVoix.addEventListener("change", function(){
-  var dispo = selVoix._dispo || [];
-  voixChoisie = dispo[parseInt(selVoix.value, 10)] || null;
-  if(voixChoisie){ prefs.voix[langue] = voixChoisie.name; ecrire("lecteur.prefs", prefs); }
-  if(enLecture) lireDepuis(ip);
-});
+/* ----------------------- transport ----------------------- */
+function versPhrase(i, jouer){
+  if(!doc) return;
+  if(i < 0){ son.currentTime = 0; }
+  else {
+    i = Math.min(i, doc.phrases.length - 1);
+    son.currentTime = doc.phrases[i].d + 0.01;
+  }
+  majSurlignage(son.currentTime, true);
+  peindre();
+  if(jouer) jouerSon();
+}
 
-/* ----------------------- vitesse ------------------------ */
-function poserVitesse(v, relancer){
+function jouerSon(){
+  var p = son.play();
+  if(p && p.catch) p.catch(function(){ dire("Touche Écouter pour démarrer le son.", true); });
+}
+
+function basculer(){
+  if(!doc) return;
+  if(son.paused) jouerSon(); else son.pause();
+}
+
+function synchroniser(){
+  var joue = doc && !son.paused;
+  document.body.classList.toggle("lecture", !!joue);
+  icLire.innerHTML = joue
+    ? '<path d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+  txLire.textContent = joue ? "Pause" : (son.currentTime > 0.2 ? "Reprendre" : "Écouter");
+
+  var vide = !doc;
+  btnLire.disabled = vide;
+  $("btn-prec").disabled = vide || ip <= 0;
+  $("btn-suiv").disabled = vide || ip >= doc.phrases.length - 1;
+  $("btn-stop").disabled = vide || (son.paused && son.currentTime < 0.2);
+}
+
+function peindre(){
+  if(!doc) return;
+  var t = son.currentTime || 0;
+  if(!glisse){
+    scrub.value = String(Math.round(t * 10));
+    scrub.style.setProperty("--p", (t / doc.duree * 100).toFixed(2) + "%");
+  }
+  tempsEl.textContent = mmss(t) + " / " + mmss(doc.duree);
+}
+
+var boucle = null;
+function demarrerBoucle(){
+  if(boucle) return;
+  var pas = function(){
+    if(son.paused){ boucle = null; return; }
+    majSurlignage(son.currentTime, true);
+    peindre();
+    boucle = requestAnimationFrame(pas);
+  };
+  boucle = requestAnimationFrame(pas);
+}
+
+/* ------------------------ vitesse ------------------------ */
+function poserVitesse(v){
   vitesse = Math.min(2, Math.max(0.5, Math.round(v * 20) / 20));
   rngVit.value = String(vitesse);
   outVit.textContent = fmtVitesse(vitesse);
-  prefs.vitesse = vitesse; ecrire("lecteur.prefs", prefs);
+  son.playbackRate = vitesse;
+  prefs.vitesse = vitesse;
+  ecrire("lecteur.prefs", prefs);
   Array.prototype.forEach.call($("presets").children, function(b){
     b.setAttribute("aria-pressed", Math.abs(parseFloat(b.dataset.v) - vitesse) < 0.001 ? "true" : "false");
   });
-  majMeta();
-  if(relancer && enLecture) lireDepuis(ip);
 }
 
 [0.75, 1, 1.25, 1.5].forEach(function(v){
   var b = document.createElement("button");
   b.type = "button"; b.dataset.v = String(v); b.textContent = fmtVitesse(v);
-  b.addEventListener("click", function(){ poserVitesse(v, true); });
+  b.addEventListener("click", function(){ poserVitesse(v); });
   $("presets").appendChild(b);
 });
-
-rngVit.addEventListener("input", function(){ poserVitesse(parseFloat(rngVit.value), false); });
-rngVit.addEventListener("change", function(){ poserVitesse(parseFloat(rngVit.value), true); });
+rngVit.addEventListener("input", function(){ poserVitesse(parseFloat(rngVit.value)); });
 
 /* ---------------------- évènements ---------------------- */
 btnLire.addEventListener("click", basculer);
-$("btn-prec").addEventListener("click", function(){ sauter(-1); });
-$("btn-suiv").addEventListener("click", function(){ sauter(1); });
-$("btn-stop").addEventListener("click", function(){ arreter(); majPhrase(0, true); dire("Arrêté, retour au début."); });
-
-$("lang-fr").addEventListener("click", function(){ majLangue("fr"); if(enLecture) lireDepuis(ip); });
-$("lang-en").addEventListener("click", function(){ majLangue("en"); if(enLecture) lireDepuis(ip); });
+$("btn-prec").addEventListener("click", function(){
+  /* Un appui en début de phrase renvoie à la précédente, sinon il la reprend. */
+  var debut = ip >= 0 ? doc.phrases[ip].d : 0;
+  versPhrase(son.currentTime - debut < 1.2 ? ip - 1 : ip, !son.paused);
+});
+$("btn-suiv").addEventListener("click", function(){ versPhrase(ip + 1, !son.paused); });
+$("btn-stop").addEventListener("click", function(){
+  son.pause(); versPhrase(-1, false); dire("Retour au début.");
+});
 
 texteEl.addEventListener("click", function(e){
   var t = e.target.closest ? e.target.closest(".s") : null;
   if(!t) return;
-  lireDepuis(parseInt(t.getAttribute("data-i"), 10));
+  versPhrase(parseInt(t.getAttribute("data-i"), 10), true);
 });
+
+scrub.addEventListener("pointerdown", function(){ glisse = true; });
+scrub.addEventListener("input", function(){
+  if(!doc) return;
+  var t = parseInt(scrub.value, 10) / 10;
+  scrub.style.setProperty("--p", (t / doc.duree * 100).toFixed(2) + "%");
+  tempsEl.textContent = mmss(t) + " / " + mmss(doc.duree);
+});
+function relacher(){
+  if(!glisse || !doc) return;
+  glisse = false;
+  son.currentTime = parseInt(scrub.value, 10) / 10;
+  majSurlignage(son.currentTime, true);
+  peindre();
+}
+scrub.addEventListener("change", relacher);
+window.addEventListener("pointerup", relacher);
+
+son.addEventListener("play", function(){ synchroniser(); demarrerBoucle(); dire("Écoute en cours."); });
+son.addEventListener("pause", function(){ synchroniser(); sauver(); });
+son.addEventListener("ended", function(){
+  synchroniser();
+  if(doc) ecrire("lecteur.temps." + doc.id, 0);
+  dire("Cours terminé.");
+});
+son.addEventListener("timeupdate", function(){ if(son.paused) peindre(); });
+son.addEventListener("loadedmetadata", function(){ peindre(); synchroniser(); });
+son.addEventListener("error", function(){
+  dire("Le fichier son n’a pas pu être chargé.", true);
+  synchroniser();
+});
+
+function sauver(){
+  if(doc) ecrire("lecteur.temps." + doc.id, Math.max(0, son.currentTime - 0.6));
+}
+window.addEventListener("pagehide", sauver);
+document.addEventListener("visibilitychange", function(){ if(document.hidden) sauver(); });
 
 document.addEventListener("keydown", function(e){
   var n = e.target && e.target.nodeName;
-  if(n === "TEXTAREA" || n === "INPUT" || n === "SELECT") return;
+  if(n === "INPUT" || n === "TEXTAREA" || n === "SELECT") return;
   if(e.metaKey || e.ctrlKey || e.altKey) return;
   if(e.key === " " || e.key === "Spacebar"){ e.preventDefault(); basculer(); }
-  else if(e.key === "ArrowRight"){ e.preventDefault(); sauter(1); }
-  else if(e.key === "ArrowLeft"){ e.preventDefault(); sauter(-1); }
-  else if(e.key === "+" || e.key === "="){ e.preventDefault(); poserVitesse(vitesse + 0.1, true); }
-  else if(e.key === "-" || e.key === "_"){ e.preventDefault(); poserVitesse(vitesse - 0.1, true); }
-  else if(e.key === "Escape"){ arreter(); dire("Arrêté."); }
-});
-
-window.addEventListener("pagehide", function(){ try{ synth.cancel(); }catch(e){} });
-
-/* ------------------ coller / ouvrir un fichier ------------------ */
-function depuisTexte(brut, titre, lg){
-  var blocs = brut.split(/\n\s*\n/).map(function(b){ return b.replace(/\s*\n\s*/g, " ").trim(); })
-                  .filter(Boolean)
-                  .map(function(x){ return { t: /^[–—-]\s/.test(x) ? "li" : "p", x: x }; });
-  if(!blocs.length) return null;
-  return { id:"perso-" + Date.now(), titre:titre, matiere:"Texte ajouté", lang:lg, blocs:blocs };
-}
-
-$("colle-lire").addEventListener("click", function(){
-  var brut = $("colle").value.trim();
-  if(!brut){ dire("Colle d’abord un texte.", true); return; }
-  ecrire("lecteur.colle", brut);
-  var d = depuisTexte(brut, "Texte collé", langue);
-  if(!d) return;
-  docs = docs.filter(function(x){ return x.id.indexOf("perso-") !== 0 || x.titre !== "Texte collé"; });
-  docs.push(d);
-  afficher(d);
-  $("panneau").hidden = true;
-});
-
-$("colle-vider").addEventListener("click", function(){
-  $("colle").value = "";
-  ecrire("lecteur.colle", "");
-  $("colle").focus();
-});
-
-var input = document.createElement("input");
-input.type = "file"; input.id = "fichier"; input.accept = ".txt,.md,.text,text/plain";
-input.style.position = "absolute"; input.style.width = "1px"; input.style.height = "1px";
-input.style.opacity = "0"; input.style.pointerEvents = "none";
-document.body.appendChild(input);
-input.addEventListener("change", function(){
-  var f = input.files && input.files[0];
-  if(!f) return;
-  var fr = new FileReader();
-  fr.onload = function(){
-    var d = depuisTexte(String(fr.result || ""), f.name.replace(/\.[^.]+$/, ""), langue);
-    if(!d){ dire("Ce fichier ne contient pas de texte.", true); return; }
-    d.matiere = "Fichier ouvert";
-    docs.push(d);
-    afficher(d);
-  };
-  fr.onerror = function(){ dire("Impossible de lire ce fichier.", true); };
-  fr.readAsText(f, "utf-8");
-  input.value = "";
+  else if(e.key === "ArrowRight"){ e.preventDefault(); versPhrase(ip + 1, !son.paused); }
+  else if(e.key === "ArrowLeft"){ e.preventDefault(); versPhrase(ip - 1, !son.paused); }
+  else if(e.key === "+" || e.key === "="){ e.preventDefault(); poserVitesse(vitesse + 0.1); }
+  else if(e.key === "-" || e.key === "_"){ e.preventDefault(); poserVitesse(vitesse - 0.1); }
+  else if(e.key === "Escape"){ son.pause(); versPhrase(-1, false); }
 });
 
 /* ------------------------ démarrage ------------------------ */
-var colleSauve = lire("lecteur.colle", "");
-if(colleSauve) $("colle").value = colleSauve;
-
-poserVitesse(vitesse, false);
-afficher(docs[0]);
-
-if(!synth){
-  dire("Ce navigateur ne sait pas lire à haute voix. Essaie Chrome, Edge ou Safari.", true);
-  btnLire.disabled = true;
+poserVitesse(vitesse);
+if(DOCS.length){
+  afficher(DOCS[0]);
 } else {
-  chargerVoix();
-  if(typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", chargerVoix);
-  else synth.onvoiceschanged = chargerVoix;
-  /* Safari publie la liste avec du retard. */
-  var essais = 0;
-  var minuteur = setInterval(function(){
-    if(voix.length || ++essais > 12){ clearInterval(minuteur); return; }
-    chargerVoix();
-  }, 300);
+  dire("Aucun cours enregistré pour l’instant.", true);
+  majPosition();
 }
 })();
 </script>
