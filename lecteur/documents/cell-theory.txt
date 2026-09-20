@@ -1,0 +1,20 @@
+titre: Cell Theory
+matiere: Anglais — la même leçon, pour s'entraîner
+langue: en
+voix: en_GB-jenny_dioco-medium
+---
+Since Antiquity, people believed in spontaneous generation: living things could appear on their own, out of non-living matter.
+
+The microscope was invented at the end of the sixteenth century by Janssen. In the seventeenth century, Hooke looked at a thin slice of cork and called the empty boxes he saw cells. His microscope was weak, and the cork cells were dead and empty, so he could not describe them precisely. Soon after, Van Leeuwenhoek became the first person to observe living cells.
+
+During the nineteenth century, Schleiden and Schwann concluded that every living thing is made of cells, and that every cell has a nucleus. Pasteur's experiments finally disproved spontaneous generation.
+
+The cell theory says three things:
+
+– every living thing is made of one or more cells;
+
+– the cell is the unit of structure and function of life;
+
+– every cell comes from another cell.
+
+From 1940 onwards, electron microscopes revealed the inside of the cell in great detail.
