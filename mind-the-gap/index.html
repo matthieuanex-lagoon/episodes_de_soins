@@ -1395,12 +1395,27 @@ function dire(texte, apres){
    l'article : on lui passe le nom de la lettre &eacute;crit comme il se
    prononce &mdash; d'o&ugrave; &laquo; aitch &raquo;, &laquo; double-you &raquo;, et &laquo; zed &raquo;
    qui est le nom britannique du Z, pas &laquo; zee &raquo;.     */
-var NOMS_LETTRE = {
-  a:'ay', b:'bee', c:'see', d:'dee', e:'ee', f:'eff', g:'jee', h:'aitch',
-  i:'eye', j:'jay', k:'kay', l:'ell', m:'em', n:'en', o:'oh', p:'pee',
-  q:'cue', r:'ar', s:'ess', t:'tee', u:'you', v:'vee', w:'double-you',
-  x:'ex', y:'why', z:'zed', "'":'apostrophe', '-':'hyphen'
-};
+/* On donne &agrave; la synth&egrave;se la lettre elle-m&ecirc;me, en capitale : c'est le
+   chemin que les moteurs pr&eacute;voient pour &ccedil;a, et les 26 noms en sortent
+   justes. La table phon&eacute;tique qu'il y avait ici (&laquo; ee &raquo;, &laquo; ay &raquo;,
+   &laquo; eff &raquo;) &eacute;tait une fausse bonne id&eacute;e : ces suites ne sont pas des
+   mots, et certaines voix les rel&egrave;sent lettre par lettre &mdash; d'o&ugrave; le
+   double /i:/ entendu sur le E de &laquo; lemonade &raquo; &mdash; quand elles ne les
+   lisaient pas de travers, &laquo; ay &raquo; sortant en /aI/, le nom du I.
+   Un seul cas r&eacute;siste : le Z, que les voix am&eacute;ricaines appellent
+   &laquo; zee &raquo;. Faute de voix britannique, on &eacute;crit &laquo; zed &raquo;, qui se dit
+   pareil des deux c&ocirc;t&eacute;s de l'Atlantique. */
+function voixBritannique(){
+  return !!(voixEn && /^en[-_]GB/i.test(voixEn.lang));
+}
+function nomLettre(c){
+  if(c === "'") return 'apostrophe';
+  if(c === '-') return 'hyphen';
+  if(!/[a-z]/i.test(c)) return null;
+  var L = c.toUpperCase();
+  if(L === 'Z' && !voixBritannique()) return 'zed';
+  return L;
+}
 var epelJeton = null;
 
 function arreterEpel(){
@@ -1430,6 +1445,7 @@ function epeler(mot, boite, bouton){
   if(!boite) return;
   arreterEpel();
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+  if(!voixEn) choisirVoix();   /* pour savoir, d&egrave;s le premier Z, si la voix est GB */
 
   var brut = String(mot), lettres = [], k;
   for(k=0;k<brut.length;k++){ if(!/[.!?,;]/.test(brut.charAt(k))) lettres.push(brut.charAt(k)); }
@@ -1457,7 +1473,7 @@ function epeler(mot, boite, bouton){
     i++;
     if(i >= lettres.length){ finir(); return; }
     if(tuiles[i]) tuiles[i].classList.add('dit');
-    var nom = NOMS_LETTRE[lettres[i].toLowerCase()];
+    var nom = nomLettre(lettres[i]);
     /* Sans son, ou sur un caract&egrave;re qui ne se nomme pas, la tuile
        s'allume quand m&ecirc;me : le rythme visuel reste l&agrave;. */
     if(!nom || !son){ setTimeout(pas, son ? 210 : 340); return; }

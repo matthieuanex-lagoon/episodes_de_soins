@@ -37,10 +37,21 @@ modèle : chaque lettre est dite à son nom anglais pendant que sa tuile s'allum
 la lettre et le son ensemble, puis le mot entier est redit d'un trait. Un
 second appui coupe — une phrase fait trente lettres.
 
-On ne passe pas « A » à la synthèse vocale, qui le lirait comme l'article : on
-lui passe le nom de la lettre écrit comme il se prononce, d'où `aitch` pour H,
-`double-you` pour W, et `zed` pour Z — le nom britannique, pas `zee`. Sans
-son, les tuiles défilent quand même : le rythme visuel reste.
+On donne à la synthèse **la lettre elle-même, en capitale**. C'est le chemin
+que les moteurs prévoient pour ça, et les 26 noms en sortent justes — vérifié
+phonème par phonème contre espeak-ng en `en-gb`.
+
+Il y avait ici une table phonétique — `ee` pour E, `ay` pour A, `eff` pour F —
+et c'était une fausse bonne idée : ces suites ne sont pas des mots, alors
+certaines voix les relisent lettre par lettre, d'où le double /iː/ entendu sur
+le E de *lemonade*. Deux étaient franchement fausses : `ay` sort en /aɪ/, le
+nom du **I**, et `eff` en /iːɛfɛf/, « E-F-eff ».
+
+Un seul cas résiste : le **Z**, que les voix américaines appellent `zee`.
+Quand aucune voix britannique n'est disponible, on écrit `zed` en toutes
+lettres — qui se dit /zɛd/ des deux côtés de l'Atlantique.
+
+Sans son, les tuiles défilent quand même : le rythme visuel reste.
 
 Le bouton n'apparaît dans une partie **qu'une fois la réponse donnée**, jamais
 avant, où il soufflerait le mot. Dans le carnet il est là en permanence, à côté
