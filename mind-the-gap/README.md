@@ -5,8 +5,10 @@ Un mini-jeu de vocabulaire anglais calé sur la façon dont la prof interroge :
 
 *Évaluation 1* réunit les quatre premiers groupes du cahier — *Greetings*,
 *School stuff*, *Written instructions*, *Oral instructions* — soit 45 mots.
-*Évaluation 2* ouvre sur *Everyday needs*, les 13 phrases de classe du
-*classroom English*. L'accueil montre une grande carte par évaluation ; on
+*Évaluation 2* en réunit trois — *Everyday needs*, les 13 phrases de classe du
+*classroom English* ; *Colours*, les onze couleurs de la fiche ; *Almost
+transparent words*, les 22 mots qui se devinent du français — soit 46 mots.
+L'accueil montre une grande carte par évaluation ; on
 l'ouvre pour trouver ses groupes, et chaque groupe se déplie sur les trois
 modes.
 
@@ -27,6 +29,28 @@ l'apostrophe ne l'est pas — `I dont know` est refusé, `Sorry I'm late` passe.
 Une phrase longue s'affiche en minuscules sur la barre du roundel plutôt qu'en
 capitales de signalétique, et la reconnaissance vocale desserre sa tolérance à
 proportion de la longueur.
+
+## Épeler
+
+La prof veut que les mots soient épelés en anglais. Un bouton **ABC** donne le
+modèle : chaque lettre est dite à son nom anglais pendant que sa tuile s'allume,
+la lettre et le son ensemble, puis le mot entier est redit d'un trait. Un
+second appui coupe — une phrase fait trente lettres.
+
+On ne passe pas « A » à la synthèse vocale, qui le lirait comme l'article : on
+lui passe le nom de la lettre écrit comme il se prononce, d'où `aitch` pour H,
+`double-you` pour W, et `zed` pour Z — le nom britannique, pas `zee`. Sans
+son, les tuiles défilent quand même : le rythme visuel reste.
+
+Le bouton n'apparaît dans une partie **qu'une fois la réponse donnée**, jamais
+avant, où il soufflerait le mot. Dans le carnet il est là en permanence, à côté
+du haut-parleur, pour réviser.
+
+## Orthographe britannique
+
+Trois écarts fréquents sont nommés plutôt que comptés faux tout court :
+`color` pour **colour**, `theater` pour **theatre**, `gray` pour **grey**. Le
+message dit lequel ; la réponse reste fausse.
 
 Un mot n'est « maîtrisé » que lorsqu'il est juste dans les trois modes, sans
 indice. La barre en segments de la carte d'évaluation — un segment par groupe,
@@ -54,7 +78,8 @@ EVALS.push({id:2, nom:'Évaluation 2', zone:'Zone 2', sous:'…'});
 ```
 
 `tok` désigne un jeton de couleur (`--l1` à `--l4`, `--l0` pour la révision) ;
-les cinq se réutilisent d'une évaluation à l'autre. `tout:true` marque la ligne
+les cinq se réutilisent d'une évaluation à l'autre, mais jamais deux fois dans
+la même. `tout:true` marque la ligne
 de révision, qui rebat douze mots au hasard parmi ceux de **son** évaluation —
 elle reste cachée tant que l'évaluation n'a qu'un seul groupe, où elle ferait
 doublon, et apparaît d'elle-même au deuxième.
@@ -90,4 +115,11 @@ groupe dans le carnet.
 
 ## Dessins
 
-45 pictogrammes au trait, redessinés d'après les fiches du cahier. Ils prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
+80 pictogrammes au trait, redessinés d'après les fiches du cahier. Ils prennent
+leurs couleurs des jetons CSS : les deux thèmes suivent.
+
+Les onze couleurs font exception, forcément : une tache « rouge » doit rester
+rouge en clair comme en sombre. `tache('#e03127')` pose la teinte en dur et ne
+laisse au thème que le contour, ce qui garde le noir et le blanc lisibles des
+deux côtés. Le blanc prend en plus un fond gris, comme sur la fiche, sans quoi
+il disparaîtrait sur la carte.

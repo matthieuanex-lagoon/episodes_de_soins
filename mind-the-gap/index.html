@@ -312,8 +312,9 @@ button.evz:active{transform:scale(.993)}
 .revu{opacity:.75}
 .fiches{display:grid;gap:8px}
 @media (min-width:560px){.fiches{grid-template-columns:1fr 1fr}}
-.fiche{display:flex;align-items:center;gap:11px;padding:9px 11px;background:var(--card);
+.fiche{display:flex;flex-wrap:wrap;align-items:center;gap:11px;padding:9px 11px;background:var(--card);
   border:1.5px solid var(--rule);border-radius:11px}
+.fiche .epel-boite{flex:0 0 100%}
 .fiche .rond{flex:none;width:46px;height:46px;border-radius:50%;border:3px solid var(--lc);
   display:grid;place-items:center;padding:6px;background:var(--card)}
 .fiche .txt{flex:1;min-width:0}
@@ -323,10 +324,31 @@ button.evz:active{transform:scale(.993)}
 .pastilles i{width:8px;height:8px;border-radius:50%;background:var(--rule);display:block}
 .pastilles i.on{background:var(--lc)}
 .hp{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--rule);background:var(--paper);
-  display:grid;place-items:center;font-size:15px}
+  display:grid;place-items:center;font-size:15px;color:var(--ink-soft)}
+.hp:hover{border-color:var(--lc);color:var(--lc)}
+.hp.on{border-color:var(--lc);color:var(--lc);background:var(--card)}
+
+/* ══ &Eacute;peler ═══════════════════════════════════════════════ */
+.epel-btn{display:inline-flex;align-items:center;gap:9px;border:1.5px solid var(--rule);
+  background:var(--card);border-radius:99px;padding:9px 16px;color:var(--ink);
+  font-family:"Jost",sans-serif;font-weight:600;font-size:14px}
+.epel-btn i{font-style:normal;font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;color:var(--lc)}
+.epel-btn:hover{border-color:var(--lc)}
+.epel-btn.on{border-color:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb, var(--lc) 18%, transparent)}
+.epel-dit{font-size:12px;line-height:1.3;color:var(--ink-soft);font-style:italic;padding-top:7px}
+.epel-boite:empty{display:none}
+.epel{display:flex;flex-wrap:wrap;gap:4px;padding-top:9px}
+.epel .lt{min-width:26px;height:33px;padding-inline:3px;display:grid;place-items:center;border-radius:6px;
+  border:1.5px solid var(--rule);background:var(--card);color:var(--ink-soft);
+  font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;font-size:15px;
+  transition:transform .13s ease, background .13s, color .13s, border-color .13s}
+.epel .lt.esp{border:0;background:none;min-width:11px;width:11px}
+.epel .lt.dit{background:var(--lc);border-color:var(--lc);color:#fff;transform:translateY(-4px) scale(1.14)}
+.epel .lt.fini{color:var(--ink);border-color:var(--lc)}
 
 /* ══ Dessins au trait ════════════════════════════════════ */
 .dess .ln{fill:none;stroke:var(--draw);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.dess .tach{stroke:var(--draw);stroke-width:2.2;stroke-linejoin:round}
 .dess .tn{fill:none;stroke:var(--draw);stroke-width:3;stroke-linecap:round}
 .dess .ep{fill:none;stroke:var(--draw);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
 .dess .sl{fill:var(--paper-2);stroke:var(--draw);stroke-width:4.6;stroke-linejoin:round;stroke-linecap:round}
@@ -462,6 +484,7 @@ button.evz:active{transform:scale(.993)}
       <div class="zone">
         <p class="info" id="info" aria-live="polite"></p>
         <div id="controles"></div>
+        <div id="epel-zone"></div>
         <button class="principal invisible" type="button" id="btn-suite">Station suivante &rarr;</button>
       </div>
     </div>
@@ -493,8 +516,9 @@ button.evz:active{transform:scale(.993)}
       <h2>Le carnet</h2>
     </div>
     <p style="color:var(--ink-soft);font-size:13.5px;line-height:1.45;max-width:60ch">
-      Tous les mots, &eacute;valuation par &eacute;valuation. Appuie sur le haut-parleur pour entendre la prononciation
-      britannique&nbsp;; les trois pastilles disent ce qui est acquis&nbsp;: choisir, dire, &eacute;crire.
+      Tous les mots, &eacute;valuation par &eacute;valuation. Le haut-parleur donne la prononciation britannique,
+      <b>ABC</b> &eacute;pelle le mot lettre par lettre&nbsp;; les trois pastilles disent ce qui est acquis&nbsp;:
+      choisir, dire, &eacute;crire.
     </p>
     <div id="carnet"></div>
   </section>
@@ -506,15 +530,26 @@ button.evz:active{transform:scale(.993)}
 "use strict";
 
 /* ═══════════════════════════════════════════════════════════
-   LES 36 MOTS
-   Trois le&ccedil;ons du cahier d'anglais : les salutations, le
-   mat&eacute;riel scolaire, les consignes &eacute;crites. Les dessins
-   reprennent les pictogrammes de la fiche « Instructions ».
+   LES MOTS DU CAHIER
+   Les fiches d'anglais, dans l'ordre o&ugrave; la prof les donne. Les
+   dessins reprennent leurs pictogrammes ; les taches de couleur
+   reprennent celles de la fiche « Colours ».
    Ajouter un mot = ajouter une ligne ici ; tout le reste
    (stations, QCM, carnet, comptes) s'y adapte tout seul.
    ═══════════════════════════════════════════════════════════ */
 
 function d(inner){ return '<svg class="dess" viewBox="0 0 120 120" aria-hidden="true">'+inner+'</svg>'; }
+
+/* Les couleurs sont le seul dessin qui ne prend pas ses teintes aux
+   jetons du th&egrave;me : une tache &laquo;&nbsp;rouge&nbsp;&raquo; doit rester rouge en clair
+   comme en sombre. Seul son contour suit le trait des autres dessins,
+   ce qui garde le blanc et le noir lisibles dans les deux th&egrave;mes. */
+function tache(c, fond){
+  return d((fond ? '<rect class="tach" fill="'+fond+'" x="7" y="5" width="106" height="86" rx="11"/>' : '')+
+    '<g class="tach" fill="'+c+'">'+
+    '<path d="M63.2 11.1Q67.6 28.7 83.5 12.9Q78.3 32.5 97.3 26.6Q81.8 41.6 103.6 46Q86.6 54.2 94.9 61.7Q79.1 63 77.9 78.1Q66.4 68.2 60.5 79.9Q52.2 69.9 40.5 76.2Q39.1 62.2 21.1 69.6Q37.4 53.1 20.8 49.3Q33.5 42.2 18 30.4Q39.1 31.5 36.2 18.5Q51.1 23.5 63.2 11.1Z"/>'+
+    '<circle cx="82.4" cy="9" r="4.2"/><circle cx="109" cy="42.5" r="3.9"/><circle cx="93.9" cy="85.9" r="3.4"/><circle cx="37.8" cy="86" r="3.1"/><circle cx="11" cy="51.9" r="3.8"/><circle cx="28.5" cy="10.9" r="4.1"/></g>');
+}
 
 var MOTS = [
 
@@ -910,7 +945,143 @@ var MOTS = [
   '<circle class="dk" cx="38" cy="86" r="3"/><circle class="dk" cx="76" cy="86" r="3"/>'+
   '<rect class="wh" x="44" y="42" width="26" height="34" rx="3"/>'+
   '<path class="ln" d="M44 59 h26"/>'+
-  '<path class="tn" d="M98 44 l10-7 M100 60 h12 M98 76 l10 7"/>')}
+  '<path class="tn" d="M98 44 l10-7 M100 60 h12 M98 76 l10 7"/>')},
+
+/* ── Ligne 6 · Colours ──────────────────────── */
+{id:'red',    l:6, en:'red',    fr:'rouge',  svg:tache('#e03127')},
+{id:'green',  l:6, en:'green',  fr:'vert',   svg:tache('#6aae2e')},
+{id:'purple', l:6, en:'purple', fr:'violet', svg:tache('#5b2d8e')},
+{id:'orange', l:6, en:'orange', fr:'orange', note:'la couleur', svg:tache('#e8801a')},
+{id:'yellow', l:6, en:'yellow', fr:'jaune',  svg:tache('#e7c012')},
+{id:'blue',   l:6, en:'blue',   fr:'bleu',   svg:tache('#1f40b5')},
+{id:'black',  l:6, en:'black',  fr:'noir',   svg:tache('#1b1f24')},
+{id:'pink',   l:6, en:'pink',   fr:'rose',   note:'la couleur', svg:tache('#e0638f')},
+{id:'grey',   l:6, en:'grey',   fr:'gris',   note:'&agrave; la britannique', svg:tache('#7b8892')},
+{id:'brown',  l:6, en:'brown',  fr:'marron', svg:tache('#7a4a22')},
+{id:'white',  l:6, en:'white',  fr:'blanc',  svg:tache('#ffffff','#aab6c1')},
+
+/* ── Ligne 7 · Almost transparent words ────────── */
+{id:'banana', l:7, en:'banana', fr:'banane', svg:d(
+  '<path class="sl" d="M24 30c0 36 24 62 58 62 12 0 18-5 18-11 0-5-5-7-12-6-28 3-46-18-48-45-.5-7-3-10-8-10s-8 4-8 10z"/>'+
+  '<path class="ln" d="M24 32l-5-11"/>')},
+
+{id:'onion', l:7, en:'onion', fr:'oignon', svg:d(
+  '<path class="sl" d="M60 32c21 0 35 18 35 38 0 21-16 34-35 34s-35-13-35-34c0-20 14-38 35-38z"/>'+
+  '<path class="tn" d="M45 42c-6 18-6 40 1 58M75 42c6 18 6 40-1 58M60 34v70"/>'+
+  '<path class="ln" d="M60 32c-4-10-2-18 4-22M60 32c5-8 11-11 17-9"/>')},
+
+{id:'umbrella', l:7, en:'umbrella', fr:'parapluie', note:'pense &agrave; &laquo;&nbsp;ombrelle&nbsp;&raquo;', svg:d(
+  '<path class="sl" d="M12 62a48 48 0 0 1 96 0c-12-9-20-9-24 0-4-9-12-9-24 0-12-9-20-9-24 0-4-9-12-9-24 0z"/>'+
+  '<path class="ln" d="M60 16v66M60 82a13 13 0 0 1-26 0"/>')},
+
+{id:'soup', l:7, en:'soup', fr:'soupe', svg:d(
+  '<path class="sl" d="M20 62h80a40 40 0 0 1-80 0z"/>'+
+  '<path class="ln" d="M12 62h96M30 102h60"/>'+
+  '<path class="tn" d="M46 44q9-8 0-16 9-8 0-16M74 44q9-8 0-16 9-8 0-16"/>')},
+
+{id:'kangaroo', l:7, en:'kangaroo', fr:'kangourou', svg:d(
+  '<path class="sl" d="M92 20c7 0 12 5 12 12 0 4-2 8-6 10l-4 9c-3 8-9 12-13 18-4 7-4 15-2 22l6 15H72l-7-13-8 13H43l8-19c-9-6-15-16-15-27 0-6 2-11 5-15l-25 13c-4 2-7-1-5-4l30-22c7-5 15-8 24-8z"/>'+
+  '<path class="ln" d="M90 15l-3-10M99 16l5-9"/>'+
+  '<circle class="dk" cx="96" cy="27" r="2.6"/>')},
+
+{id:'bicycle', l:7, en:'bicycle', fr:'bicyclette', svg:d(
+  '<circle class="ln" cx="30" cy="82" r="21"/><circle class="ln" cx="90" cy="82" r="21"/>'+
+  '<path class="ln" d="M30 82L50 46h22l18 36M50 46l20 36M72 46l7-9"/>'+
+  '<path class="ln" d="M44 42h13l-7 4"/><path class="tn" d="M74 34h13"/>')},
+
+{id:'salad', l:7, en:'salad', fr:'salade', svg:d(
+  '<path class="fl" d="M40 60c-9-13-5-25 8-29 6 9 6 21-8 29z"/>'+
+  '<path class="fl" d="M66 58c-2-15 7-25 19-23 0 11-7 21-19 23z"/>'+
+  '<circle class="hr" cx="53" cy="52" r="9"/>'+
+  '<path class="sl" d="M20 62h80a40 40 0 0 1-80 0z"/><path class="ln" d="M12 62h96"/>')},
+
+{id:'tomato', l:7, en:'tomato', fr:'tomate', svg:d(
+  '<circle class="hr" cx="60" cy="68" r="33"/>'+
+  '<path class="ln" d="M60 38V26"/>'+
+  '<path class="fl" d="M60 40c-7-11-19-13-25-8 4 9 13 13 25 8zM60 40c7-11 19-13 25-8-4 9-13 13-25 8z"/>')},
+
+{id:'shampoo', l:7, en:'shampoo', fr:'shampooing', svg:d(
+  '<rect class="dk" x="52" y="14" width="16" height="11" rx="2"/>'+
+  '<path class="sl" d="M52 25h16v9h-16z"/>'+
+  '<rect class="sl" x="36" y="34" width="48" height="72" rx="9"/>'+
+  '<path class="tn" d="M46 54h28M46 66h28"/>'+
+  '<circle class="ln" cx="98" cy="32" r="6"/><circle class="ln" cx="22" cy="24" r="4.5"/>')},
+
+{id:'lemonade', l:7, en:'lemonade', fr:'limonade', svg:d(
+  '<path class="sl" d="M34 34h44l-6 72H40z"/><path class="ln" d="M30 34h52"/>'+
+  '<path class="ln" d="M66 30l12-16"/><path class="tn" d="M40 58h32"/>'+
+  '<circle class="hi" cx="98" cy="48" r="12"/><path class="tn" d="M98 36v24M86 48h24"/>')},
+
+{id:'coffee', l:7, en:'coffee', fr:'caf&eacute;', note:'la boisson', svg:d(
+  '<path class="sl" d="M28 46h56v28a28 28 0 0 1-56 0z"/>'+
+  '<path class="ln" d="M84 52h10a12 12 0 0 1 0 24h-10M22 104h76"/>'+
+  '<path class="tn" d="M48 34q9-8 0-16M64 34q9-8 0-16"/>')},
+
+{id:'lizard', l:7, en:'lizard', fr:'l&eacute;zard', svg:d(
+  '<ellipse class="sl" cx="58" cy="60" rx="26" ry="13"/>'+
+  '<circle class="sl" cx="93" cy="56" r="11"/><circle class="dk" cx="97" cy="52" r="2.6"/>'+
+  '<path class="ln" d="M32 62c-12 2-19 10-17 19 2 8 11 10 15 5"/>'+
+  '<path class="ln" d="M46 70l-8 14M72 70l8 14M46 50l-8-14M72 50l8-14"/>')},
+
+{id:'ocean', l:7, en:'ocean', fr:'oc&eacute;an', svg:d(
+  '<path class="sl" d="M42 56h34l-7 12H49z"/><path class="ln" d="M60 56V26l16 14H60"/>'+
+  '<path class="ln" d="M8 76q13-11 26 0t26 0 26 0 26 0M8 96q13-11 26 0t26 0 26 0 26 0"/>')},
+
+{id:'table', l:7, en:'table', fr:'table', svg:d(
+  '<path class="ln" d="M26 52v52M94 52v52"/>'+
+  '<rect class="sl" x="10" y="36" width="100" height="15" rx="4"/>')},
+
+{id:'bus', l:7, en:'bus', fr:'bus', svg:d(
+  '<rect class="sl" x="14" y="22" width="92" height="66" rx="8"/>'+
+  '<rect class="wh" x="23" y="30" width="25" height="16" rx="2"/>'+
+  '<rect class="wh" x="54" y="30" width="20" height="16" rx="2"/>'+
+  '<rect class="wh" x="80" y="30" width="18" height="16" rx="2"/>'+
+  '<rect class="wh" x="23" y="56" width="25" height="18" rx="2"/>'+
+  '<rect class="wh" x="54" y="56" width="20" height="18" rx="2"/>'+
+  '<rect class="wh" x="80" y="56" width="18" height="18" rx="2"/>'+
+  '<circle class="dk" cx="34" cy="96" r="9"/><circle class="dk" cx="88" cy="96" r="9"/>')},
+
+{id:'restaurant', l:7, en:'restaurant', fr:'restaurant', svg:d(
+  '<circle class="sl" cx="60" cy="62" r="33"/>'+
+  '<path class="ln" d="M44 32v18a5 5 0 0 0 10 0V32M49 32v18M49 54v34"/>'+
+  '<path class="ln" d="M77 32c7 5 9 15 6 23-2 5-6 6-6 6v27"/>')},
+
+{id:'lion', l:7, en:'lion', fr:'lion', svg:d(
+  '<path class="fl" d="M60 14l9 11 12-7 3 14 14 1-5 13 11 9-11 9 7 12-14 4 1 14-14-3-5 13-11-9-11 9-5-13-14 3 1-14-14-4 7-12-11-9 11-9-5-13 14-1 3-14 12 7z"/>'+
+  '<circle class="sl" cx="60" cy="62" r="23"/>'+
+  '<circle class="dk" cx="52" cy="58" r="3"/><circle class="dk" cx="68" cy="58" r="3"/>'+
+  '<path class="ln" d="M55 69h10l-5 5zM60 74v5M54 83q6 5 12 0"/>')},
+
+{id:'jungle', l:7, en:'jungle', fr:'jungle', svg:d(
+  '<path class="ln" d="M14 104h92M44 104c0-30 3-47 12-62"/>'+
+  '<path class="fl" d="M56 42c-14-11-31-9-38 1 13 9 28 9 38-1z"/>'+
+  '<path class="fl" d="M56 42c-5-17 4-31 17-33 4 15-1 29-17 33z"/>'+
+  '<path class="fl" d="M56 42c14-11 31-9 38 1-13 9-28 9-38-1z"/>'+
+  '<path class="fl" d="M88 104c-11-7-13-22-6-30 11 5 15 20 6 30z"/>')},
+
+{id:'biscuit', l:7, en:'biscuit', fr:'biscuit', svg:d(
+  '<circle class="sl" cx="60" cy="60" r="33"/>'+
+  '<circle class="dk" cx="48" cy="49" r="4"/><circle class="dk" cx="71" cy="45" r="3.4"/>'+
+  '<circle class="dk" cx="62" cy="66" r="4.4"/><circle class="dk" cx="44" cy="72" r="3.4"/>'+
+  '<circle class="dk" cx="77" cy="70" r="4"/>')},
+
+{id:'zoo', l:7, en:'zoo', fr:'zoo', svg:d(
+  '<rect class="sl" x="18" y="22" width="84" height="78" rx="7"/>'+
+  '<circle class="dk" cx="46" cy="56" r="4"/><circle class="dk" cx="74" cy="56" r="4"/>'+
+  '<path class="ln" d="M52 74q8 7 16 0"/>'+
+  '<path class="ln" d="M36 26v70M52 26v70M68 26v70M84 26v70"/>')},
+
+{id:'fruits', l:7, en:'fruits', fr:'fruits', svg:d(
+  '<circle class="hr" cx="42" cy="48" r="15"/><circle class="hi" cx="76" cy="46" r="14"/>'+
+  '<circle class="fl" cx="59" cy="30" r="12"/>'+
+  '<path class="sl" d="M18 62h84a42 42 0 0 1-84 0z"/><path class="ln" d="M10 62h100"/>')},
+
+{id:'theatre', l:7, en:'theatre', fr:'th&eacute;&acirc;tre', svg:d(
+  '<path class="ln" d="M10 22h100"/>'+
+  '<path class="fl" d="M16 22c12 25 12 60 6 82h-6zM104 22c-12 25-12 60-6 82h6z"/>'+
+  '<path class="sl" d="M40 58a20 20 0 0 1 40 0c0 17-9 28-20 28S40 75 40 58z"/>'+
+  '<circle class="dk" cx="52" cy="56" r="3"/><circle class="dk" cx="68" cy="56" r="3"/>'+
+  '<path class="ln" d="M50 70q10 10 20 0"/>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -919,7 +1090,7 @@ var EVALS = [
   {id:1, nom:'&Eacute;valuation 1', zone:'Zone 1',
    sous:'Les quatre premiers groupes du cahier&nbsp;: se saluer, nommer ses affaires, comprendre les consignes &eacute;crites puis celles que le prof donne &agrave; voix haute.'},
   {id:2, nom:'&Eacute;valuation 2', zone:'Zone 2',
-   sous:'Le <i>classroom English</i>&nbsp;: les phrases qu&rsquo;on dit au prof pour demander, s&rsquo;excuser ou dire qu&rsquo;on n&rsquo;a pas compris.'}
+   sous:'Le <i>classroom English</i>, les onze couleurs, et les mots qu&rsquo;on devine du fran&ccedil;ais sans les &eacute;crire comme en fran&ccedil;ais.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -938,7 +1109,11 @@ var LIGNES = [
 
   {id:5, ev:2, tok:'--l1', nom:'Everyday needs', sous:'Demander, s&rsquo;excuser, ne pas comprendre',
    rem:'Des phrases enti&egrave;res, pas des mots. &Agrave; l&rsquo;&eacute;crit, l&rsquo;apostrophe compte (<b>don&rsquo;t</b>, <b>didn&rsquo;t</b>) ; la virgule et le point d&rsquo;interrogation sont facultatifs.'},
-  {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze phrases au hasard, tous groupes'}
+  {id:6, ev:2, tok:'--l2', nom:'Colours', sous:'Les onze couleurs de la fiche',
+   rem:'Orthographe britannique&nbsp;: <b>grey</b>, jamais <i>gray</i>. Le verbe <b>colour</b> (&laquo;&nbsp;colorie&nbsp;&raquo;) est rest&eacute; dans <i>Written instructions</i>, &eacute;valuation&nbsp;1.'},
+  {id:7, ev:2, tok:'--l3', nom:'Almost transparent words', sous:'Les mots qu&rsquo;on devine&hellip; et qu&rsquo;on &eacute;crit de travers',
+   rem:'Le sens se devine, le pi&egrave;ge est l&rsquo;orthographe&nbsp;: <b>banana</b> sans <i>e</i>, <b>coffee</b> avec deux <i>f</i> et deux <i>e</i>, <b>theatre</b> en <b>-re</b>. Message secret de la fiche&nbsp;: <i>English is a piece of cake&nbsp;!</i>'},
+  {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'}
 ];
 
 var MODES = [
@@ -1089,7 +1264,8 @@ var ICONES = {
   oral:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
   ecrit:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9.5 14h5"/></svg>',
   cadenas:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>',
-  micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="pastille" x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>'
+  micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="pastille" x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+  epel:'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2" y="4.5" width="20" height="15" rx="3"/><text x="12" y="15.6" text-anchor="middle" font-size="8.4" font-weight="700" font-family="Jost, sans-serif" letter-spacing=".5" fill="currentColor" stroke="none">ABC</text></svg>'
 };
 
 /* ═══ Comparer ce qui est &eacute;crit ══════════════════════════
@@ -1211,6 +1387,94 @@ function dire(texte, apres){
     setTimeout(function(){ try{ s.speak(u); }catch(e){ if(apres) apres(); } }, 80);
   }catch(e){ if(apres) apres(); }
 }
+/* ═══ Épeler ═══════════════════════════════════════
+   La ma&icirc;tresse veut que les mots soient &eacute;pel&eacute;s en anglais. Le
+   bouton donne le mod&egrave;le : chaque lettre est dite &agrave; son nom
+   anglais pendant que sa tuile s'allume, lettre et son ensemble.
+   On ne passe pas &laquo; A &raquo; &agrave; la synth&egrave;se, qui le lirait comme
+   l'article : on lui passe le nom de la lettre &eacute;crit comme il se
+   prononce &mdash; d'o&ugrave; &laquo; aitch &raquo;, &laquo; double-you &raquo;, et &laquo; zed &raquo;
+   qui est le nom britannique du Z, pas &laquo; zee &raquo;.     */
+var NOMS_LETTRE = {
+  a:'ay', b:'bee', c:'see', d:'dee', e:'ee', f:'eff', g:'jee', h:'aitch',
+  i:'eye', j:'jay', k:'kay', l:'ell', m:'em', n:'en', o:'oh', p:'pee',
+  q:'cue', r:'ar', s:'ess', t:'tee', u:'you', v:'vee', w:'double-you',
+  x:'ex', y:'why', z:'zed', "'":'apostrophe', '-':'hyphen'
+};
+var epelJeton = null;
+
+function arreterEpel(){
+  if(epelJeton) epelJeton.stop = true;
+  epelJeton = null;
+  var b = document.querySelectorAll('.epel-btn.on, .hp.on'), i;
+  for(i=0;i<b.length;i++) b[i].classList.remove('on');
+}
+
+/* Une phrase enti&egrave;re fait trente lettres : le m&ecirc;me bouton doit
+   pouvoir couper ce qu'il a lanc&eacute;. Les tuiles d&eacute;j&agrave; pos&eacute;es restent
+   lisibles, seule la lettre en cours s'&eacute;teint. */
+function basculerEpel(mot, boite, bouton){
+  if(bouton && bouton.classList.contains('on')){
+    arreterEpel();
+    try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+    if(boite){
+      var t = boite.querySelectorAll('.lt.dit'), i;
+      for(i=0;i<t.length;i++) t[i].classList.remove('dit');
+    }
+    return;
+  }
+  epeler(mot, boite, bouton);
+}
+
+function epeler(mot, boite, bouton){
+  if(!boite) return;
+  arreterEpel();
+  try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+
+  var brut = String(mot), lettres = [], k;
+  for(k=0;k<brut.length;k++){ if(!/[.!?,;]/.test(brut.charAt(k))) lettres.push(brut.charAt(k)); }
+
+  boite.innerHTML = '<div class="epel">' + lettres.map(function(c){
+    return c === ' ' ? '<span class="lt esp"></span>'
+                     : '<span class="lt">' + echapper(c.toUpperCase()) + '</span>';
+  }).join('') + '</div>';
+
+  var tuiles = boite.querySelectorAll('.lt');
+  var jeton = {stop:false};
+  epelJeton = jeton;
+  if(bouton) bouton.classList.add('on');
+  var i = -1;
+
+  function finir(){
+    if(bouton) bouton.classList.remove('on');
+    for(var j=0;j<tuiles.length;j++) tuiles[j].classList.add('fini');
+    if(epelJeton === jeton) epelJeton = null;
+    dire(brut);
+  }
+  function pas(){
+    if(jeton.stop) return;
+    if(i >= 0 && tuiles[i]) tuiles[i].classList.remove('dit');
+    i++;
+    if(i >= lettres.length){ finir(); return; }
+    if(tuiles[i]) tuiles[i].classList.add('dit');
+    var nom = NOMS_LETTRE[lettres[i].toLowerCase()];
+    /* Sans son, ou sur un caract&egrave;re qui ne se nomme pas, la tuile
+       s'allume quand m&ecirc;me : le rythme visuel reste l&agrave;. */
+    if(!nom || !son){ setTimeout(pas, son ? 210 : 340); return; }
+    /* La synth&egrave;se ne rappelle pas toujours onend : un garde-fou
+       fait avancer la file au bout d'une seconde et quelque. */
+    var passe = false;
+    function enchaine(){
+      if(passe || jeton.stop) return;
+      passe = true;
+      setTimeout(pas, 110);
+    }
+    dire(nom, enchaine);
+    setTimeout(enchaine, 1250);
+  }
+  pas();
+}
+
 var ac = null;
 function bip(bon){
   if(!son) return;
@@ -1272,6 +1536,7 @@ function arreterEcoute(){
 function montrer(nom){
   ecranActuel = nom;
   arreterEcoute();
+  arreterEpel();
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
   document.body.classList.toggle('en-jeu', nom === 'jeu');
   ['accueil','eval','jeu','bilan','carnet'].forEach(function(n){
@@ -1362,7 +1627,9 @@ function construireEval(e){
     h +=     '</div>';
     MODES.forEach(function(md){
       var ok = debloque(L.id, md.id);
-      var att = L.tout ? 'Quand les quatre groupes sont pass&eacute;s.' : 'Apr&egrave;s le groupe pr&eacute;c&eacute;dent.';
+      /* Le nombre de groupes change d'une &eacute;valuation &agrave; l'autre : on le compte. */
+      var att = L.tout ? 'Quand les ' + groupesDe(L.ev).length + ' groupes sont pass&eacute;s.'
+                       : 'Apr&egrave;s le groupe pr&eacute;c&eacute;dent.';
       h += '<button class="mode" type="button" data-jouer="'+L.id+'" data-mode="'+md.id+'"'+(ok?'':' disabled')+'>';
       h +=   '<span class="pic">'+(ok ? ICONES[md.id] : ICONES.cadenas)+'</span>';
       h +=   '<span class="lbl"><b>'+md.nom+'</b><small>'+
@@ -1431,7 +1698,9 @@ function construireCarnet(){
                '<i class="'+(acquis(m.id,'qcm')?'on':'')+'"></i>'+
                '<i class="'+(acquis(m.id,'oral')?'on':'')+'"></i>'+
                '<i class="'+(acquis(m.id,'ecrit')?'on':'')+'"></i></span>';
+      h +=   '<button class="hp" type="button" data-epeler="'+m.id+'" aria-label="&Eacute;peler '+echapper(m.en)+'">'+ICONES.epel+'</button>';
       h +=   '<button class="hp" type="button" data-dire="'+m.id+'" aria-label="&Eacute;couter '+echapper(m.en)+'">🔊</button>';
+      h +=   '<div class="epel-boite"></div>';
       h += '</div>';
     });
     h +=   '</div>';
@@ -1458,6 +1727,8 @@ function poser(){
   partie.repondu = false;
   partie.essais = 0;
   arreterEcoute();
+  arreterEpel();
+  $('#epel-zone').innerHTML = '';
 
   $('#dess').innerHTML = it.svg;
   $('#bar-fr').className = 'bar' + (nu(it.fr).length > 20 ? ' long' : '');
@@ -1604,6 +1875,10 @@ function verifierEcrit(it){
       : 'Presque&nbsp;: il y a un article en trop.';
   } else if(normFrappe(saisie).replace(/or/g,'our') === normFrappe(cible)){
     msg = 'Presque&nbsp;: ici c&rsquo;est l&rsquo;anglais britannique, <b>-our</b>.';
+  } else if(normFrappe(saisie).replace(/er$/,'re') === normFrappe(cible)){
+    msg = 'Presque&nbsp;: l&rsquo;anglais britannique finit en <b>-re</b>, pas en <i>-er</i>.';
+  } else if(normFrappe(saisie).replace(/gray/g,'grey') === normFrappe(cible)){
+    msg = 'Presque&nbsp;: <i>gray</i> est am&eacute;ricain, la fiche dit <b>grey</b>.';
   } else if(lev(normFrappe(saisie), normFrappe(cible)) <= 2){
     msg = 'Tout pr&egrave;s, mais l&rsquo;orthographe doit &ecirc;tre exacte.';
   }
@@ -1661,6 +1936,14 @@ function repondre(bon, it, mode, msgSup, saisie){
   } else {
     $('#controles').innerHTML = '';
   }
+
+  /* Le mot est d&eacute;sormais visible : c'est le moment d'en &eacute;peler les
+     lettres, jamais avant, o&ugrave; ce serait souffler la r&eacute;ponse. */
+  $('#epel-zone').innerHTML =
+    '<button class="epel-btn" type="button" id="btn-epeler">' + ICONES.epel +
+    '<span>&Eacute;peler <i>' + echapper(it.en) + '</i></span></button>' +
+    '<p class="epel-dit">&Eacute;coute les lettres, puis &eacute;pelle-le &agrave; ton tour, &agrave; voix haute.</p>' +
+    '<div class="epel-boite" id="epel-boite"></div>';
 
   dire(it.en);
   var s = $('#btn-suite');
@@ -1736,7 +2019,7 @@ function bilan(){
 
 /* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-bilan-1,#btn-bilan-2') : null;
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-epeler],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-epeler,#btn-bilan-1,#btn-bilan-2') : null;
   if(!el) return;
 
   if(el.hasAttribute('data-go')){
@@ -1760,7 +2043,16 @@ document.addEventListener('click', function(ev){
   }
   if(el.hasAttribute('data-dire')){
     var m = parId(el.getAttribute('data-dire'));
+    arreterEpel();
     if(m) dire(m.en); return;
+  }
+  if(el.hasAttribute('data-epeler')){
+    var me = parId(el.getAttribute('data-epeler'));
+    /* La bo&icirc;te est la sœur du bouton dans la fiche : pas d'identifiant
+       à fabriquer, donc pas de doublon quand un mot rejoue ailleurs. */
+    var bo = el.parentNode ? el.parentNode.querySelector('.epel-boite') : null;
+    if(me && bo) basculerEpel(me.en, bo, el);
+    return;
   }
   if(el.id === 'btn-suite'){ suite(); return; }
   if(el.id === 'btn-son'){ son = !son; majSon(); sauver(); if(son) dire('OK'); return; }
@@ -1800,6 +2092,7 @@ document.addEventListener('click', function(ev){
     dire(it.en); return;
   }
   if(el.id === 'btn-passe'){ if(it && !partie.repondu) repondre(true, it, 'oral'); return; }
+  if(el.id === 'btn-epeler'){ if(it) basculerEpel(it.en, $('#epel-boite'), el); return; }
   if(el.id === 'btn-indice'){
     if(!it || partie.repondu) return;
     partie.aideEnCours = true;
