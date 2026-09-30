@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mind the Gap</title>
+<title>Parlez-vous ?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Jost:wght@500;600;700&display=swap">
@@ -21,6 +21,9 @@
   --or:#c9a227; --jaune:#f5d400;
   --draw:#2a323a; --draw-soft:#aebbc6;
   --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l0:#10161c;
+  /* Lignes du U-Bahn de Berlin, pour le cours d'allemand. */
+  --d1:#1f4f86; --d2:#7b5b9c; --d3:#c9640d;
+  --barre:var(--bleu); --barre-txt:var(--bar-txt);
   --lc:var(--l1);
   --ombre:0 1px 0 rgba(16,22,28,.05), 0 12px 28px -18px rgba(16,22,28,.55);
 }
@@ -197,7 +200,7 @@ button.evz:active{transform:scale(.993)}
 .dess{width:100%;height:100%;display:block}
 .bar{
   position:absolute;left:-12%;right:-12%;top:62%;
-  background:var(--bleu);color:var(--bar-txt);
+  background:var(--barre);color:var(--barre-txt);
   display:flex;align-items:center;justify-content:center;
   min-height:19%;padding:7px 12px;text-align:center;
   font-family:"Jost",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
@@ -366,6 +369,7 @@ button.evz:active{transform:scale(.993)}
 .dess .c3{fill:var(--jaune);stroke:var(--draw);stroke-width:4;stroke-linejoin:round}
 .dess .txt{fill:var(--draw);stroke:none;font-family:"Jost",sans-serif;font-weight:700;font-size:30px;text-anchor:middle}
 .dess .txt.gr{font-size:38px}
+.dess .txt.xl{font-size:54px}
 .dess .txt.sm{font-size:24px}
 .dess .kox{fill:none;stroke:var(--ko);stroke-width:8;stroke-linecap:round}
 
@@ -380,6 +384,7 @@ button.evz:active{transform:scale(.993)}
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
     --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
+    --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
 }
@@ -392,8 +397,48 @@ button.evz:active{transform:scale(.993)}
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
   --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
+  --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
+
+/* ══ Cours d'allemand : l'habillage du U-Bahn de Berlin ══
+   Le carré arrondi au U blanc remplace le roundel londonien, et la
+   barre passe au jaune BVG. Rien d'autre ne bouge : mêmes écrans,
+   mêmes gestes, mêmes trois modes. */
+body.cours-de{--barre:#f0d722; --barre-txt:#17140a}
+body.cours-de .roundel{border-radius:15%}
+body.cours-de .fiche .rond{border-radius:26%}
+body.cours-de .rate .cadre{border-radius:24%}
+
+/* ══ Le choix du cours ═══════════════════════════════════ */
+#acc-logo{flex:none;display:block;width:52px;height:52px}
+.cours-liste{display:grid;gap:14px;padding-top:4px}
+.cz{display:grid;gap:12px;width:100%;text-align:left;padding:18px;
+  background:var(--card);border:1.5px solid var(--rule);border-radius:18px;box-shadow:var(--ombre);
+  transition:transform .1s ease}
+.cz:active{transform:scale(.993)}
+.cz-tete{display:flex;align-items:center;gap:14px}
+.cz .marque{flex:none;width:56px;height:56px}
+.cz .marque svg{width:100%;height:100%;display:block}
+.cz-t{flex:1;min-width:0;display:grid;gap:3px}
+.cz-t b{font-family:"Jost",sans-serif;font-weight:700;font-size:clamp(20px,5.4vw,24px);
+  letter-spacing:-.015em;line-height:1.05;display:block}
+.cz-t .lang{font-family:"Jost",sans-serif;font-size:11.5px;font-weight:600;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--ink-soft)}
+.cz small{color:var(--ink-soft);font-size:13px;line-height:1.4;display:block}
+.cz-pied{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cz .compteur{font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.cz .compteur b{color:var(--ink);font-weight:700}
+.cz .cta{font-family:"Jost",sans-serif;font-weight:600;font-size:14.5px;color:var(--bleu);flex:none}
+
+/* ══ Les touches à trémas, sous le champ de saisie ═══════
+   Un clavier français ne donne ni ä ni ß : sans ces touches, la
+   moitié des nombres allemands serait intapable. */
+.umlauts{display:flex;gap:7px;flex-wrap:wrap}
+.uml{min-width:46px;min-height:44px;border-radius:10px;border:1.5px solid var(--rule);
+  background:var(--card);color:var(--ink);
+  font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;font-size:19px}
+.uml:active{transform:scale(.95)}
 
 @keyframes secousse{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-4px)}}
 .secoue{animation:secousse .34s}
@@ -410,28 +455,18 @@ button.evz:active{transform:scale(.993)}
 
 <main id="app">
 
-  <!-- ════ ACCUEIL ════════════════════════════════════════ -->
-  <section class="ecran" id="ecran-accueil">
+  <!-- ════ CHOIX DU COURS ═════════════════════════════════ -->
+  <section class="ecran" id="ecran-cours">
     <div class="tete">
-      <p class="eyebrow">Anglais &middot; Vocabulaire</p>
-      <div class="logo">
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rouge)" stroke-width="13"></circle>
-          <rect x="4" y="42" width="92" height="16" fill="var(--bleu)"></rect>
-        </svg>
-        <h1>Mind the Gap</h1>
-      </div>
-      <p class="sous">Les mots du cahier, une &eacute;valuation &agrave; la fois. On les reconna&icirc;t, on les dit, puis on les &eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
+      <p class="eyebrow">Deux langues &middot; Deux r&eacute;seaux</p>
+      <h1>Parlez-vous&nbsp;?</h1>
+      <p class="sous">Les cahiers de langues, un cours par langue. M&ecirc;me m&eacute;canique des deux c&ocirc;t&eacute;s&nbsp;: on reconna&icirc;t le mot, on le dit, on l&rsquo;&eacute;pelle, puis on l&rsquo;&eacute;crit &mdash; et l&agrave;, pas une lettre de travers.</p>
     </div>
 
-    <div class="evals" id="evals"></div>
-
-    <div class="liens">
-      <button class="lien" type="button" data-go="carnet">Le carnet des mots &rarr;</button>
-    </div>
+    <div class="cours-liste" id="cours-liste"></div>
 
     <div class="pied">
-      <span id="pied-txt">Le cahier d&rsquo;anglais, &eacute;valuation par &eacute;valuation</span>
+      <span id="pied-cours">Choisis ta ligne</span>
       <button type="button" id="btn-reset">Tout effacer</button>
     </div>
 
@@ -445,6 +480,29 @@ button.evz:active{transform:scale(.993)}
         <button class="mini" type="button" id="btn-parent-annule">Annuler</button>
       </form>
       <p class="parent-msg" id="parent-msg" role="status"></p>
+    </div>
+  </section>
+
+  <!-- ════ UN COURS : SES &Eacute;VALUATIONS ═════════════════════ -->
+  <section class="ecran" id="ecran-accueil" hidden>
+    <div class="carnet-tete">
+      <button class="ico" type="button" data-go="cours" aria-label="Revenir au choix du cours">&larr;</button>
+      <p class="eyebrow" id="acc-eyebrow"></p>
+    </div>
+    <div class="tete" style="padding-block:0 18px">
+      <div class="logo"><span id="acc-logo"></span><h1 id="acc-titre"></h1></div>
+      <p class="sous" id="acc-sous"></p>
+    </div>
+
+    <div class="evals" id="evals"></div>
+
+    <div class="liens">
+      <button class="lien" type="button" data-go="carnet">Le carnet des mots &rarr;</button>
+    </div>
+
+    <div class="pied">
+      <span id="pied-txt"></span>
+      <button class="mini" type="button" data-go="cours">Changer de langue</button>
     </div>
   </section>
 
@@ -587,6 +645,15 @@ function gateau(plus){
     '<path class="fl" d="M12 42 h64 v13 H12z"/>'+
     '<rect class="sl" x="12" y="55" width="64" height="26" rx="4"/>'+
     '<path class="ln" d="M6 85 h76"/>' + (plus || ''));
+}
+
+/* Un nombre n'a pas d'image : le chiffre EST son image. On le pose
+   dans le carr&eacute; du U-Bahn, qui est d&eacute;j&agrave; la forme du cours allemand.
+   Montrer &laquo; 7 &raquo; ne souffle rien &mdash; c'est &laquo; sieben &raquo; qu'on cherche. */
+function zahl(n){
+  var t = String(n), gros = t.length < 3;
+  return d('<rect class="sl" x="16" y="22" width="88" height="76" rx="11"/>'+
+    '<text class="txt '+(gros ? 'xl' : 'gr')+'" x="60" y="'+(gros ? 79 : 74)+'">'+t+'</text>');
 }
 
 function tache(c, fond){
@@ -1241,16 +1308,211 @@ var MOTS = [
   '<circle class="dk" cx="90" cy="60" r="12"/>'+
   '<circle cx="95" cy="56" r="3.2" fill="var(--card)"/>'+
   '<path class="hi" d="M78 46l1-14 6 7 5-10 5 10 6-7 1 14z"/>'+
-  '<path class="dk" d="M27 66l-13-6v12z"/>')}
+  '<path class="dk" d="M27 66l-13-6v12z"/>')},
+
+/* ═══════════════════════════════════════════════════════════
+   COURS D'ALLEMAND · Sprichst du Deutsch?
+   Les identifiants sont pr&eacute;fix&eacute;s « de- » : un mot n'existe qu'une
+   fois dans MOTS, tous cours confondus, et le compteur d'acquis
+   s'appuie dessus.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Ligne 101 · Hobbys ──────────────────────────────────
+   L'allemand met une majuscule &agrave; TOUS les noms communs, pas
+   seulement aux jours et aux mois : c'est le « cap » de ces
+   entr&eacute;es, et la r&egrave;gle la plus rentable de la le&ccedil;on. */
+
+{id:'de-hobbies', l:101, cap:true, en:'Was sind deine Hobbies?',
+ fr:'Quels sont tes loisirs&nbsp;?', note:'l&rsquo;orthographe de la fiche', svg:d(
+  '<path class="sl" d="M14 20h92a8 8 0 0 1 8 8v46a8 8 0 0 1-8 8H50l-18 18V82H14a8 8 0 0 1-8-8V28a8 8 0 0 1 8-8z"/>'+
+  '<text class="txt gr" x="60" y="66">?</text>')},
+
+{id:'de-fussball', l:101, cap:true, en:'Ich spiele gern Fußball', alt:['ich spiele gern fussball'],
+ fr:'J&rsquo;aime jouer au football', svg:d(
+  '<circle class="sl" cx="60" cy="60" r="37"/>'+
+  '<path class="dk" d="M60 44L75 55l-6 18H51l-6-18z"/>'+
+  '<path class="ln" d="M60 44V26M75 55l17-12M69 73l11 17M51 73l-11 17M45 55L28 43"/>')},
+
+{id:'de-basketball', l:101, cap:true, en:'Ich spiele gern Basketball',
+ fr:'J&rsquo;aime jouer au basket', svg:d(
+  '<rect class="sl" x="74" y="12" width="36" height="26" rx="2"/>'+
+  '<path class="ln" d="M78 38h28"/>'+
+  '<path class="tn" d="M81 38l3 14M89 38l1 14M97 38l-1 14M103 38l-3 14M84 52h16"/>'+
+  '<circle class="fl" cx="40" cy="74" r="25"/>'+
+  '<path class="ln" d="M40 49v50M15 74h50M22 57q17 17 0 34M58 57q-17 17 0 34"/>')},
+
+{id:'de-tischtennis', l:101, cap:true, en:'Ich spiele gern Tischtennis',
+ fr:'J&rsquo;aime jouer au ping-pong', svg:d(
+  '<g transform="rotate(-25 52 56)">'+
+  '<ellipse class="fl" cx="52" cy="44" rx="26" ry="30"/>'+
+  '<path class="sl" d="M46 74h12v28a6 6 0 0 1-12 0z"/>'+
+  '</g>'+
+  '<circle class="wh" cx="98" cy="28" r="11"/>')},
+
+{id:'de-tennis', l:101, cap:true, en:'Ich spiele gern Tennis',
+ fr:'J&rsquo;aime jouer au tennis', svg:d(
+  '<g transform="rotate(-25 50 50)">'+
+  '<ellipse class="wh" cx="50" cy="40" rx="25" ry="30"/>'+
+  '<path class="tn" d="M34 16v48M50 12v56M66 16v48M27 28h46M25 40h50M27 52h46"/>'+
+  '<ellipse class="ln" cx="50" cy="40" rx="25" ry="30"/>'+
+  '<path class="ep" d="M50 70v32"/>'+
+  '</g>'+
+  '<circle class="hi" cx="98" cy="32" r="11"/>'+
+  '<path class="tn" d="M90 24q8 8 0 16M106 24q-8 8 0 16"/>')},
+
+{id:'de-schach', l:101, cap:true, en:'Ich spiele gern Schach',
+ fr:'J&rsquo;aime jouer aux &eacute;checs', svg:d(
+  '<g class="dk">'+
+  '<rect x="14" y="84" width="16" height="16"/><rect x="46" y="84" width="16" height="16"/>'+
+  '<rect x="78" y="84" width="16" height="16"/><rect x="30" y="68" width="16" height="16"/>'+
+  '<rect x="62" y="68" width="16" height="16"/><rect x="94" y="68" width="16" height="16"/>'+
+  '</g>'+
+  '<rect class="ln" x="14" y="68" width="96" height="32"/>'+
+  '<path class="sl" d="M46 64h28l-6-24c8-6 9-16 3-21-5-5-15-5-20 0-6 5-5 15 3 21z"/>')},
+
+{id:'de-musik', l:101, cap:true, en:'Ich spiele gern Musik',
+ fr:'J&rsquo;aime faire de la musique', svg:d(
+  '<path class="dk" d="M40 96a12 10 0 1 0 14 10V38l38-10v44a12 10 0 1 0 14 10V12L40 24z"/>')},
+
+{id:'de-singen', l:101, en:'Ich singe gern', fr:'J&rsquo;aime chanter', svg:d(
+  '<rect class="sl" x="44" y="14" width="24" height="44" rx="12"/>'+
+  '<path class="ln" d="M32 50a24 24 0 0 0 48 0M56 74v20M40 104h32"/>'+
+  '<path class="dk" d="M94 60a7 6 0 1 0 8 6V38l-16 4v20a7 6 0 1 0 8 6z"/>')},
+
+{id:'de-tanzen', l:101, en:'Ich tanze gern', fr:'J&rsquo;aime danser', svg:d(
+  '<circle class="ln" cx="66" cy="24" r="11"/>'+
+  '<path class="ln" d="M66 35l-6 30M60 65l-14 26M60 65l18 22M66 42l-22-8M66 42l24 4"/>'+
+  '<path class="dk" d="M26 28a6 5 0 1 0 7 5V14l-14 4v16a6 5 0 1 0 7 5z"/>')},
+
+{id:'de-malen', l:101, en:'Ich male gern', fr:'J&rsquo;aime peindre', svg:d(
+  '<path class="sl" d="M56 16c26 0 46 16 46 34 0 10-8 14-16 14h-8c-7 0-12 5-12 11 0 5 4 8 4 13 0 6-6 10-14 10-24 0-42-18-42-40S30 16 56 16z"/>'+
+  '<circle class="hr" cx="38" cy="40" r="6"/><circle class="hi" cx="58" cy="32" r="6"/>'+
+  '<circle class="c2" cx="78" cy="44" r="6"/><circle class="fl" cx="34" cy="64" r="6"/>')},
+
+{id:'de-lesen', l:101, en:'Ich lese gern', fr:'J&rsquo;aime lire', svg:d(
+  '<path class="sl" d="M10 30q24-11 48 0v56q-24-11-48 0z"/>'+
+  '<path class="sl" d="M110 30q-24-11-48 0v56q24-11 48 0z"/>'+
+  '<path class="ln" d="M60 30V86"/>'+
+  '<path class="tn" d="M20 48h28M20 60h22M72 48h28M72 60h22"/>')},
+
+{id:'de-surfen', l:101, en:'Ich surfe gern', fr:'J&rsquo;aime surfer', svg:d(
+  '<g transform="rotate(-28 60 50)">'+
+  '<path class="sl" d="M60 10c13 13 17 38 0 62-17-24-13-49 0-62z"/>'+
+  '<path class="tn" d="M60 20v42"/>'+
+  '</g>'+
+  '<path class="ln" d="M6 92q14-12 28 0t28 0 28 0 28 0"/>')},
+
+{id:'de-segeln', l:101, en:'Ich segle gern', fr:'J&rsquo;aime faire de la voile', svg:d(
+  '<path class="ln" d="M60 68V12"/>'+
+  '<path class="sl" d="M64 18l24 44H64z"/>'+
+  '<path class="sl" d="M56 24L34 62h22z"/>'+
+  '<path class="sl" d="M20 68h80l-14 18H34z"/>'+
+  '<path class="ln" d="M8 98q13-10 26 0t26 0 26 0 26 0"/>')},
+
+{id:'de-kochen', l:101, en:'Ich koche gern', fr:'J&rsquo;aime cuisiner', svg:d(
+  '<path class="sl" d="M26 56h68v32a10 10 0 0 1-10 10H36a10 10 0 0 1-10-10z"/>'+
+  '<path class="ln" d="M18 56h84M26 68h-8M94 68h8"/>'+
+  '<path class="tn" d="M46 44q9-8 0-16M74 44q9-8 0-16"/>')},
+
+{id:'de-basteln', l:101, en:'Ich bastle gern', fr:'J&rsquo;aime bricoler', svg:d(
+  '<path class="ln" d="M12 102h96"/>'+
+  '<rect class="fl" x="24" y="86" width="72" height="16" rx="2"/>'+
+  '<path class="dk" d="M54 62h8v24h-8zM46 58h24v8H46z"/>'+
+  '<g transform="rotate(32 86 40)">'+
+  '<path class="sl" d="M68 12h36v18H68z"/>'+
+  '<path class="ln" d="M86 30v46"/>'+
+  '</g>')},
+
+{id:'de-reiten', l:101, en:'Ich reite gern', fr:'J&rsquo;aime monter &agrave; cheval', svg:d(
+  '<path class="sl" d="M104 30c0-9-7-14-16-14l-24 4c-12 2-22 10-26 20l-14 8c-4 2-3 8 2 8l10-3c1 11 6 19 13 24l-4 25h12l4-22h18l4 22h12l-4-26c8-7 13-18 13-30z"/>'+
+  '<circle class="dk" cx="96" cy="26" r="3"/>'+
+  '<path class="ln" d="M98 14l3-10M88 15l-2-10M24 44q-12 8-10 22"/>')},
+
+{id:'de-fahrrad', l:101, cap:true, en:'Ich fahre gern Fahrrad',
+ fr:'J&rsquo;aime faire du v&eacute;lo', svg:d(
+  '<circle class="ln" cx="30" cy="82" r="21"/><circle class="ln" cx="90" cy="82" r="21"/>'+
+  '<path class="ln" d="M30 82L50 46h22l18 36M50 46l20 36M72 46l7-9"/>'+
+  '<path class="ln" d="M44 42h13l-7 4"/><path class="tn" d="M74 34h13"/>')},
+
+{id:'de-lachen', l:101, en:'Ich lache gern', fr:'J&rsquo;aime rire', svg:d(
+  '<circle class="hi" cx="60" cy="60" r="39"/>'+
+  '<path class="ln" d="M34 48q9-9 18 0M68 48q9-9 18 0"/>'+
+  '<path class="dk" d="M30 64h60c0 17-13 30-30 30S30 81 30 64z"/>'+
+  '<path class="wh" d="M40 64h40c0 5-3 7-6 7H46c-3 0-6-2-6-7z"/>'+
+  '<path class="tn" d="M24 74q-5 10 0 18M96 74q5 10 0 18"/>')},
+
+/* ── Ligne 102 · Zahlen 1–30 ─────────────────────────────
+   Les pi&egrave;ges sont connus : sechzehn et non « sechszehn »,
+   siebzehn et non « siebenzehn », et dreißig qui prend l'eszett. */
+
+{id:'de-1',  l:102, en:'eins',   fr:'un',     svg:zahl(1)},
+{id:'de-2',  l:102, en:'zwei',   fr:'deux',   svg:zahl(2)},
+{id:'de-3',  l:102, en:'drei',   fr:'trois',  svg:zahl(3)},
+{id:'de-4',  l:102, en:'vier',   fr:'quatre', svg:zahl(4)},
+{id:'de-5',  l:102, en:'fünf',   fr:'cinq',   svg:zahl(5)},
+{id:'de-6',  l:102, en:'sechs',  fr:'six',    svg:zahl(6)},
+{id:'de-7',  l:102, en:'sieben', fr:'sept',   svg:zahl(7)},
+{id:'de-8',  l:102, en:'acht',   fr:'huit',   svg:zahl(8)},
+{id:'de-9',  l:102, en:'neun',   fr:'neuf',   svg:zahl(9)},
+{id:'de-10', l:102, en:'zehn',   fr:'dix',    svg:zahl(10)},
+{id:'de-11', l:102, en:'elf',    fr:'onze',   svg:zahl(11)},
+{id:'de-12', l:102, en:'zwölf',  fr:'douze',  svg:zahl(12)},
+{id:'de-13', l:102, en:'dreizehn',  fr:'treize',   svg:zahl(13)},
+{id:'de-14', l:102, en:'vierzehn',  fr:'quatorze', svg:zahl(14)},
+{id:'de-15', l:102, en:'fünfzehn', fr:'quinze',   svg:zahl(15)},
+{id:'de-16', l:102, en:'sechzehn',  fr:'seize',    note:'pas &laquo;&nbsp;sechszehn&nbsp;&raquo;', svg:zahl(16)},
+{id:'de-17', l:102, en:'siebzehn',  fr:'dix-sept', note:'pas &laquo;&nbsp;siebenzehn&nbsp;&raquo;', svg:zahl(17)},
+{id:'de-18', l:102, en:'achtzehn',  fr:'dix-huit', svg:zahl(18)},
+{id:'de-19', l:102, en:'neunzehn',  fr:'dix-neuf', svg:zahl(19)},
+{id:'de-20', l:102, en:'zwanzig',   fr:'vingt',    svg:zahl(20)},
+{id:'de-21', l:102, en:'einundzwanzig',   fr:'vingt-et-un',    note:'ein, pas eins', svg:zahl(21)},
+{id:'de-22', l:102, en:'zweiundzwanzig',  fr:'vingt-deux',   svg:zahl(22)},
+{id:'de-23', l:102, en:'dreiundzwanzig',  fr:'vingt-trois',  svg:zahl(23)},
+{id:'de-24', l:102, en:'vierundzwanzig',  fr:'vingt-quatre', svg:zahl(24)},
+{id:'de-25', l:102, en:'fünfundzwanzig',  fr:'vingt-cinq',   svg:zahl(25)},
+{id:'de-26', l:102, en:'sechsundzwanzig',  fr:'vingt-six',    svg:zahl(26)},
+{id:'de-27', l:102, en:'siebenundzwanzig', fr:'vingt-sept',   svg:zahl(27)},
+{id:'de-28', l:102, en:'achtundzwanzig',   fr:'vingt-huit',   svg:zahl(28)},
+{id:'de-29', l:102, en:'neunundzwanzig',   fr:'vingt-neuf',   svg:zahl(29)},
+{id:'de-30', l:102, en:'dreißig', alt:['dreissig'], fr:'trente', svg:zahl(30)},
+
+/* ── Ligne 103 · Zehner bis 100 ──────────────────────────── */
+{id:'de-40',  l:103, en:'vierzig',  fr:'quarante',        svg:zahl(40)},
+{id:'de-50',  l:103, en:'fünfzig',  fr:'cinquante',       svg:zahl(50)},
+{id:'de-60',  l:103, en:'sechzig',  fr:'soixante',        note:'pas &laquo;&nbsp;sechszig&nbsp;&raquo;', svg:zahl(60)},
+{id:'de-70',  l:103, en:'siebzig',  fr:'soixante-dix',    note:'pas &laquo;&nbsp;siebenzig&nbsp;&raquo;', svg:zahl(70)},
+{id:'de-80',  l:103, en:'achtzig',  fr:'quatre-vingts',   svg:zahl(80)},
+{id:'de-90',  l:103, en:'neunzig',  fr:'quatre-vingt-dix', svg:zahl(90)},
+{id:'de-100', l:103, en:'hundert', alt:['einhundert'], fr:'cent', svg:zahl(100)}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
    la suivante s'ajoute ici, avec ses propres groupes dans LIGNES. */
+/* ═══ Les deux cours ═════════════════════════════════════
+   Une m&ecirc;me m&eacute;canique, deux langues. Chaque cours porte sa langue
+   de synth&egrave;se, ses f&eacute;licitations et son tampon de rat&eacute; ; le reste
+   &mdash; &eacute;valuations, groupes, trois modes, carnet, code parent &mdash; est
+   commun. Les cha&icirc;nes des tampons passent par textContent : elles
+   s'&eacute;crivent avec de vrais caract&egrave;res accentu&eacute;s, pas des entit&eacute;s. */
+var COURS = [
+  {id:'en', nom:'Mind the Gap', adj:'anglais', langue:'Anglais', lang:'en-GB',
+   sous:'Les mots du cahier, une &eacute;valuation &agrave; la fois. On les reconna&icirc;t, on les dit, puis on les &eacute;crit &mdash; et l&agrave;, pas une lettre de travers.',
+   bravos:['Brilliant!','Spot on!','Smashing!','Well done!','Jolly good!','Lovely!','Top marks!','Bang on!'],
+   rate:'Mind the gap!', aide:'With a hint'},
+  {id:'de', nom:'Sprichst du Deutsch?', adj:'allemand', langue:'Allemand', lang:'de-DE',
+   sous:'Les fiches d&rsquo;allemand, m&ecirc;me m&eacute;canique&nbsp;: reconna&icirc;tre, dire, puis &eacute;crire sans une faute &mdash; tr&eacute;mas compris.',
+   bravos:['Prima!','Klasse!','Super!','Genau!','Richtig!','Sehr gut!','Toll!','Na also!'],
+   rate:'Zurückbleiben!', aide:'Mit Hilfe'}
+];
+
 var EVALS = [
-  {id:1, nom:'&Eacute;valuation 1', zone:'Zone 1',
+  {id:1, co:'en', nom:'&Eacute;valuation 1', zone:'Zone 1',
    sous:'Les quatre premiers groupes du cahier&nbsp;: se saluer, nommer ses affaires, comprendre les consignes &eacute;crites puis celles que le prof donne &agrave; voix haute.'},
-  {id:2, nom:'&Eacute;valuation 2', zone:'Zone 2',
-   sous:'Le <i>classroom English</i>, les couleurs, les mots qu&rsquo;on devine du fran&ccedil;ais, le calendrier de l&rsquo;anniversaire et la page o&ugrave; l&rsquo;on se pr&eacute;sente.'}
+  {id:2, co:'en', nom:'&Eacute;valuation 2', zone:'Zone 2',
+   sous:'Le <i>classroom English</i>, les couleurs, les mots qu&rsquo;on devine du fran&ccedil;ais, le calendrier de l&rsquo;anniversaire et la page o&ugrave; l&rsquo;on se pr&eacute;sente.'},
+
+  {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
+   sous:'La premi&egrave;re fiche&nbsp;: dire ce qu&rsquo;on aime faire, puis compter jusqu&rsquo;&agrave; cent.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -1277,16 +1539,23 @@ var LIGNES = [
    rem:'En anglais les jours et les mois prennent une <b>majuscule</b>, ce que le fran&ccedil;ais ne fait pas&nbsp;: <b>Monday</b>, <b>July</b>. La casse n&rsquo;a jamais &eacute;t&eacute; compt&eacute;e fausse ici, mais le jeu le rappelle. Les saisons, elles, restent en minuscules.'},
   {id:9, ev:2, tok:'--l5', nom:'About me', sous:'Se pr&eacute;senter, comme &agrave; la page du cahier',
    rem:'Les phrases de la page de pr&eacute;sentation. <b>French</b> prend une majuscule, et il s&rsquo;&eacute;crit avec un <b>e</b>&nbsp;&mdash; pas <i>franch</i>.'},
-  {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'}
+  {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
+   rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},
+  {id:102, ev:101, tok:'--d2', nom:'Zahlen 1&ndash;30', sous:'Compter de un &agrave; trente',
+   rem:'Trois pi&egrave;ges&nbsp;: <b>sechzehn</b> perd son <i>s</i>, <b>siebzehn</b> perd son <i>en</i>, et <b>drei&szlig;ig</b> prend l&rsquo;eszett. &Agrave; partir de 21 on dit l&rsquo;unit&eacute; d&rsquo;abord&nbsp;: <b>einundzwanzig</b>, un-et-vingt.'},
+  {id:103, ev:101, tok:'--d3', nom:'Zehner bis 100', sous:'Les dizaines jusqu&rsquo;&agrave; cent',
+   rem:'M&ecirc;me perte qu&rsquo;&agrave; l&rsquo;adolescence&nbsp;: <b>sechzig</b> et <b>siebzig</b>, jamais <i>sechszig</i> ni <i>siebenzig</i>.'},
+  {id:951, ev:101, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
 ];
 
+/* « %L » est remplac&eacute; par la langue du cours ouvert. */
 var MODES = [
   {id:'qcm',   nom:'Je choisis',      sous:'Trois propositions.'},
-  {id:'oral',  nom:'Je le dis',       sous:'&Agrave; voix haute, en anglais.'},
+  {id:'oral',  nom:'Je le dis',       sous:'&Agrave; voix haute, en %L.'},
   {id:'ecrit', nom:"Je l'&eacute;cris",     sous:'Au clavier. Z&eacute;ro faute admise.'}
 ];
-
-var BRAVOS = ['Brilliant!','Spot on!','Smashing!','Well done!','Jolly good!','Lovely!','Top marks!','Bang on!'];
 
 /* ═══ &Eacute;tat ═══════════════════════════════════════════════ */
 var CLE = 'mind-the-gap-v1';
@@ -1295,9 +1564,10 @@ var M = {};        /* acquis par mot : id -> {qcm:1,oral:1,ecrit:1} */
 var son = true;
 var libre = false;     /* cadenas lev&eacute;s par le code parent */
 var partie = null;
-var ecranActuel = 'accueil';
+var ecranActuel = 'cours';
 var ligneOuverte = 1;
 var evalOuvert = 1;
+var coursOuvert = 'en';
 var microKO = false;
 
 function charger(){
@@ -1307,10 +1577,11 @@ function charger(){
     M = (r && typeof r.m === 'object' && r.m) ? r.m : {};
     son = r.son !== false;
     libre = r.libre === true;
+    if(r.co && coursDe(r.co)) coursOuvert = r.co;
   }catch(e){ P = {}; M = {}; son = true; libre = false; }
 }
 function sauver(){
-  try{ localStorage.setItem(CLE, JSON.stringify({p:P, m:M, son:son, libre:libre})); }catch(e){}
+  try{ localStorage.setItem(CLE, JSON.stringify({p:P, m:M, son:son, libre:libre, co:coursOuvert})); }catch(e){}
 }
 
 function $(s){ return document.querySelector(s); }
@@ -1337,6 +1608,20 @@ function evalDe(e){
   for(var i=0;i<EVALS.length;i++){ if(EVALS[i].id === e) return EVALS[i]; }
   return null;
 }
+/* Le cours d'un mot se d&eacute;duit : mot → ligne → &eacute;valuation → cours.
+   Rien n'est &eacute;crit deux fois, et un mot ne peut pas se retrouver
+   dans la mauvaise langue. */
+function coursDe(id){
+  for(var i=0;i<COURS.length;i++){ if(COURS[i].id === id) return COURS[i]; }
+  return null;
+}
+function coursActuel(){ return coursDe(coursOuvert) || COURS[0]; }
+function evalsDe(co){ return EVALS.filter(function(E){ return E.co === co; }); }
+function coursDeEval(e){ var E = evalDe(e); return E ? E.co : COURS[0].id; }
+function coursDeLigne(l){ var L = ligneDe(l); return L ? coursDeEval(L.ev) : COURS[0].id; }
+function coursDeMot(m){ return m ? coursDeLigne(m.l) : COURS[0].id; }
+function motsDeCours(co){ return MOTS.filter(function(m){ return coursDeMot(m) === co; }); }
+
 function lignesDe(e){ return LIGNES.filter(function(L){ return L.ev === e; }); }
 /* Tant qu'une &eacute;valuation n'a qu'un groupe, sa ligne de r&eacute;vision
    rejouerait le m&ecirc;me contenu : on ne la montre pas. Elle appara&icirc;t
@@ -1393,9 +1678,9 @@ function noterMot(id, m, bon){
   if(!M[id]) M[id] = {};
   M[id][m] = bon ? 1 : 0;
 }
-function totalMaitrises(){
-  var n = 0;
-  MOTS.forEach(function(x){ if(niveau(x.id) === 3) n++; });
+function totalMaitrises(co){
+  var n = 0, liste = co ? motsDeCours(co) : MOTS;
+  liste.forEach(function(x){ if(niveau(x.id) === 3) n++; });
   return n;
 }
 
@@ -1457,10 +1742,23 @@ function formes(it){ return [it.en].concat(it.alt || []); }
 /* Une phrase se juge sur ses mots et son orthographe, pas sur ses
    virgules : « Sorry I'm late » passe, « Sorry, Im late » non. */
 function sansVirgule(t){ return normFrappe(t).replace(/[,;]/g,'').replace(/\s+/g,' ').trim(); }
+
+/* L'allemand demande ä ö ü ß, qu'un clavier fran&ccedil;ais ne donne pas.
+   La substitution officielle &mdash; celle des formulaires et des adresses
+   &mdash; est ae oe ue ss : on l'accepte des deux c&ocirc;t&eacute;s de la comparaison.
+   Sur un mot anglais elle ne change rien, faute de tels caract&egrave;res. */
+function sansUmlaut(t){
+  return normFrappe(t).replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+}
+/* Le tr&eacute;ma purement retir&eacute; : sert &agrave; reconna&icirc;tre « funf » pour « fünf »
+   et &agrave; dire ce qui manque, pas &agrave; l'accepter. */
+function sansTrema(t){
+  return normFrappe(t).replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss');
+}
 function justeFrappe(saisie, it){
-  var n = normFrappe(saisie), v2 = sansVirgule(saisie);
+  var n = normFrappe(saisie), v2 = sansVirgule(saisie), v3 = sansUmlaut(saisie);
   return formes(it).some(function(v){
-    return normFrappe(v) === n || sansVirgule(v) === v2;
+    return normFrappe(v) === n || sansVirgule(v) === v2 || sansUmlaut(v) === v3;
   });
 }
 /* Les jours, les mois et les nationalit&eacute;s prennent une majuscule en
@@ -1556,54 +1854,68 @@ function gabarit(mot){
 /* ═══ &Eacute;couter ══════════════════════════════════════════════
    Le mot mod&egrave;le est dit par la synth&egrave;se vocale du navigateur, en
    anglais britannique quand une voix GB existe.            */
-var voixEn = null;
-function choisirVoix(){
+/* Une voix par langue, cherch&eacute;e une fois et gard&eacute;e : on pr&eacute;f&egrave;re la
+   variante r&eacute;gionale exacte (en-GB, de-DE), &agrave; d&eacute;faut n'importe quelle
+   voix de la langue. */
+var voix = {};
+function choisirVoix(lang){
+  lang = lang || coursActuel().lang;
   try{
     var vs = window.speechSynthesis.getVoices() || [];
-    voixEn = vs.filter(function(v){ return /^en[-_]GB/i.test(v.lang); })[0]
-          || vs.filter(function(v){ return /^en/i.test(v.lang); })[0] || null;
-  }catch(e){}
+    var base = lang.split('-')[0].toLowerCase();
+    voix[lang] =
+      vs.filter(function(v){ return v.lang && v.lang.replace('_','-').toLowerCase() === lang.toLowerCase(); })[0] ||
+      vs.filter(function(v){ return v.lang && v.lang.slice(0,2).toLowerCase() === base; })[0] || null;
+  }catch(e){ voix[lang] = null; }
+  return voix[lang];
 }
-function dire(texte, apres){
+function rafraichirVoix(){
+  COURS.forEach(function(C){ choisirVoix(C.lang); });
+}
+function dire(texte, apres, lang){
   try{
     var s = window.speechSynthesis;
     if(!s || !son){ if(apres) apres(); return; }
+    lang = lang || coursActuel().lang;
     s.cancel();
     var u = new SpeechSynthesisUtterance(String(texte));
-    u.lang = 'en-GB'; u.rate = .88; u.pitch = 1;
-    if(!voixEn) choisirVoix();
-    if(voixEn) u.voice = voixEn;
+    u.lang = lang; u.rate = .88; u.pitch = 1;
+    if(!(lang in voix)) choisirVoix(lang);
+    if(voix[lang]) u.voice = voix[lang];
     if(apres){ u.onend = apres; u.onerror = apres; }
     setTimeout(function(){ try{ s.speak(u); }catch(e){ if(apres) apres(); } }, 80);
   }catch(e){ if(apres) apres(); }
 }
-/* ═══ Épeler ═══════════════════════════════════════
-   La ma&icirc;tresse veut que les mots soient &eacute;pel&eacute;s en anglais. Le
-   bouton donne le mod&egrave;le : chaque lettre est dite &agrave; son nom
-   anglais pendant que sa tuile s'allume, lettre et son ensemble.
-   On ne passe pas &laquo; A &raquo; &agrave; la synth&egrave;se, qui le lirait comme
-   l'article : on lui passe le nom de la lettre &eacute;crit comme il se
-   prononce &mdash; d'o&ugrave; &laquo; aitch &raquo;, &laquo; double-you &raquo;, et &laquo; zed &raquo;
-   qui est le nom britannique du Z, pas &laquo; zee &raquo;.     */
-/* On donne &agrave; la synth&egrave;se la lettre elle-m&ecirc;me, en capitale : c'est le
-   chemin que les moteurs pr&eacute;voient pour &ccedil;a, et les 26 noms en sortent
-   justes. La table phon&eacute;tique qu'il y avait ici (&laquo; ee &raquo;, &laquo; ay &raquo;,
-   &laquo; eff &raquo;) &eacute;tait une fausse bonne id&eacute;e : ces suites ne sont pas des
-   mots, et certaines voix les rel&egrave;sent lettre par lettre &mdash; d'o&ugrave; le
-   double /i:/ entendu sur le E de &laquo; lemonade &raquo; &mdash; quand elles ne les
-   lisaient pas de travers, &laquo; ay &raquo; sortant en /aI/, le nom du I.
-   Un seul cas r&eacute;siste : le Z, que les voix am&eacute;ricaines appellent
-   &laquo; zee &raquo;. Faute de voix britannique, on &eacute;crit &laquo; zed &raquo;, qui se dit
-   pareil des deux c&ocirc;t&eacute;s de l'Atlantique. */
+/* ═══ &Eacute;peler ═══════════════════════════════════════════
+   Les deux profs veulent que les mots soient &eacute;pel&eacute;s dans leur
+   langue. On donne &agrave; la synth&egrave;se la lettre elle-m&ecirc;me, en capitale,
+   avec la langue du cours : c'est le chemin que les moteurs
+   pr&eacute;voient pour &ccedil;a, et les noms en sortent justes de part et
+   d'autre &mdash; « ay » en anglais, « ah » en allemand pour le m&ecirc;me A.
+   La table phon&eacute;tique qu'il y avait ici (« ee », « ay », « eff »)
+   &eacute;tait une fausse bonne id&eacute;e : ces suites ne sont pas des mots, et
+   certaines voix les rel&egrave;sent lettre par lettre &mdash; d'o&ugrave; le double
+   /i:/ entendu sur le E de « lemonade ».
+   Deux exceptions : le Z, que les voix am&eacute;ricaines appellent
+   « zee » l&agrave; o&ugrave; la fiche attend « zed » ; et le ß, qui n'a pas de
+   capitale et se nomme « Eszett ». */
 function voixBritannique(){
-  return !!(voixEn && /^en[-_]GB/i.test(voixEn.lang));
+  var v = voix['en-GB'];
+  return !!(v && /^en[-_]GB/i.test(v.lang));
 }
-function nomLettre(c){
+/* toUpperCase() rendrait « SS » pour ß, soit deux lettres l&agrave; o&ugrave; la
+   tuile n'en montre qu'une. On le laisse tel quel. */
+function majLettre(c){ return c === 'ß' ? 'ß' : String(c).toUpperCase(); }
+
+function nomLettre(c, co){
+  co = co || coursOuvert;
   if(c === "'") return 'apostrophe';
-  if(c === '-') return 'hyphen';
-  if(!/[a-z]/i.test(c)) return null;
-  var L = c.toUpperCase();
-  if(L === 'Z' && !voixBritannique()) return 'zed';
+  if(c === '-') return co === 'de' ? 'Bindestrich' : 'hyphen';
+  /* Le ß n'a pas de capitale &agrave; lui : la voix allemande le nomme. */
+  if(c === 'ß') return 'Eszett';
+  if(!/[a-zäöü]/i.test(c)) return null;
+  var L = majLettre(c);
+  if(co === 'en' && L === 'Z' && !voixBritannique()) return 'zed';
   return L;
 }
 var epelJeton = null;
@@ -1635,14 +1947,15 @@ function epeler(mot, boite, bouton){
   if(!boite) return;
   arreterEpel();
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
-  if(!voixEn) choisirVoix();   /* pour savoir, d&egrave;s le premier Z, si la voix est GB */
+  var co = coursOuvert;
+  if(!(coursActuel().lang in voix)) choisirVoix();  /* pour savoir, d&egrave;s le premier Z, si la voix est GB */
 
   var brut = String(mot), lettres = [], k;
   for(k=0;k<brut.length;k++){ if(!/[.!?,;]/.test(brut.charAt(k))) lettres.push(brut.charAt(k)); }
 
   boite.innerHTML = '<div class="epel">' + lettres.map(function(c){
     return c === ' ' ? '<span class="lt esp"></span>'
-                     : '<span class="lt">' + echapper(c.toUpperCase()) + '</span>';
+                     : '<span class="lt">' + echapper(majLettre(c)) + '</span>';
   }).join('') + '</div>';
 
   var tuiles = boite.querySelectorAll('.lt');
@@ -1663,7 +1976,7 @@ function epeler(mot, boite, bouton){
     i++;
     if(i >= lettres.length){ finir(); return; }
     if(tuiles[i]) tuiles[i].classList.add('dit');
-    var nom = nomLettre(lettres[i]);
+    var nom = nomLettre(lettres[i], co);
     /* Sans son, ou sur un caract&egrave;re qui ne se nomme pas, la tuile
        s'allume quand m&ecirc;me : le rythme visuel reste l&agrave;. */
     if(!nom || !son){ setTimeout(pas, son ? 210 : 340); return; }
@@ -1745,29 +2058,81 @@ function montrer(nom){
   arreterEpel();
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
   document.body.classList.toggle('en-jeu', nom === 'jeu');
-  ['accueil','eval','jeu','bilan','carnet'].forEach(function(n){
+  /* L'habillage suit le cours ouvert ; l'&eacute;cran de choix reste neutre. */
+  COURS.forEach(function(C){
+    document.body.classList.toggle('cours-'+C.id, C.id === coursOuvert && nom !== 'cours');
+  });
+  ['cours','accueil','eval','jeu','bilan','carnet'].forEach(function(n){
     $('#ecran-'+n).hidden = (n !== nom);
   });
   window.scrollTo(0,0);
 }
 
-/* ═══ Accueil ════════════════════════════════════════════ */
-function roundelNum(n){
+/* ═══ Cours et accueil ═══════════════════════════════════
+   Chaque cours a son signe : le roundel de Londres, le carr&eacute; bleu
+   du U-Bahn de Berlin. Le carr&eacute; garde ses couleurs propres dans
+   les deux th&egrave;mes, d'o&ugrave; le blanc pos&eacute; en dur sur son num&eacute;ro. */
+function signeCours(co){
+  if(co === 'de'){
+    return '<svg viewBox="0 0 100 100" aria-hidden="true">'+
+           '<rect x="6" y="6" width="88" height="88" rx="15" fill="#1f4f86"></rect>'+
+           '<text x="50" y="74" text-anchor="middle" font-family="Jost, sans-serif" '+
+           'font-weight="700" font-size="64" fill="#ffffff">U</text></svg>';
+  }
+  return '<svg viewBox="0 0 100 100" aria-hidden="true">'+
+         '<circle cx="50" cy="50" r="38" fill="none" stroke="var(--rouge)" stroke-width="13"></circle>'+
+         '<rect x="4" y="42" width="92" height="16" fill="var(--bleu)"></rect></svg>';
+}
+function badgeNum(n, co){
+  if(co === 'de'){
+    return '<span class="num"><svg viewBox="0 0 100 100" aria-hidden="true">'+
+           '<rect x="2" y="2" width="96" height="96" rx="16" fill="#1f4f86"></rect>'+
+           '</svg><b style="color:#fff">'+n+'</b></span>';
+  }
   return '<span class="num"><svg viewBox="0 0 100 100" aria-hidden="true">'+
          '<circle cx="50" cy="50" r="36" fill="none" stroke="var(--rouge)" stroke-width="14"></circle>'+
          '<rect x="1" y="32" width="98" height="36" fill="var(--bleu)"></rect>'+
          '</svg><b>'+n+'</b></span>';
 }
 
+/* L'&eacute;cran de t&ecirc;te : une carte par cours, avec ce qui y est d&eacute;j&agrave; su. */
+function construireCours(){
+  var h = '';
+  COURS.forEach(function(C){
+    var mots = motsDeCours(C.id), n = totalMaitrises(C.id), evs = evalsDe(C.id);
+    h += '<button class="cz" type="button" data-cours="'+C.id+'">';
+    h +=   '<span class="cz-tete"><span class="marque">'+signeCours(C.id)+'</span>'+
+           '<span class="cz-t"><span class="lang">'+C.langue+'</span><b>'+C.nom+'</b></span></span>';
+    h +=   '<small>'+C.sous+'</small>';
+    h +=   '<span class="cz-pied"><span class="compteur"><b>'+n+'</b> / '+mots.length+
+           ' mots &middot; '+evs.length+' &eacute;valuation'+(evs.length > 1 ? 's' : '')+
+           '</span><span class="cta">Ouvrir &rarr;</span></span>';
+    h += '</button>';
+  });
+  $('#cours-liste').innerHTML = h;
+  majParent();
+  var t = totalMaitrises();
+  $('#pied-cours').innerHTML = t === 0
+    ? 'Choisis ta ligne'
+    : t + ' mot' + (t > 1 ? 's' : '') + ' ma&icirc;tris&eacute;' + (t > 1 ? 's' : '') +
+      ' sur ' + MOTS.length + ', les deux langues ensemble';
+}
+
 /* L'accueil : une grande carte par &eacute;valuation. La barre en quatre
    segments est le plan de l'&eacute;valuation en petit &mdash; un segment par
    groupe, large comme son nombre de mots, rempli de ce qui est su. */
 function construireAccueil(){
+  var C = coursActuel();
+  $('#acc-eyebrow').innerHTML = C.langue + ' &middot; Vocabulaire';
+  $('#acc-logo').innerHTML = signeCours(C.id);
+  $('#acc-titre').innerHTML = C.nom;
+  $('#acc-sous').innerHTML = C.sous;
+
   var h = '';
-  EVALS.forEach(function(E){
+  evalsDe(C.id).forEach(function(E, k){
     var mots = motsDeEval(E.id), n = susDans(mots);
     h += '<button class="evz" type="button" data-eval="'+E.id+'">';
-    h +=   '<span class="evz-tete">'+roundelNum(E.id)+
+    h +=   '<span class="evz-tete">'+badgeNum(k + 1, C.id)+
            '<span class="evz-t"><b>'+E.nom+'</b><small>'+E.sous+'</small></span></span>';
     h +=   '<span class="zbar">';
     groupesDe(E.id).forEach(function(g){
@@ -1787,16 +2152,15 @@ function construireAccueil(){
   });
   h += '<div class="evz vide">';
   h +=   '<span class="evz-tete"><span class="num">?</span>';
-  h +=     '<span class="evz-t"><b>&Eacute;valuation '+(EVALS.length+1)+'</b>'+
+  h +=     '<span class="evz-t"><b>&Eacute;valuation '+(evalsDe(C.id).length + 1)+'</b>'+
            '<small>Les prochains groupes de mots, quand la prof les donnera.</small></span></span>';
   h += '</div>';
   $('#evals').innerHTML = h;
 
-  majParent();
-  var tot = totalMaitrises();
-  $('#pied-txt').innerHTML = tot === MOTS.length
-    ? 'Terminus&nbsp;: les '+MOTS.length+' mots sont sus.'
-    : tot + ' mot' + (tot > 1 ? 's' : '') + ' ma&icirc;tris&eacute;' + (tot > 1 ? 's' : '') + ' sur ' + MOTS.length;
+  var dans = motsDeCours(C.id).length, tot = totalMaitrises(C.id);
+  $('#pied-txt').innerHTML = (tot === dans && dans > 0)
+    ? 'Terminus&nbsp;: les '+dans+' mots sont sus.'
+    : tot + ' mot' + (tot > 1 ? 's' : '') + ' ma&icirc;tris&eacute;' + (tot > 1 ? 's' : '') + ' sur ' + dans;
 }
 
 /* L'&eacute;cran d'une &eacute;valuation : ses groupes de mots, chacun d&eacute;pliable
@@ -1839,7 +2203,8 @@ function construireEval(e){
       h += '<button class="mode" type="button" data-jouer="'+L.id+'" data-mode="'+md.id+'"'+(ok?'':' disabled')+'>';
       h +=   '<span class="pic">'+(ok ? ICONES[md.id] : ICONES.cadenas)+'</span>';
       h +=   '<span class="lbl"><b>'+md.nom+'</b><small>'+
-             (ok ? md.sous : (md.id === 'qcm' ? att : 'Apr&egrave;s &laquo;&nbsp;Je choisis&nbsp;&raquo;.'))+'</small></span>';
+             (ok ? md.sous.replace('%L', coursActuel().adj)
+                 : (md.id === 'qcm' ? att : 'Apr&egrave;s &laquo;&nbsp;Je choisis&nbsp;&raquo;.'))+'</small></span>';
       if(ok) h += '<span class="etoiles">'+etoilesHTML(etoilesDe(L.id, md.id))+'</span>';
       h += '</button>';
     });
@@ -1870,6 +2235,7 @@ function ouvrirTout(saisie){
   if(String(saisie || '').trim().toUpperCase() === CODE_PARENT){
     libre = true;
     sauver();
+    construireCours();
     construireAccueil();
     construireEval(evalOuvert);
     return true;
@@ -1887,7 +2253,7 @@ function ouvrirTout(saisie){
 /* ═══ Carnet ═════════════════════════════════════════════ */
 function construireCarnet(){
   var h = '';
-  EVALS.forEach(function(E){
+  evalsDe(coursOuvert).forEach(function(E){
     h += '<p class="carnet-eval">'+E.nom+'</p>';
   groupesDe(E.id).forEach(function(L){
     h += '<div style="--lc:'+couleurDe(L.id)+'">';
@@ -1919,6 +2285,7 @@ function construireCarnet(){
 /* ═══ La partie ══════════════════════════════════════════ */
 function demarrer(l, mode, liste){
   var L = ligneDe(l), file;
+  coursOuvert = coursDeLigne(l);   /* la langue suit la ligne jou&eacute;e */
   if(liste) file = melange(liste);
   else if(L && L.tout) file = melange(motsDe(l)).slice(0,12);
   else file = melange(motsDe(l));
@@ -1967,7 +2334,7 @@ function dessinerTrajet(){
 
 /* ── Mode 1 : choisir parmi trois ────────────────────── */
 function rendreQcm(it){
-  $('#info').innerHTML = 'Comment &ccedil;a se dit en anglais&nbsp;?';
+  $('#info').innerHTML = 'Comment &ccedil;a se dit en '+coursActuel().adj+'&nbsp;?';
   var pool = (partie.l === 0 ? MOTS : motsDe(it.l)).filter(function(x){ return x.id !== it.id; });
   var autres = melange(pool).slice(0,2);
   var opts = melange([it].concat(autres));
@@ -1986,7 +2353,7 @@ function rendreQcm(it){
 function rendreOral(it){
   var h = '';
   if(SR && !microKO){
-    $('#info').innerHTML = 'Dis-le en anglais, puis rel&acirc;che. <b>Le mot est cach&eacute;&nbsp;: &agrave; toi de le retrouver.</b>';
+    $('#info').innerHTML = 'Dis-le en '+coursActuel().adj+', puis rel&acirc;che. <b>Le mot est cach&eacute;&nbsp;: &agrave; toi de le retrouver.</b>';
     h += '<button class="micro" type="button" id="btn-micro">'+ICONES.micro+'<span>Appuie et dis-le</span></button>';
   } else {
     $('#info').innerHTML = '&Eacute;coute le mod&egrave;le, r&eacute;p&egrave;te &agrave; voix haute, puis dis si c&rsquo;&eacute;tait bon.';
@@ -2005,7 +2372,7 @@ function ecouter(it){
   try{
     reco = new SR();
   }catch(e){ microKO = true; rendreOral(it); return; }
-  reco.lang = 'en-GB';
+  reco.lang = coursActuel().lang;
   reco.interimResults = false;
   reco.maxAlternatives = 5;
   ecoute = true;
@@ -2048,11 +2415,22 @@ function ecouter(it){
 
 /* ── Mode 3 : l'&eacute;crire, sans faute ──────────────────── */
 function rendreEcrit(it){
-  $('#info').innerHTML = '&Eacute;cris-le en anglais. <b>Chaque lettre compte</b>, l&rsquo;article aussi.';
+  var C = coursActuel(), de = C.id === 'de';
+  $('#info').innerHTML = '&Eacute;cris-le en '+C.adj+'. <b>Chaque lettre compte</b>'+
+    (de ? ', tr&eacute;mas compris.' : ', l&rsquo;article aussi.');
   var h = '';
   h += '<form id="form-ecrit" style="display:grid;gap:9px">';
   h +=   '<input class="champ'+(it.en.length > 18 ? ' long' : '')+'" id="saisie" type="text" autocomplete="off" autocapitalize="off" '+
-         'autocorrect="off" spellcheck="false" placeholder="en anglais…" aria-label="&Eacute;cris le mot en anglais">';
+         'autocorrect="off" spellcheck="false" placeholder="en '+C.adj+'…" aria-label="&Eacute;cris le mot en '+C.adj+'">';
+  /* Un clavier fran&ccedil;ais ne donne ni &auml; ni &szlig; : sans ces touches, la
+     moiti&eacute; des nombres allemands serait intapable. */
+  if(de){
+    h += '<div class="umlauts">';
+    ['ä','ö','ü','ß'].forEach(function(c){
+      h += '<button class="uml" type="button" data-uml="'+c+'" aria-label="Ins&eacute;rer '+c+'">'+c+'</button>';
+    });
+    h += '</div>';
+  }
   h +=   '<div class="duo">';
   h +=     '<button class="secondaire" type="button" id="btn-indice">Un indice</button>';
   h +=     '<button class="principal" type="submit">V&eacute;rifier</button>';
@@ -2079,6 +2457,12 @@ function verifierEcrit(it){
     msg = /^(a|an|the) /.test(normFrappe(cible))
       ? 'Presque&nbsp;: il manque l&rsquo;article <b>&laquo;&nbsp;'+echapper(normFrappe(cible).split(' ')[0])+'&nbsp;&raquo;</b>.'
       : 'Presque&nbsp;: il y a un article en trop.';
+  } else if(sansTrema(saisie) === sansTrema(cible)){
+    var tr = (normFrappe(cible).match(/[äöüß]/) || [''])[0];
+    msg = (tr === 'ß')
+      ? 'Presque&nbsp;: c&rsquo;est un <b>&szlig;</b>, ou <b>ss</b> si ton clavier ne le fait pas.'
+      : 'Presque&nbsp;: il manque le tr&eacute;ma &mdash; <b>'+tr+'</b>, ou <b>'+
+        tr.replace('ä','ae').replace('ö','oe').replace('ü','ue')+'</b> au clavier fran&ccedil;ais.';
   } else if(normFrappe(saisie).replace(/or/g,'our') === normFrappe(cible)){
     msg = 'Presque&nbsp;: ici c&rsquo;est l&rsquo;anglais britannique, <b>-our</b>.';
   } else if(normFrappe(saisie).replace(/er$/,'re') === normFrappe(cible)){
@@ -2104,9 +2488,10 @@ function repondre(bon, it, mode, msgSup, saisie){
   if(!bon) partie.rates.push(it.id);
   noterMot(it.id, mode, bon && !aide);
 
+  var C = coursActuel();
   var t = $('#tampon');
   t.className = 'tampon' + (bon ? '' : ' ko');
-  t.textContent = bon ? (aide ? 'With a hint' : auHasard(BRAVOS)) : 'Mind the gap!';
+  t.textContent = bon ? (aide ? C.aide : auHasard(C.bravos)) : C.rate;
   setTimeout(function(){ t.classList.add('vu'); }, 40);
   bip(bon);
 
@@ -2227,15 +2612,41 @@ function bilan(){
 
 /* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest ? ev.target.closest('[data-go],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-epeler],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-epeler,#btn-bilan-1,#btn-bilan-2') : null;
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-cours],[data-uml],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-epeler],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-epeler,#btn-bilan-1,#btn-bilan-2') : null;
   if(!el) return;
 
   if(el.hasAttribute('data-go')){
     var ou = el.getAttribute('data-go');
+    if(ou === 'cours') construireCours();
     if(ou === 'carnet') construireCarnet();
     if(ou === 'accueil') construireAccueil();
     if(ou === 'eval') construireEval(evalOuvert);
     montrer(ou); return;
+  }
+  if(el.hasAttribute('data-cours')){
+    coursOuvert = el.getAttribute('data-cours');
+    var prem = evalsDe(coursOuvert)[0];
+    if(prem){
+      evalOuvert = prem.id;
+      var g1 = groupesDe(prem.id)[0];
+      ligneOuverte = g1 ? g1.id : -1;
+    }
+    sauver();
+    construireAccueil();
+    montrer('accueil'); return;
+  }
+  /* Les touches &agrave; tr&eacute;mas ins&egrave;rent au point d'insertion, sans effacer
+     ce qui est d&eacute;j&agrave; &eacute;crit ni faire perdre le focus. */
+  if(el.hasAttribute('data-uml')){
+    var ch = $('#saisie');
+    if(ch && !ch.disabled){
+      var p = ch.selectionStart, q = ch.selectionEnd, v = ch.value;
+      if(typeof p !== 'number'){ p = q = v.length; }
+      ch.value = v.slice(0, p) + el.getAttribute('data-uml') + v.slice(q);
+      ch.focus();
+      try{ ch.setSelectionRange(p + 1, p + 1); }catch(e){}
+    }
+    return;
   }
   if(el.hasAttribute('data-eval')){
     construireEval(parseInt(el.getAttribute('data-eval'),10));
@@ -2265,7 +2676,7 @@ document.addEventListener('click', function(ev){
   if(el.id === 'btn-suite'){ suite(); return; }
   if(el.id === 'btn-son'){ son = !son; majSon(); sauver(); if(son) dire('OK'); return; }
   if(el.id === 'btn-parent'){
-    if(libre){ libre = false; sauver(); construireAccueil(); construireEval(evalOuvert); return; }
+    if(libre){ libre = false; sauver(); construireCours(); construireAccueil(); construireEval(evalOuvert); return; }
     el.hidden = true;
     $('#parent-msg').className = 'parent-msg';
     $('#parent-msg').textContent = '';
@@ -2276,8 +2687,9 @@ document.addEventListener('click', function(ev){
   }
   if(el.id === 'btn-parent-annule'){ majParent(); return; }
   if(el.id === 'btn-reset'){
-    if(window.confirm('Effacer toutes les étoiles et repartir de zéro ?')){
-      P = {}; M = {}; sauver(); ligneOuverte = 1; construireAccueil(); construireEval(evalOuvert);
+    if(window.confirm('Effacer toutes les étoiles des deux cours et repartir de zéro ?')){
+      P = {}; M = {}; sauver(); ligneOuverte = 1;
+      construireCours(); construireAccueil(); construireEval(evalOuvert);
     }
     return;
   }
@@ -2345,21 +2757,28 @@ document.addEventListener('keydown', function(ev){
 function lancer(etat){
   charger();
   majSon();
+  if(etat && etat.co && coursDe(etat.co)) coursOuvert = etat.co;
+  if(etat && etat.ev && evalDe(etat.ev)) evalOuvert = etat.ev;
+  construireCours();
   construireAccueil();
-  if(etat && etat.ev) evalOuvert = etat.ev;
-  if(etat && etat.ecran === 'carnet'){ construireCarnet(); montrer('carnet'); }
-  else if(etat && etat.ecran === 'eval'){ construireEval(evalOuvert); montrer('eval'); }
+  var ec = (etat && etat.ecran) || 'cours';
+  if(ec === 'carnet'){ construireCarnet(); montrer('carnet'); }
+  else if(ec === 'eval'){ construireEval(evalOuvert); montrer('eval'); }
+  else if(ec === 'accueil'){ montrer('accueil'); }
+  else montrer('cours');
   try{
     if(window.speechSynthesis){
-      choisirVoix();
-      window.speechSynthesis.onvoiceschanged = choisirVoix;
+      rafraichirVoix();
+      window.speechSynthesis.onvoiceschanged = rafraichirVoix;
     }
   }catch(e){}
 }
 try{
   if(window.claude && window.claude.hot && window.claude.hot.snapshot){
     window.claude.hot.snapshot(function(){
-      return {ecran: (ecranActuel === 'carnet' || ecranActuel === 'eval') ? ecranActuel : 'accueil', ev: evalOuvert};
+      var gardes = ['cours','accueil','eval','carnet'];
+      return {ecran: gardes.indexOf(ecranActuel) >= 0 ? ecranActuel : 'accueil',
+              ev: evalOuvert, co: coursOuvert};
     });
   }
 }catch(e){}
