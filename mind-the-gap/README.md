@@ -5,10 +5,12 @@ Un mini-jeu de vocabulaire anglais calé sur la façon dont la prof interroge :
 
 *Évaluation 1* réunit les quatre premiers groupes du cahier — *Greetings*,
 *School stuff*, *Written instructions*, *Oral instructions* — soit 45 mots.
-*Évaluation 2* en réunit trois — *Everyday needs*, les 13 phrases de classe du
+*Évaluation 2* en réunit cinq — *Everyday needs*, les 13 phrases de classe du
 *classroom English* ; *Colours*, les onze couleurs de la fiche ; *Almost
-transparent words*, les 22 mots qui se devinent du français — soit 46 mots.
-L'accueil montre une grande carte par évaluation ; on
+transparent words*, les 22 mots qui se devinent du français ; *When is your
+birthday?*, les sept jours, les douze mois, les quatre saisons et la question
+qui s'en sert ; *About me*, les phrases de la page où l'on se présente — soit
+77 mots. L'accueil montre une grande carte par évaluation ; on
 l'ouvre pour trouver ses groupes, et chaque groupe se déplie sur les trois
 modes.
 
@@ -56,6 +58,19 @@ Sans son, les tuiles défilent quand même : le rythme visuel reste.
 Le bouton n'apparaît dans une partie **qu'une fois la réponse donnée**, jamais
 avant, où il soufflerait le mot. Dans le carnet il est là en permanence, à côté
 du haut-parleur, pour réviser.
+
+## La majuscule anglaise
+
+Les jours, les mois et les nationalités prennent une majuscule en anglais, là
+où le français n'en met pas. La casse n'a jamais compté ici et ce n'est pas le
+moment de changer la règle : `monday` reste **juste**, le jeu ajoute seulement
+« au passage : en anglais, **Monday** prend une majuscule ».
+
+Le champ `cap:true` marque les entrées concernées. Sur une phrase, le premier
+mot est sauté — sa majuscule ne dit rien d'anglais, elle dit seulement qu'une
+phrase commence ; c'est `France` qu'on veut signaler dans *I am from France*,
+pas `I`. Les saisons ne sont pas marquées : en anglais elles restent en
+minuscules.
 
 ## Orthographe britannique
 
@@ -126,11 +141,23 @@ groupe dans le carnet.
 
 ## Dessins
 
-80 pictogrammes au trait, redessinés d'après les fiches du cahier. Ils prennent
+111 pictogrammes au trait, redessinés d'après les fiches du cahier. Ils prennent
 leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Les onze couleurs font exception, forcément : une tache « rouge » doit rester
 rouge en clair comme en sombre. `tache('#e03127')` pose la teinte en dur et ne
 laisse au thème que le contour, ce qui garde le noir et le blanc lisibles des
 deux côtés. Le blanc prend en plus un fond gris, comme sur la fiche, sans quoi
-il disparaîtrait sur la carte.
+il disparaîtrait sur la carte. Le drapeau français de *I am from France* suit
+la même règle.
+
+Les jours et les mois se ressemblent tous : ce qui les distingue, c'est leur
+rang. `jourSem(n)` et `moisAn(n)` dessinent donc la case occupée — dans la
+semaine, dans l'année — plutôt qu'une image arbitraire, et ça apprend au
+passage que *September* est le neuvième mois.
+
+## Le prénom n'est pas dans le dépôt
+
+*About me* reprend la page de présentation du cahier, mais en tournures :
+`My name is...` et non le prénom, parce que le dépôt est public et que c'est
+la tournure qui s'apprend. L'âge et le pays sont, eux, ceux de la fiche.

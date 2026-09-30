@@ -20,7 +20,7 @@
   --ko:#c4271c; --ko-doux:#f9e6e4;
   --or:#c9a227; --jaune:#f5d400;
   --draw:#2a323a; --draw-soft:#aebbc6;
-  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l0:#10161c;
+  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l0:#10161c;
   --lc:var(--l1);
   --ombre:0 1px 0 rgba(16,22,28,.05), 0 12px 28px -18px rgba(16,22,28,.55);
 }
@@ -207,6 +207,9 @@ button.evz:active{transform:scale(.993)}
   font-size:clamp(13px,3.6vw,17px);text-transform:none;letter-spacing:0;line-height:1.2;
   padding:9px 12px;
 }
+/* Au-del&agrave; de deux lignes la barre d&eacute;borderait du roundel sur un &eacute;cran
+   bas, o&ugrave; le cercle est d&eacute;j&agrave; petit : on resserre encore. */
+.bar.tres{top:56%;font-size:clamp(11px,2.6vw,13px);line-height:1.18;padding:6px 9px}
 .note{
   position:absolute;left:-12%;right:-12%;top:100%;
   padding-top:9px;text-align:center;color:var(--ink-soft);font-size:13px;font-style:italic;
@@ -376,7 +379,7 @@ button.evz:active{transform:scale(.993)}
     --ko:#e5786b; --ko-doux:#2a1815;
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
-    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l0:#e9eef3;
+    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
 }
@@ -388,7 +391,7 @@ button.evz:active{transform:scale(.993)}
   --ko:#e5786b; --ko-doux:#2a1815;
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
-  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l0:#e9eef3;
+  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
 
@@ -544,6 +547,48 @@ function d(inner){ return '<svg class="dess" viewBox="0 0 120 120" aria-hidden="
    jetons du th&egrave;me : une tache &laquo;&nbsp;rouge&nbsp;&raquo; doit rester rouge en clair
    comme en sombre. Seul son contour suit le trait des autres dessins,
    ce qui garde le blanc et le noir lisibles dans les deux th&egrave;mes. */
+/* Les sept jours et les douze mois se ressemblent tous : ce qui les
+   distingue, c'est leur rang. Le dessin montre donc la case occup&eacute;e
+   dans la semaine ou dans l'ann&eacute;e plut&ocirc;t qu'une image arbitraire &mdash;
+   et &ccedil;a apprend au passage que September est le neuvi&egrave;me mois. */
+function calendrier(){
+  return '<rect class="sl" x="6" y="16" width="108" height="76" rx="7"/>'+
+         '<path class="ln" d="M6 36 h108"/>'+
+         '<path class="ln" d="M34 16 V5 M86 16 V5"/>';
+}
+function jourSem(n){
+  var h = calendrier(), i, x;
+  for(i=0;i<7;i++){
+    x = (11.5 + i*14.4).toFixed(1);
+    h += (i === n-1)
+      ? '<rect class="dk" x="'+x+'" y="44" width="12" height="38" rx="3"/>'
+      : '<rect class="wh" x="'+x+'" y="54" width="12" height="20" rx="3"/>';
+  }
+  return d(h);
+}
+function moisAn(n){
+  var h = calendrier(), i, x, y;
+  for(i=0;i<12;i++){
+    x = 14 + (i % 4) * 24.5;
+    y = 43 + Math.floor(i / 4) * 16.5;
+    h += (i === n-1)
+      ? '<rect class="dk" x="'+(x-2)+'" y="'+(y-3)+'" width="22" height="15" rx="3"/>'
+      : '<rect class="wh" x="'+x+'" y="'+y+'" width="18" height="9" rx="2"/>';
+  }
+  return d(h);
+}
+/* Un g&acirc;teau &agrave; bougies, plus ce qui distingue la phrase : le point
+   d'interrogation de la question, le mois, la saison. */
+function gateau(plus){
+  return d(
+    '<circle class="hi" cx="30" cy="24" r="4.5"/><circle class="hi" cx="44" cy="19" r="4.5"/>'+
+    '<circle class="hi" cx="58" cy="24" r="4.5"/>'+
+    '<path class="tn" d="M30 42 V30 M44 42 V25 M58 42 V30"/>'+
+    '<path class="fl" d="M12 42 h64 v13 H12z"/>'+
+    '<rect class="sl" x="12" y="55" width="64" height="26" rx="4"/>'+
+    '<path class="ln" d="M6 85 h76"/>' + (plus || ''));
+}
+
 function tache(c, fond){
   return d((fond ? '<rect class="tach" fill="'+fond+'" x="7" y="5" width="106" height="86" rx="11"/>' : '')+
     '<g class="tach" fill="'+c+'">'+
@@ -1081,7 +1126,122 @@ var MOTS = [
   '<path class="fl" d="M16 22c12 25 12 60 6 82h-6zM104 22c-12 25-12 60-6 82h6z"/>'+
   '<path class="sl" d="M40 58a20 20 0 0 1 40 0c0 17-9 28-20 28S40 75 40 58z"/>'+
   '<circle class="dk" cx="52" cy="56" r="3"/><circle class="dk" cx="68" cy="56" r="3"/>'+
-  '<path class="ln" d="M50 70q10 10 20 0"/>')}
+  '<path class="ln" d="M50 70q10 10 20 0"/>')},
+
+/* ── Ligne 8 · When is your birthday? ───────────
+   Les jours, les mois, les saisons, et la question qui s'en sert.
+   « cap » marque les mots qui prennent une majuscule en anglais l&agrave;
+   où le français n'en met pas : la réponse reste juste sans elle,
+   mais on le dit. */
+
+{id:'monday',    l:8, cap:true, en:'Monday',    fr:'lundi',    svg:jourSem(1)},
+{id:'tuesday',   l:8, cap:true, en:'Tuesday',   fr:'mardi',    svg:jourSem(2)},
+{id:'wednesday', l:8, cap:true, en:'Wednesday', fr:'mercredi', svg:jourSem(3)},
+{id:'thursday',  l:8, cap:true, en:'Thursday',  fr:'jeudi',    svg:jourSem(4)},
+{id:'friday',    l:8, cap:true, en:'Friday',    fr:'vendredi', svg:jourSem(5)},
+{id:'saturday',  l:8, cap:true, en:'Saturday',  fr:'samedi',   svg:jourSem(6)},
+{id:'sunday',    l:8, cap:true, en:'Sunday',    fr:'dimanche', svg:jourSem(7)},
+
+{id:'january',   l:8, cap:true, en:'January',   fr:'janvier',   svg:moisAn(1)},
+{id:'february',  l:8, cap:true, en:'February',  fr:'f&eacute;vrier',  svg:moisAn(2)},
+{id:'march',     l:8, cap:true, en:'March',     fr:'mars',      svg:moisAn(3)},
+{id:'april',     l:8, cap:true, en:'April',     fr:'avril',     svg:moisAn(4)},
+{id:'may',       l:8, cap:true, en:'May',       fr:'mai',       svg:moisAn(5)},
+{id:'june',      l:8, cap:true, en:'June',      fr:'juin',      svg:moisAn(6)},
+{id:'july',      l:8, cap:true, en:'July',      fr:'juillet',   svg:moisAn(7)},
+{id:'august',    l:8, cap:true, en:'August',    fr:'ao&ucirc;t',      svg:moisAn(8)},
+{id:'september', l:8, cap:true, en:'September', fr:'septembre', svg:moisAn(9)},
+{id:'october',   l:8, cap:true, en:'October',   fr:'octobre',   svg:moisAn(10)},
+{id:'november',  l:8, cap:true, en:'November',  fr:'novembre',  svg:moisAn(11)},
+{id:'december',  l:8, cap:true, en:'December',  fr:'d&eacute;cembre',  svg:moisAn(12)},
+
+{id:'spring', l:8, en:'spring', fr:'printemps', note:'la saison', svg:d(
+  '<path class="ln" d="M60 106 V56"/>'+
+  '<path class="fl" d="M60 94c-16-2-25-12-23-21 11-2 21 7 23 21z"/>'+
+  '<g class="fl"><circle cx="60" cy="23" r="12"/><circle cx="78" cy="36" r="12"/>'+
+  '<circle cx="71" cy="57" r="12"/><circle cx="49" cy="57" r="12"/><circle cx="42" cy="36" r="12"/></g>'+
+  '<circle class="hi" cx="60" cy="40" r="11"/>')},
+
+{id:'summer', l:8, en:'summer', fr:'&eacute;t&eacute;', note:'la saison', svg:d(
+  '<circle class="hi" cx="60" cy="58" r="25"/>'+
+  '<path class="ln" d="M60 24V8M60 108V92M96 58h16M8 58h16M85 33l11-11M24 94l-11 11M85 83l11 11M24 22L13 11"/>')},
+
+{id:'autumn', l:8, en:'autumn', alt:['fall'], fr:'automne', note:'la saison', svg:d(
+  '<path class="fl" d="M86 22c7 27-5 52-28 60-17 6-32 2-40-6 21-23 44-46 68-54z"/>'+
+  '<path class="ln" d="M18 76L86 22"/>'+
+  '<path class="tn" d="M42 65l8 13M55 54l8 13M68 43l8 13M36 53l-11-4M49 42l-11-4"/>'+
+  '<path class="ln" d="M18 76q-7 13-3 26"/>')},
+
+{id:'winter', l:8, en:'winter', fr:'hiver', note:'la saison', svg:d(
+  '<g class="ln">'+
+  '<path d="M60 10V110M17 35l86 50M17 85l86-50"/>'+
+  '<path d="M60 24l-9-9M60 24l9-9M60 96l-9 9M60 96l9 9"/>'+
+  '<path d="M29 43l-12 1M29 43l1-12M91 77l12-1M91 77l-1 12"/>'+
+  '<path d="M29 77l-12-1M29 77l1 12M91 43l12-1M91 43l-1 12"/>'+
+  '</g>')},
+
+{id:'whenbday', l:8, en:'When is your birthday?', fr:'Quand est ton anniversaire&nbsp;?',
+ svg:gateau('<text class="txt gr" x="99" y="56">?</text>')},
+
+{id:'bdaymois', l:8, cap:true, en:'My birthday is in May', fr:'Mon anniversaire est en mai',
+ note:'avec le mois', svg:gateau(
+  '<rect class="sl" x="84" y="28" width="30" height="28" rx="3"/>'+
+  '<path class="ln" d="M84 38h30M92 28v-7M106 28v-7"/>'+
+  '<rect class="dk" x="89" y="43" width="9" height="8" rx="1.5"/>')},
+
+{id:'bdaysaison', l:8, en:'My birthday is in spring', fr:'Mon anniversaire est au printemps',
+ note:'avec la saison', svg:gateau(
+  '<path class="ln" d="M99 62V42"/>'+
+  '<g class="fl"><circle cx="99" cy="22" r="7"/><circle cx="110" cy="30" r="7"/>'+
+  '<circle cx="106" cy="43" r="7"/><circle cx="92" cy="43" r="7"/><circle cx="88" cy="30" r="7"/></g>'+
+  '<circle class="hi" cx="99" cy="32" r="6.5"/>')},
+
+/* ── Ligne 9 · About me ───────────────────
+   La page de présentation du cahier. Le prénom n'est pas écrit ici :
+   le dépôt est public, et c'est la tournure qui s'apprend, pas le nom. */
+
+{id:'myname', l:9, en:'My name is...', fr:'Je m&rsquo;appelle&hellip;', svg:d(
+  '<path class="ln" d="M52 30V20a8 8 0 0 1 16 0v10"/>'+
+  '<rect class="sl" x="14" y="30" width="92" height="58" rx="6"/>'+
+  '<path class="fl" d="M14 30h92v18H14z"/>'+
+  '<path class="tn" d="M28 64h64M28 76h42"/>'+
+  '<circle class="dk" cx="60" cy="22" r="4"/>')},
+
+{id:'tenyears', l:9, en:'I am ten years old', alt:['i am 10 years old'], fr:'J&rsquo;ai dix ans', svg:d(
+  '<circle class="ln" cx="34" cy="34" r="13"/>'+
+  '<path class="ln" d="M34 47v28M34 55L20 65M34 55l14 10M34 75L24 103M34 75l10 28"/>'+
+  '<path class="sl" d="M66 16h42a6 6 0 0 1 6 6v30a6 6 0 0 1-6 6H84l-11 12V58h-7a6 6 0 0 1-6-6V22a6 6 0 0 1 6-6z"/>'+
+  '<text class="txt" x="90" y="48">10</text>')},
+
+{id:'fromfrance', l:9, cap:true, en:'I am from France', fr:'Je viens de France', svg:d(
+  '<path class="ln" d="M16 24v72"/>'+
+  '<g transform="translate(20,32)">'+
+  '<rect fill="#002395" x="0" y="0" width="26" height="52"/>'+
+  '<rect fill="#ffffff" x="26" y="0" width="26" height="52"/>'+
+  '<rect fill="#ed2939" x="52" y="0" width="26" height="52"/>'+
+  '<rect fill="none" stroke="var(--draw)" stroke-width="3.5" x="0" y="0" width="78" height="52"/>'+
+  '</g>')},
+
+{id:'imfrench', l:9, cap:true, en:'I am French', fr:'Je suis fran&ccedil;aise', svg:d(
+  '<circle class="sl" cx="60" cy="36" r="20"/>'+
+  '<path class="sl" d="M22 98c0-22 17-34 38-34s38 12 38 34z"/>'+
+  '<g transform="translate(70,74)">'+
+  '<rect fill="#002395" x="0" y="0" width="8" height="17"/>'+
+  '<rect fill="#ffffff" x="8" y="0" width="8" height="17"/>'+
+  '<rect fill="#ed2939" x="16" y="0" width="8" height="17"/>'+
+  '<rect fill="none" stroke="var(--draw)" stroke-width="2.5" x="0" y="0" width="24" height="17"/>'+
+  '</g>')},
+
+{id:'spellingbee', l:9, en:'I am the next spelling bee champion!',
+ fr:'Je suis la prochaine championne d&rsquo;orthographe&nbsp;!', svg:d(
+  '<path class="gl" d="M50 42c-12-14 2-28 14-18 7 6 5 15-4 20z"/>'+
+  '<path class="gl" d="M66 40c6-20 24-16 21-3-2 9-12 12-21 5z"/>'+
+  '<ellipse class="hi" cx="56" cy="66" rx="28" ry="18"/>'+
+  '<path class="ep" d="M48 52q-5 14 0 28M62 50q-5 16 0 32M76 54q-4 12 0 24"/>'+
+  '<circle class="dk" cx="90" cy="60" r="12"/>'+
+  '<circle cx="95" cy="56" r="3.2" fill="var(--card)"/>'+
+  '<path class="hi" d="M78 46l1-14 6 7 5-10 5 10 6-7 1 14z"/>'+
+  '<path class="dk" d="M27 66l-13-6v12z"/>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -1090,7 +1250,7 @@ var EVALS = [
   {id:1, nom:'&Eacute;valuation 1', zone:'Zone 1',
    sous:'Les quatre premiers groupes du cahier&nbsp;: se saluer, nommer ses affaires, comprendre les consignes &eacute;crites puis celles que le prof donne &agrave; voix haute.'},
   {id:2, nom:'&Eacute;valuation 2', zone:'Zone 2',
-   sous:'Le <i>classroom English</i>, les onze couleurs, et les mots qu&rsquo;on devine du fran&ccedil;ais sans les &eacute;crire comme en fran&ccedil;ais.'}
+   sous:'Le <i>classroom English</i>, les couleurs, les mots qu&rsquo;on devine du fran&ccedil;ais, le calendrier de l&rsquo;anniversaire et la page o&ugrave; l&rsquo;on se pr&eacute;sente.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -1113,6 +1273,10 @@ var LIGNES = [
    rem:'Orthographe britannique&nbsp;: <b>grey</b>, jamais <i>gray</i>. Le verbe <b>colour</b> (&laquo;&nbsp;colorie&nbsp;&raquo;) est rest&eacute; dans <i>Written instructions</i>, &eacute;valuation&nbsp;1.'},
   {id:7, ev:2, tok:'--l3', nom:'Almost transparent words', sous:'Les mots qu&rsquo;on devine&hellip; et qu&rsquo;on &eacute;crit de travers',
    rem:'Le sens se devine, le pi&egrave;ge est l&rsquo;orthographe&nbsp;: <b>banana</b> sans <i>e</i>, <b>coffee</b> avec deux <i>f</i> et deux <i>e</i>, <b>theatre</b> en <b>-re</b>. Message secret de la fiche&nbsp;: <i>English is a piece of cake&nbsp;!</i>'},
+  {id:8, ev:2, tok:'--l4', nom:'When is your birthday?', sous:'Les jours, les mois, les saisons',
+   rem:'En anglais les jours et les mois prennent une <b>majuscule</b>, ce que le fran&ccedil;ais ne fait pas&nbsp;: <b>Monday</b>, <b>July</b>. La casse n&rsquo;a jamais &eacute;t&eacute; compt&eacute;e fausse ici, mais le jeu le rappelle. Les saisons, elles, restent en minuscules.'},
+  {id:9, ev:2, tok:'--l5', nom:'About me', sous:'Se pr&eacute;senter, comme &agrave; la page du cahier',
+   rem:'Les phrases de la page de pr&eacute;sentation. <b>French</b> prend une majuscule, et il s&rsquo;&eacute;crit avec un <b>e</b>&nbsp;&mdash; pas <i>franch</i>.'},
   {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'}
 ];
 
@@ -1252,6 +1416,15 @@ function echapper(t){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
   });
 }
+/* Trois tailles pour la barre du roundel : les capitales de
+   signal&eacute;tique tant que le libell&eacute; est court, des minuscules d&egrave;s
+   qu'il devient une phrase, plus petites encore quand la phrase
+   passerait &agrave; trois lignes. */
+function classeBar(t){
+  var n = String(t || '').length;
+  return n > 42 ? ' long tres' : (n > 20 ? ' long' : '');
+}
+
 /* Le libell&eacute; fran&ccedil;ais contient des entit&eacute;s HTML : pour la synth&egrave;se
    vocale et les comparaisons, on veut le texte nu. */
 function nu(html){
@@ -1290,6 +1463,23 @@ function justeFrappe(saisie, it){
     return normFrappe(v) === n || sansVirgule(v) === v2;
   });
 }
+/* Les jours, les mois et les nationalit&eacute;s prennent une majuscule en
+   anglais, l&agrave; o&ugrave; le fran&ccedil;ais n'en met pas. La casse n'a jamais compt&eacute;
+   ici et ce n'est pas le moment de changer la r&egrave;gle : la r&eacute;ponse reste
+   juste, on signale seulement le mot concern&eacute;. Sur une phrase, le
+   premier mot est saut&eacute; &mdash; sa majuscule ne dit rien d'anglais, elle
+   dit seulement qu'une phrase commence. */
+function majManquante(saisie, it){
+  if(!it || !it.cap) return '';
+  var ma = String(saisie || '').replace(/\s+/g,' ').trim().split(' ');
+  var mb = String(it.en).split(' ');
+  var deb = mb.length > 1 ? 1 : 0, i;
+  for(i=deb;i<mb.length && i<ma.length;i++){
+    if(/^[A-Z]/.test(mb[i]) && !/^[A-Z]/.test(ma[i])) return mb[i];
+  }
+  return '';
+}
+
 /* Sans l'article : sert &agrave; reconna&icirc;tre « pencil » pour « a pencil »
    et &agrave; le dire pr&eacute;cis&eacute;ment plut&ocirc;t que « faux ». */
 function sansArticle(t){ return normFrappe(t).replace(/^(a|an|the) /, ''); }
@@ -1747,7 +1937,7 @@ function poser(){
   $('#epel-zone').innerHTML = '';
 
   $('#dess').innerHTML = it.svg;
-  $('#bar-fr').className = 'bar' + (nu(it.fr).length > 20 ? ' long' : '');
+  $('#bar-fr').className = 'bar' + classeBar(nu(it.fr));
   $('#bar-fr').innerHTML = it.fr;
   $('#note').innerHTML = it.note ? '(' + it.note + ')' : '';
   var t = $('#tampon'); t.className = 'tampon'; t.textContent = '';
@@ -1879,7 +2069,7 @@ function verifierEcrit(it){
   var saisie = c.value;
   if(!normFrappe(saisie)){ c.classList.add('secoue'); setTimeout(function(){ c.classList.remove('secoue'); },400); return; }
   if(justeFrappe(saisie, it)){
-    repondre(true, it, 'ecrit');
+    repondre(true, it, 'ecrit', '', saisie);
     return;
   }
   /* Faux. On dit pr&eacute;cis&eacute;ment o&ugrave; &ccedil;a coince plut&ocirc;t que « non ». */
@@ -1922,13 +2112,15 @@ function repondre(bon, it, mode, msgSup, saisie){
 
   /* Le mot juste appara&icirc;t sur la barre du roundel : c'est lui qu'on
      doit garder en t&ecirc;te, pas la faute. */
-  $('#bar-fr').className = 'bar' + (it.en.length > 20 ? ' long' : '');
+  $('#bar-fr').className = 'bar' + classeBar(it.en);
   $('#bar-fr').innerHTML = echapper(it.en);
   $('#note').innerHTML = nu(it.fr) + (it.note ? ' (' + nu(it.note) + ')' : '');
 
   var h = '';
   if(bon){
     h = '<b class="ok">' + (mode === 'ecrit' ? 'Pas une lettre de travers.' : 'C&rsquo;est &ccedil;a.') + '</b> ';
+    var mj = (mode === 'ecrit') ? majManquante(saisie, it) : '';
+    if(mj) h += 'Au passage&nbsp;: en anglais, <b>'+echapper(mj)+'</b> prend une majuscule. ';
   } else {
     h = '<b class="ko">' + echapper(it.en) + '</b> ';
     if(msgSup) h += msgSup + ' ';
