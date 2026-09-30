@@ -1907,6 +1907,13 @@ function voixBritannique(){
    tuile n'en montre qu'une. On le laisse tel quel. */
 function majLettre(c){ return c === 'ß' ? 'ß' : String(c).toUpperCase(); }
 
+/* On PRONONCE la minuscule et on AFFICHE la capitale. Les deux
+   donnent le m&ecirc;me nom de lettre &mdash; v&eacute;rifi&eacute; phon&egrave;me par phon&egrave;me dans
+   les deux langues, l'article &laquo; a &raquo; anglais compris &mdash; mais une
+   capitale isol&eacute;e fait annoncer &laquo; capital A &raquo;, &laquo; gro&szlig;es A &raquo; &agrave;
+   beaucoup de voix. Ce pr&eacute;fixe n'apprend rien, et il allongeait
+   chaque lettre au point de d&eacute;passer le garde-fou, qui coupait la
+   parole et relan&ccedil;ait : on entendait le pr&eacute;fixe en boucle. */
 function nomLettre(c, co){
   co = co || coursOuvert;
   if(c === "'") return 'apostrophe';
@@ -1914,9 +1921,9 @@ function nomLettre(c, co){
   /* Le ß n'a pas de capitale &agrave; lui : la voix allemande le nomme. */
   if(c === 'ß') return 'Eszett';
   if(!/[a-zäöü]/i.test(c)) return null;
-  var L = majLettre(c);
-  if(co === 'en' && L === 'Z' && !voixBritannique()) return 'zed';
-  return L;
+  var min = String(c).toLowerCase();
+  if(co === 'en' && min === 'z' && !voixBritannique()) return 'zed';
+  return min;
 }
 var epelJeton = null;
 
@@ -1988,8 +1995,11 @@ function epeler(mot, boite, bouton){
       passe = true;
       setTimeout(pas, 110);
     }
+    /* Garde-fou : certaines voix ne rappellent pas onend. Il doit
+       rester plus long qu'une lettre dite, sinon il coupe la parole
+       et la file se bouscule. */
     dire(nom, enchaine);
-    setTimeout(enchaine, 1250);
+    setTimeout(enchaine, 1700);
   }
   pas();
 }

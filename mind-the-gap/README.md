@@ -41,11 +41,18 @@ Les deux profs veulent que les mots soient épelés dans leur langue. Un bouton
 s'allume, la lettre et le son ensemble, puis le mot entier est redit d'un
 trait. Un second appui coupe — une phrase fait trente lettres.
 
-On donne à la synthèse **la lettre elle-même, en capitale**, avec la langue du
-cours. C'est le chemin que les moteurs prévoient pour ça, et les noms en
-sortent justes de part et d'autre : le même `A` se dit /eɪ/ en `en-GB` et /aː/
-en `de`. Vérifié phonème par phonème contre espeak-ng, les 26 lettres plus
-`Ä Ö Ü ß`.
+On donne à la synthèse **la lettre elle-même**, avec la langue du cours. C'est
+le chemin que les moteurs prévoient pour ça, et les noms en sortent justes de
+part et d'autre : le même `A` se dit /eɪ/ en `en-GB` et /aː/ en `de`. Vérifié
+phonème par phonème contre espeak-ng, les 26 lettres plus `Ä Ö Ü ß`.
+
+**On prononce la minuscule et on affiche la capitale.** Les deux donnent le
+même nom de lettre — l'article `a` anglais compris — mais une capitale isolée
+fait annoncer « capital A », « großes A » à beaucoup de voix. Ce préfixe
+n'apprend rien, et il allongeait chaque lettre au point de dépasser le
+garde-fou qui rattrape les voix ne rappelant pas `onend` : la parole était
+coupée puis relancée, et on entendait le préfixe en boucle. Le test vérifie
+désormais qu'aucune capitale isolée ne part à la synthèse.
 
 Il y avait ici une table phonétique — `ee` pour E, `ay` pour A, `eff` pour F —
 et c'était une fausse bonne idée : ces suites ne sont pas des mots, alors
