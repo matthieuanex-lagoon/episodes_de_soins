@@ -22,7 +22,7 @@
   --draw:#2a323a; --draw-soft:#aebbc6;
   --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l0:#10161c;
   /* Lignes du U-Bahn de Berlin, pour le cours d'allemand. */
-  --d1:#1f4f86; --d2:#7b5b9c; --d3:#c9640d;
+  --d1:#1f4f86; --d2:#7b5b9c; --d3:#c9640d; --d4:#0e9fc9; --d5:#b4367c;
   --barre:var(--bleu); --barre-txt:var(--bar-txt);
   --lc:var(--l1);
   --ombre:0 1px 0 rgba(16,22,28,.05), 0 12px 28px -18px rgba(16,22,28,.55);
@@ -384,7 +384,7 @@ button.evz:active{transform:scale(.993)}
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
     --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
-    --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f;
+    --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
 }
@@ -397,7 +397,7 @@ button.evz:active{transform:scale(.993)}
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
   --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
-  --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f;
+  --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
 
@@ -654,6 +654,53 @@ function zahl(n){
   var t = String(n), gros = t.length < 3;
   return d('<rect class="sl" x="16" y="22" width="88" height="76" rx="11"/>'+
     '<text class="txt '+(gros ? 'xl' : 'gr')+'" x="60" y="'+(gros ? 79 : 74)+'">'+t+'</text>');
+}
+
+/* Les trois genres ont chacun leur figure ; les phrases d'&acirc;ge
+   reprennent la m&ecirc;me, r&eacute;duite, avec le nombre &agrave; c&ocirc;t&eacute;. */
+function garcon(){
+  return '<circle class="sl" cx="60" cy="40" r="20"/>'+
+         '<path class="dk" d="M40 36c0-12 9-21 20-21s20 9 20 21c-5-6-12-8-20-8s-15 2-20 8z"/>'+
+         '<circle class="dk" cx="52" cy="42" r="2.8"/><circle class="dk" cx="68" cy="42" r="2.8"/>'+
+         '<path class="ln" d="M53 52q7 5 14 0"/>'+
+         '<path class="sl" d="M22 100c0-22 17-34 38-34s38 12 38 34z"/>';
+}
+function fille(){
+  return '<path class="dk" d="M34 46c0-19 12-33 26-33s26 14 26 33v30c0 5-7 5-7 0V52c-5 4-12 6-19 6s-14-2-19-6v24c0 5-7 5-7 0z"/>'+
+         '<circle class="sl" cx="60" cy="42" r="19"/>'+
+         '<circle class="dk" cx="52" cy="43" r="2.8"/><circle class="dk" cx="68" cy="43" r="2.8"/>'+
+         '<path class="ln" d="M53 53q7 5 14 0"/>'+
+         '<path class="sl" d="M26 100c0-21 15-33 34-33s34 12 34 33z"/>';
+}
+/* Un cochon d'Inde n'a pas de cou : un corps en miche, une t&ecirc;te qui
+   s'y fond, une oreille ronde. La silhouette pleine sert au pronom,
+   la version d&eacute;taill&eacute;e au nom. */
+/* En silhouette pleine l'animal ne se lisait plus : un bloc sombre
+   avec une bosse. Il garde donc ses d&eacute;tails partout, et c'est
+   l'herbe qui distingue le nom du pronom. */
+function cobaye(herbe){
+  var h = '<ellipse class="fl" cx="52" cy="62" rx="35" ry="22"/>'+
+          '<ellipse class="fl" cx="83" cy="33" rx="9" ry="7" transform="rotate(-20 83 33)"/>'+
+          '<circle class="fl" cx="87" cy="52" r="16"/>'+
+          '<circle class="dk" cx="94" cy="47" r="3.2"/>'+
+          '<ellipse class="dk" cx="98" cy="57" rx="4" ry="3"/>'+
+          '<path class="ln" d="M98 60v4M98 64q-5 3-9 0M98 64q5 3 9 0"/>'+
+          '<path class="ln" d="M26 82v8M44 84v7M62 84v7M78 80v9"/>'+
+          '<path class="tn" d="M32 54q8-5 16 0M28 68q8-5 16 0"/>';
+  if(herbe){
+    h += '<path class="ln" d="M8 90q3-13 9-15M19 90q1-15 8-17M104 90q-3-13-9-15M115 90q-1-15-8-17"/>';
+  }
+  return h;
+}
+/* La figure recul&eacute;e, et l'&acirc;ge dans sa pastille. */
+function avecAge(figure, n){
+  return d('<g transform="translate(-14,6) scale(.78)">'+figure+'</g>'+
+    '<rect class="sl" x="70" y="16" width="44" height="34" rx="7"/>'+
+    '<text class="txt" x="92" y="42">'+n+'</text>');
+}
+function nuage(dy){
+  return '<g transform="translate(0,'+dy+')">'+
+         '<path class="sl" d="M34 70a19 19 0 0 1 3-37 25 25 0 0 1 46-6 17 17 0 0 1 4 43z"/></g>';
 }
 
 function tache(c, fond){
@@ -1483,7 +1530,55 @@ var MOTS = [
 {id:'de-70',  l:103, en:'siebzig',  fr:'soixante-dix',    note:'pas &laquo;&nbsp;siebenzig&nbsp;&raquo;', svg:zahl(70)},
 {id:'de-80',  l:103, en:'achtzig',  fr:'quatre-vingts',   svg:zahl(80)},
 {id:'de-90',  l:103, en:'neunzig',  fr:'quatre-vingt-dix', svg:zahl(90)},
-{id:'de-100', l:103, en:'hundert', alt:['einhundert'], fr:'cent', svg:zahl(100)}
+{id:'de-100', l:103, en:'hundert', alt:['einhundert'], fr:'cent', svg:zahl(100)},
+
+/* ── Ligne 104 · Er, sie, es ──────────────────────────────
+   Le point de grammaire de la page du 9 octobre. Les pr&eacute;noms du
+   cahier n'y sont pas : le d&eacute;p&ocirc;t est public, et c'est la tournure
+   qui s'apprend. Le cochon d'Inde, lui, reste &mdash; c'est lui qui porte
+   la r&egrave;gle du neutre. */
+
+{id:'de-er',  l:104, en:'er',  fr:'il',       note:'masculin', svg:d(garcon())},
+{id:'de-sie', l:104, en:'sie', fr:'elle',     note:'f&eacute;minin',  svg:d(fille())},
+{id:'de-es',  l:104, en:'es',  fr:'il, elle', note:'neutre',   svg:d(cobaye(false))},
+
+{id:'de-dasist', l:104, en:'Das ist...', fr:'C&rsquo;est&hellip;', note:'pour pr&eacute;senter', svg:d(
+  '<path class="sl" d="M14 24h78a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H46L28 92V74H14a8 8 0 0 1-8-8V32a8 8 0 0 1 8-8z"/>'+
+  '<path class="ep" d="M28 49h40m-12-12l12 12-12 12"/>')},
+
+{id:'de-er11',  l:104, en:'Er ist elf',  alt:['er ist 11'],  fr:'Il a onze ans',  svg:avecAge(garcon(), 11)},
+{id:'de-sie10', l:104, en:'Sie ist zehn', alt:['sie ist 10'], fr:'Elle a dix ans', svg:avecAge(fille(), 10)},
+{id:'de-es1',   l:104, en:'Es ist eins', alt:['es ist 1'],   fr:'Il a un an', note:'le cochon d&rsquo;Inde',
+ svg:avecAge(cobaye(false), 1)},
+
+{id:'de-meerschweinchen', l:104, cap:true, en:'das Meerschweinchen', fr:'le cochon d&rsquo;Inde',
+ svg:d(cobaye(true))},
+
+/* ── Ligne 105 · Heute ────────────────────────────────────
+   L'en-t&ecirc;te de la page : la date, puis le temps qu'il fait. Le jour
+   et le mois reprennent les calendriers du cours d'anglais &mdash; la
+   case occup&eacute;e dans la semaine, dans l'ann&eacute;e. */
+
+{id:'de-freitag', l:105, cap:true, en:'Freitag', fr:'vendredi', svg:jourSem(5)},
+{id:'de-oktober', l:105, cap:true, en:'Oktober', fr:'octobre',  svg:moisAn(10)},
+
+{id:'de-wolkig', l:105, en:'wolkig', fr:'nuageux', svg:d(
+  nuage(6)+
+  '<g transform="translate(26,30) scale(.62)">'+
+  '<path class="wh" d="M34 70a19 19 0 0 1 3-37 25 25 0 0 1 46-6 17 17 0 0 1 4 43z"/></g>')},
+
+{id:'de-regnet', l:105, en:'Es regnet', fr:'Il pleut', svg:d(
+  nuage(-8)+
+  '<path class="ln" d="M34 72l-7 20M53 74l-7 20M72 72l-7 20M90 70l-7 20"/>')},
+
+{id:'de-wetter', l:105, en:'Heute ist es wolkig und es regnet',
+ fr:'Aujourd&rsquo;hui il y a des nuages et il pleut', svg:d(
+  '<g transform="translate(8,-14) scale(.86)">'+
+  '<path class="sl" d="M34 70a19 19 0 0 1 3-37 25 25 0 0 1 46-6 17 17 0 0 1 4 43z"/></g>'+
+  '<path class="ln" d="M36 58l-6 16M54 60l-6 16M72 58l-6 16M89 56l-6 16"/>'+
+  '<rect class="sl" x="34" y="78" width="52" height="34" rx="5"/>'+
+  '<path class="ln" d="M34 90h52M48 78v-8M72 78v-8"/>'+
+  '<rect class="dk" x="44" y="96" width="12" height="9" rx="2"/>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -1512,7 +1607,7 @@ var EVALS = [
    sous:'Le <i>classroom English</i>, les couleurs, les mots qu&rsquo;on devine du fran&ccedil;ais, le calendrier de l&rsquo;anniversaire et la page o&ugrave; l&rsquo;on se pr&eacute;sente.'},
 
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
-   sous:'La premi&egrave;re fiche&nbsp;: dire ce qu&rsquo;on aime faire, puis compter jusqu&rsquo;&agrave; cent.'}
+   sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -1547,6 +1642,10 @@ var LIGNES = [
    rem:'Trois pi&egrave;ges&nbsp;: <b>sechzehn</b> perd son <i>s</i>, <b>siebzehn</b> perd son <i>en</i>, et <b>drei&szlig;ig</b> prend l&rsquo;eszett. &Agrave; partir de 21 on dit l&rsquo;unit&eacute; d&rsquo;abord&nbsp;: <b>einundzwanzig</b>, un-et-vingt.'},
   {id:103, ev:101, tok:'--d3', nom:'Zehner bis 100', sous:'Les dizaines jusqu&rsquo;&agrave; cent',
    rem:'M&ecirc;me perte qu&rsquo;&agrave; l&rsquo;adolescence&nbsp;: <b>sechzig</b> et <b>siebzig</b>, jamais <i>sechszig</i> ni <i>siebenzig</i>.'},
+  {id:104, ev:101, tok:'--d4', nom:'Er, sie, es', sous:'Les trois genres et leurs pronoms',
+   rem:'Le genre allemand ne suit pas le fran&ccedil;ais&nbsp;: <b>das Meerschweinchen</b> est <b>neutre</b>, comme tous les mots en <b>-chen</b>, quel que soit l&rsquo;animal. Et on <b>est</b> onze ans, on ne les a pas&nbsp;: <b>er ist elf</b>, jamais <i>er hat elf</i>.'},
+  {id:105, ev:101, tok:'--d5', nom:'Heute', sous:'La date et le temps qu&rsquo;il fait',
+   rem:'En t&ecirc;te de page on &eacute;crit le jour, puis <b>den</b>, puis le quanti&egrave;me suivi d&rsquo;un point&nbsp;: <i>Freitag, den 9. Oktober 2026</i>. Le temps se dit avec <b>es</b> impersonnel&nbsp;: <b>es regnet</b>, <b>es ist wolkig</b>.'},
   {id:951, ev:101, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
 ];
 

@@ -7,7 +7,7 @@ mots**.
 | Cours | Langue | Contenu |
 |-------|--------|---------|
 | **Mind the Gap** | anglais | 2 évaluations, 9 groupes, 122 mots |
-| **Sprichst du Deutsch?** | allemand | 1 évaluation, 3 groupes, 55 mots |
+| **Sprichst du Deutsch?** | allemand | 1 évaluation, 5 groupes, 68 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
 cours sur ses évaluations, une évaluation sur ses groupes, et chaque groupe se
@@ -85,6 +85,18 @@ aucune faute. Sans rien faire, la moitié des nombres allemands (**fünf**,
 Quand seul le tréma manque, le message le nomme : « il manque le tréma — **ü**,
 ou **ue** au clavier français ». La réponse reste fausse ; c'est le tréma qu'on
 apprend.
+
+## Le genre allemand
+
+Le groupe *Er, sie, es* porte le point de grammaire de la fiche du 9 octobre :
+**das Meerschweinchen** est **neutre**, comme tous les mots en **-chen**, quel
+que soit l'animal — un genre que le français ne devine pas. Et en allemand on
+**est** onze ans, on ne les a pas : `er ist elf`, jamais *er hat elf*. Les deux
+règles sont dans le `rem` du groupe.
+
+Le groupe *Heute* reprend l'en-tête de la page : la date — *Freitag, den
+9. Oktober 2026*, avec `den` et le quantième suivi d'un point — et le temps,
+qui se dit avec le `es` impersonnel : `es regnet`, `es ist wolkig`.
 
 ## La majuscule
 
@@ -181,7 +193,7 @@ fois.
 
 ## Dessins
 
-166 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+179 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :
@@ -202,12 +214,23 @@ leurs membres est un rang ou un nombre, pas une image :
 - `zahl(n)` pose le chiffre dans le carré du U-Bahn. Montrer « 7 » ne souffle
   rien : c'est *sieben* qu'on cherche.
 
+`Freitag` et `Oktober` réutilisent tels quels `jourSem(5)` et `moisAn(10)` du
+cours d'anglais : la case occupée dans la semaine, dans l'année.
+
+Un mot sur le cochon d'Inde : en silhouette pleine il ne se lisait plus — un
+bloc sombre avec une bosse. Il garde donc ses détails dans les deux emplois, et
+c'est l'herbe qui distingue le nom (`das Meerschweinchen`) du pronom (`es`).
+
 ## Le prénom n'est pas dans le dépôt
 
 *About me* reprend la page de présentation du cahier d'anglais, mais en
 tournures : `My name is...` et non le prénom, parce que le dépôt est public et
 que c'est la tournure qui s'apprend. L'âge et le pays sont, eux, ceux de la
 fiche.
+
+Même règle côté allemand : la page du 9 octobre présente deux enfants par leur
+prénom, le groupe *Er, sie, es* n'en garde que les tournures et les âges. Le
+cochon d'Inde reste — c'est lui qui porte la règle du neutre.
 
 ## Le dossier s'appelle encore `mind-the-gap`
 
