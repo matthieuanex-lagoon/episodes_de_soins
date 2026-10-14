@@ -7,7 +7,7 @@ mots**.
 | Cours | Langue | Contenu |
 |-------|--------|---------|
 | **Mind the Gap** | anglais | 3 évaluations, 12 groupes, 136 mots |
-| **Sprichst du Deutsch?** | allemand | 1 évaluation, 5 groupes, 68 mots |
+| **Sprichst du Deutsch?** | allemand | 2 évaluations, 10 groupes, 113 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
 cours sur ses évaluations, une évaluation sur ses groupes, et chaque groupe se
@@ -106,6 +106,26 @@ Le groupe *Heute* reprend l'en-tête de la page : la date — *Freitag, den
 9. Oktober 2026*, avec `den` et le quantième suivi d'un point — et le temps,
 qui se dit avec le `es` impersonnel : `es regnet`, `es ist wolkig`.
 
+## L'ordre des mots allemand
+
+L'évaluation 2 allemande rassemble ce qui ouvre et ferme un cours : saluer, dire
+qui on est, où l'on habite et comment on va, écrire la date et le temps qu'il
+fait. Deux points de grammaire y reviennent, et ce sont les mêmes :
+
+- `Meine Familie liebe ich` met le complément en tête et le verbe en deuxième
+  position ;
+- `Heute regnet es` fait pareil avec le temps, là où `Es regnet` commence par le
+  sujet.
+
+Ce n'est pas une inversion de style : en allemand le verbe conjugué occupe la
+deuxième place, quoi qu'on mette devant. Les deux formes sont dans le jeu, dans
+des groupes différents, pour que la règle se voie.
+
+Les sept jours et les douze mois forment un groupe à part. `Freitag` et
+`Oktober` y **rejouent** depuis *Heute* par le champ `aussi` plutôt que d'être
+récrits — ils n'existent qu'une fois dans `MOTS`, et le compteur ne les compte
+pas deux fois.
+
 ## La majuscule
 
 Les jours, les mois et les nationalités prennent une majuscule en anglais ; en
@@ -201,7 +221,7 @@ fois.
 
 ## Dessins
 
-193 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+239 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :

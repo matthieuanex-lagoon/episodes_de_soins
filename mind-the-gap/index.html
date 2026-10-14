@@ -658,6 +658,30 @@ function zahl(n){
     '<text class="txt '+(gros ? 'xl' : 'gr')+'" x="60" y="'+(gros ? 79 : 74)+'">'+t+'</text>');
 }
 
+/* Une question, c'est quelque chose &mdash; quelqu'un, une maison, un
+   g&acirc;teau &mdash; et une bulle o&ugrave; flotte un point d'interrogation. */
+function avecQuestion(dedans){
+  return '<g transform="translate(-16,24) scale(.58)">'+dedans+'</g>'+
+         '<path class="sl" d="M58 8h52a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8H84L70 68V54h-12a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z"/>'+
+         '<text class="txt" x="86" y="44">?</text>';
+}
+function soleil(){
+  return '<circle class="hi" cx="60" cy="54" r="24"/>'+
+         '<path class="ln" d="M60 22V8M60 100V86M94 54h14M12 54h14M84 30l10-10M26 88l-10 10M84 78l10 10M26 20L16 10"/>';
+}
+function maison(){
+  return '<path class="sl" d="M60 18L18 54v48h84V54z"/>'+
+         '<path class="ln" d="M8 58L60 12l52 46"/>'+
+         '<rect class="wh" x="50" y="70" width="22" height="32" rx="2"/>'+
+         '<rect class="wh" x="28" y="64" width="15" height="14" rx="2"/>'+
+         '<rect class="wh" x="79" y="64" width="15" height="14" rx="2"/>';
+}
+/* Les quatre signes de calcul, dans le m&ecirc;me carr&eacute; que les nombres. */
+function signe(trait){
+  return d('<rect class="sl" x="18" y="24" width="84" height="72" rx="10"/>'+
+           '<path class="ep" d="'+trait+'"/>');
+}
+
 /* Les &eacute;motions : un m&ecirc;me visage, des sourcils et une bouche qui
    changent. L'adjectif montre le visage nu, la phrase &agrave; la premi&egrave;re
    personne le met dans une bulle &mdash; m&ecirc;me &eacute;motion, quelqu'un qui la dit. */
@@ -1645,6 +1669,146 @@ var MOTS = [
 {id:'de-90',  l:103, en:'neunzig',  fr:'quatre-vingt-dix', svg:zahl(90)},
 {id:'de-100', l:103, en:'hundert', alt:['einhundert'], fr:'cent', svg:zahl(100)},
 
+/* Le z&eacute;ro et les quatre signes, donn&eacute;s le m&ecirc;me jour que les nombres. */
+{id:'de-0',     l:102, en:'null',   fr:'z&eacute;ro',        svg:zahl(0)},
+{id:'de-plus',  l:102, en:'plus',   fr:'plus',          svg:signe('M60 40v40M40 60h40')},
+{id:'de-minus', l:102, en:'minus',  fr:'moins',         svg:signe('M40 60h40')},
+{id:'de-mal',   l:102, en:'mal',    fr:'fois',          svg:signe('M44 44l32 32M76 44L44 76')},
+{id:'de-durch', l:102, en:'durch',  fr:'divis&eacute; par',   svg:d(
+  '<rect class="sl" x="18" y="24" width="84" height="72" rx="10"/>'+
+  '<path class="ep" d="M40 60h40"/>'+
+  '<circle class="dk" cx="60" cy="44" r="6"/><circle class="dk" cx="60" cy="76" r="6"/>')},
+
+/* ══ &Eacute;valuation 2 · ligne 201 · Hallo und tsch&uuml;ss ══════════ */
+
+{id:'de-hallo', l:201, en:'Hallo', fr:'Salut', note:'&agrave; tout moment', svg:d(
+  '<path class="sl" d="M40 104 C28 94 24 78 24 64 V52 a7 7 0 0 1 14 0 v6 V34 a7 7 0 0 1 14 0 v22 V28 a7 7 0 0 1 14 0 v28 V38 a7 7 0 0 1 14 0 v30 c0 22-10 34-22 38 z"/>'+
+  '<path class="ln" d="M92 42 q9 18 0 36 M104 30 q15 30 0 60"/>')},
+
+{id:'de-morgen', l:201, cap:true, en:'Guten Morgen', fr:'Bonjour', note:'le matin', svg:d(
+  '<path class="ln" d="M10 88 h100"/>'+
+  '<path class="sl" d="M34 88 a26 26 0 0 1 52 0 z"/>'+
+  '<path class="ln" d="M60 36 V22 M88 48 l9-9 M32 48 l-9-9 M96 70 h12 M12 70 h12"/>'+
+  '<path class="tn" d="M30 104 h24 M66 104 h24"/>')},
+
+{id:'de-tag', l:201, cap:true, en:'Guten Tag', fr:'Bonjour', note:'dans la journ&eacute;e', svg:d(soleil())},
+
+{id:'de-tschuss', l:201, en:'Tschüss!', alt:['tschuess','tschuss'], fr:'Salut&nbsp;!', note:'en partant', svg:d(
+  '<rect class="sl" x="62" y="14" width="44" height="92" rx="4"/>'+
+  '<circle class="dk" cx="73" cy="60" r="4.5"/>'+
+  '<path class="ep" d="M14 60 h36 m-13-13 l13 13 -13 13"/>')},
+
+{id:'de-danke', l:201, en:'Danke', fr:'Merci', svg:d(
+  '<path class="hr" d="M60 40 c-8-13-30-9-30 8 0 15 19 25 30 36 11-11 30-21 30-36 0-17-22-21-30-8 z"/>'+
+  '<path class="ln" d="M18 82 q11 28 42 28 t42-28"/>')},
+
+/* ══ Ligne 202 · Wer bist du? ════════════════════════════ */
+
+{id:'de-werbist', l:202, en:'Wer bist du?', fr:'Qui es-tu&nbsp;?', svg:d(avecQuestion(garcon()))},
+
+{id:'de-ichbin', l:202, en:'Ich bin...', fr:'Je m&rsquo;appelle&hellip;', svg:d(
+  '<path class="ln" d="M52 30V20a8 8 0 0 1 16 0v10"/>'+
+  '<rect class="sl" x="14" y="30" width="92" height="58" rx="6"/>'+
+  '<path class="fl" d="M14 30h92v18H14z"/>'+
+  '<path class="tn" d="M28 64h64M28 76h42"/>'+
+  '<circle class="dk" cx="60" cy="22" r="4"/>')},
+
+{id:'de-wiealt', l:202, en:'Wie alt bist du?', fr:'Quel &acirc;ge as-tu&nbsp;?', svg:d(avecQuestion(
+  '<circle class="hi" cx="30" cy="24" r="4.5"/><circle class="hi" cx="44" cy="19" r="4.5"/>'+
+  '<circle class="hi" cx="58" cy="24" r="4.5"/>'+
+  '<path class="tn" d="M30 42 V30 M44 42 V25 M58 42 V30"/>'+
+  '<path class="fl" d="M12 42 h64 v13 H12z"/>'+
+  '<rect class="sl" x="12" y="55" width="64" height="26" rx="4"/>'))},
+
+{id:'de-ichbinelf', l:202, en:'Ich bin elf', alt:['ich bin 11'], fr:'J&rsquo;ai onze ans',
+ svg:avecAge(fille(), 11)},
+
+{id:'de-wowohnst', l:202, en:'Wo wohnst du?', fr:'O&ugrave; habites-tu&nbsp;?', svg:d(avecQuestion(maison()))},
+
+{id:'de-ichwohne', l:202, en:'Ich wohne in...', fr:'J&rsquo;habite &agrave;&hellip;', svg:d(maison())},
+
+{id:'de-wasmagst', l:202, en:'Was magst du?', fr:'Qu&rsquo;est-ce que tu aimes&nbsp;?', svg:d(avecQuestion(
+  '<path class="hr" d="M60 40 c-8-13-30-9-30 8 0 15 19 25 30 36 11-11 30-21 30-36 0-17-22-21-30-8 z"/>'))},
+
+{id:'de-familie', l:202, cap:true, en:'Meine Familie liebe ich', fr:'Ma famille, je l&rsquo;aime',
+ note:'le compl&eacute;ment en t&ecirc;te', svg:d(
+  '<circle class="sl" cx="28" cy="48" r="13"/><path class="sl" d="M8 96c0-14 9-22 20-22s20 8 20 22z"/>'+
+  '<circle class="sl" cx="92" cy="48" r="13"/><path class="sl" d="M72 96c0-14 9-22 20-22s20 8 20 22z"/>'+
+  '<circle class="sl" cx="60" cy="66" r="11"/><path class="sl" d="M43 100c0-11 7-18 17-18s17 7 17 18z"/>'+
+  '<path class="hr" d="M60 24c-6-9-21-6-21 6 0 11 14 18 21 26 8-8 21-15 21-26 0-12-15-15-21-6z"/>')},
+
+/* ══ Ligne 203 · Wie geht&rsquo;s? ══════════════════════════ */
+
+{id:'de-wiegehts', l:203, en:"Wie geht's?", alt:['wie gehts?','wie geht es?'],
+ fr:'Comment &ccedil;a va&nbsp;?', svg:d(avecQuestion(tete(YEUX+'<path class="ln" d="M44 80h32"/>')))},
+
+{id:'de-gut', l:203, en:'Es geht mir gut', fr:'Je vais bien', svg:d(tete(
+  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
+  '<path class="ln" d="M38 72q22 20 44 0"/>'))},
+
+{id:'de-solala', l:203, en:'Es geht mir solala', alt:['es geht mir so lala'],
+ fr:'&Ccedil;a va comme ci comme &ccedil;a', svg:d(tete(
+  YEUX+'<path class="ln" d="M42 80h36"/>'))},
+
+{id:'de-schlecht', l:203, en:'Es geht mir schlecht', fr:'Je vais mal', svg:d(tete(
+  '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
+  '<path class="ln" d="M42 86q18-14 36 0"/>'))},
+
+{id:'de-mude', l:203, en:'Ich bin müde', fr:'Je suis fatigu&eacute;e', svg:d(tete(
+  '<path class="ln" d="M38 54q9 8 17 0M65 54q9 8 17 0"/>'+
+  '<path class="ln" d="M46 82q14-8 28 0"/>')+
+  '<text class="txt sm" x="100" y="30">z</text><text class="txt" x="104" y="56">Z</text>')},
+
+{id:'de-krank', l:203, en:'Ich bin krank', fr:'Je suis malade', svg:d(tete(
+  '<path class="ln" d="M38 48l18 4M82 48l-18 4"/>'+
+  '<path class="ln" d="M40 60q7 8 14 0M66 60q7 8 14 0"/>'+
+  '<path class="ln" d="M44 82q8-8 16 0t16 0"/>')+
+  '<path class="hr" d="M24 16h58v12H24z"/><path class="hr" d="M47 4h12v36H47z"/>')},
+
+{id:'de-topfit', l:203, en:'Ich bin top fit!', alt:['ich bin top-fit!','ich bin topfit!'],
+ fr:'Je suis en pleine forme&nbsp;!', svg:d(tete(
+  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
+  '<path class="ln" d="M36 70q24 24 48 0"/>')+
+  '<path class="sl" d="M14 96V74a8 8 0 0 1 16 0v10l10-26a6 6 0 0 1 11 5l-8 22v11z"/>')},
+
+/* ══ Ligne 204 · Tage und Monate ═════════════════════════
+   Freitag et Oktober reviennent du groupe « Heute » par le champ
+   « aussi » : un mot n'existe qu'une fois. */
+
+{id:'de-montag',     l:204, cap:true, en:'Montag',     fr:'lundi',    svg:jourSem(1)},
+{id:'de-dienstag',   l:204, cap:true, en:'Dienstag',   fr:'mardi',    svg:jourSem(2)},
+{id:'de-mittwoch',   l:204, cap:true, en:'Mittwoch',   fr:'mercredi', svg:jourSem(3)},
+{id:'de-donnerstag', l:204, cap:true, en:'Donnerstag', fr:'jeudi',    svg:jourSem(4)},
+{id:'de-samstag',    l:204, cap:true, en:'Samstag',    fr:'samedi',   svg:jourSem(6)},
+{id:'de-sonntag',    l:204, cap:true, en:'Sonntag',    fr:'dimanche', svg:jourSem(7)},
+
+{id:'de-januar',    l:204, cap:true, en:'Januar',    fr:'janvier',  svg:moisAn(1)},
+{id:'de-februar',   l:204, cap:true, en:'Februar',   fr:'f&eacute;vrier',  svg:moisAn(2)},
+{id:'de-maerz',     l:204, cap:true, en:'März',  fr:'mars',     svg:moisAn(3)},
+{id:'de-april',     l:204, cap:true, en:'April',     fr:'avril',    svg:moisAn(4)},
+{id:'de-mai',       l:204, cap:true, en:'Mai',       fr:'mai',      svg:moisAn(5)},
+{id:'de-juni',      l:204, cap:true, en:'Juni',      fr:'juin',     note:'un <b>i</b>', svg:moisAn(6)},
+{id:'de-juli',      l:204, cap:true, en:'Juli',      fr:'juillet',  note:'un <b>l</b>', svg:moisAn(7)},
+{id:'de-august',    l:204, cap:true, en:'August',    fr:'ao&ucirc;t',     svg:moisAn(8)},
+{id:'de-september', l:204, cap:true, en:'September', fr:'septembre', svg:moisAn(9)},
+{id:'de-november',  l:204, cap:true, en:'November',  fr:'novembre', svg:moisAn(11)},
+{id:'de-dezember',  l:204, cap:true, en:'Dezember',  fr:'d&eacute;cembre', svg:moisAn(12)},
+
+/* ══ Ligne 205 · Das Wetter ══════════════════════════════ */
+
+{id:'de-sonne', l:205, cap:true, en:'Heute scheint die Sonne',
+ fr:'Aujourd&rsquo;hui le soleil brille', svg:d(soleil())},
+
+{id:'de-heutewolkig', l:205, en:'Heute ist es wolkig', fr:'Aujourd&rsquo;hui il y a des nuages', svg:d(
+  nuage(6)+
+  '<g transform="translate(26,30) scale(.62)">'+
+  '<path class="wh" d="M34 70a19 19 0 0 1 3-37 25 25 0 0 1 46-6 17 17 0 0 1 4 43z"/></g>')},
+
+{id:'de-heuteregnet', l:205, en:'Heute regnet es', fr:'Aujourd&rsquo;hui il pleut',
+ note:'le verbe reste en deuxi&egrave;me', svg:d(
+  nuage(-8)+
+  '<path class="ln" d="M34 72l-7 20M53 74l-7 20M72 72l-7 20M90 70l-7 20"/>')},
+
 /* ── Ligne 104 · Er, sie, es ──────────────────────────────
    Le point de grammaire de la page du 9 octobre. Les pr&eacute;noms du
    cahier n'y sont pas : le d&eacute;p&ocirc;t est public, et c'est la tournure
@@ -1723,7 +1887,10 @@ var EVALS = [
    sous:'Les &eacute;motions, d&rsquo;apr&egrave;s la fiche <i>Inside Out</i>&nbsp;: les nommer, les dire &agrave; la premi&egrave;re personne, et les reconna&icirc;tre &agrave; l&rsquo;oreille.'},
 
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
-   sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'}
+   sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'},
+
+  {id:102, co:'de', nom:'&Eacute;valuation 2', zone:'Bereich B',
+   sous:'Tout ce qui ouvre et ferme un cours&nbsp;: saluer, dire qui on est, o&ugrave; l&rsquo;on habite et comment on va, &eacute;crire la date et le temps qu&rsquo;il fait.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -1763,15 +1930,29 @@ var LIGNES = [
 
   {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
    rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},
-  {id:102, ev:101, tok:'--d2', nom:'Zahlen 1&ndash;30', sous:'Compter de un &agrave; trente',
-   rem:'Trois pi&egrave;ges&nbsp;: <b>sechzehn</b> perd son <i>s</i>, <b>siebzehn</b> perd son <i>en</i>, et <b>drei&szlig;ig</b> prend l&rsquo;eszett. &Agrave; partir de 21 on dit l&rsquo;unit&eacute; d&rsquo;abord&nbsp;: <b>einundzwanzig</b>, un-et-vingt.'},
+  {id:102, ev:101, tok:'--d2', nom:'Zahlen und Rechnen', sous:'Compter de z&eacute;ro &agrave; trente, et calculer',
+   rem:'Trois pi&egrave;ges&nbsp;: <b>sechzehn</b> perd son <i>s</i>, <b>siebzehn</b> perd son <i>en</i>, et <b>drei&szlig;ig</b> prend l&rsquo;eszett. &Agrave; partir de 21 on dit l&rsquo;unit&eacute; d&rsquo;abord&nbsp;: <b>einundzwanzig</b>, un-et-vingt. Les quatre signes de calcul closent la fiche du 7 septembre.'},
   {id:103, ev:101, tok:'--d3', nom:'Zehner bis 100', sous:'Les dizaines jusqu&rsquo;&agrave; cent',
    rem:'M&ecirc;me perte qu&rsquo;&agrave; l&rsquo;adolescence&nbsp;: <b>sechzig</b> et <b>siebzig</b>, jamais <i>sechszig</i> ni <i>siebenzig</i>.'},
   {id:104, ev:101, tok:'--d4', nom:'Er, sie, es', sous:'Les trois genres et leurs pronoms',
    rem:'Le genre allemand ne suit pas le fran&ccedil;ais&nbsp;: <b>das Meerschweinchen</b> est <b>neutre</b>, comme tous les mots en <b>-chen</b>, quel que soit l&rsquo;animal. Et on <b>est</b> onze ans, on ne les a pas&nbsp;: <b>er ist elf</b>, jamais <i>er hat elf</i>.'},
   {id:105, ev:101, tok:'--d5', nom:'Heute', sous:'La date et le temps qu&rsquo;il fait',
    rem:'En t&ecirc;te de page on &eacute;crit le jour, puis <b>den</b>, puis le quanti&egrave;me suivi d&rsquo;un point&nbsp;: <i>Freitag, den 9. Oktober 2026</i>. Le temps se dit avec <b>es</b> impersonnel&nbsp;: <b>es regnet</b>, <b>es ist wolkig</b>.'},
-  {id:951, ev:101, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
+  {id:951, ev:101, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:201, ev:102, tok:'--d1', nom:'Hallo und tsch&uuml;ss', sous:'Saluer, remercier, partir',
+   rem:'<b>Guten Morgen</b> le matin, <b>Guten Tag</b> le reste de la journ&eacute;e, <b>Hallo</b> &agrave; tout moment. <i>Morgen</i> et <i>Tag</i> sont des noms&nbsp;: majuscule.'},
+  {id:202, ev:102, tok:'--d2', nom:'Wer bist du?', sous:'Les quatre questions, et leurs r&eacute;ponses',
+   rem:'Les pr&eacute;noms ne sont pas dans le jeu&nbsp;: le d&eacute;p&ocirc;t est public, et c&rsquo;est la tournure qui s&rsquo;apprend. <b>Meine Familie liebe ich</b> met le compl&eacute;ment en t&ecirc;te et le verbe en deuxi&egrave;me position&nbsp;: c&rsquo;est la r&egrave;gle allemande, pas une inversion de style.'},
+  {id:203, ev:102, tok:'--d3', nom:'Wie geht&rsquo;s?', sous:'Dire comment on va',
+   rem:'Trois r&eacute;ponses sur l&rsquo;&eacute;chelle&nbsp;: <b>gut</b>, <b>solala</b>, <b>schlecht</b>. Et trois &eacute;tats&nbsp;: fatigu&eacute;, malade, en pleine forme.'},
+  {id:204, ev:102, tok:'--d4', nom:'Tage und Monate', sous:'Les sept jours, les douze mois',
+   aussi:['de-freitag','de-oktober'],
+   rem:'Tous prennent une <b>majuscule</b>&nbsp;: ce sont des noms. <b>M&auml;rz</b> prend un tr&eacute;ma, <b>Juni</b> et <b>Juli</b> ne se distinguent que d&rsquo;une lettre. Freitag et Oktober reviennent du groupe <i>Heute</i>.'},
+  {id:205, ev:102, tok:'--d5', nom:'Das Wetter', sous:'Le temps qu&rsquo;il fait, en t&ecirc;te de page',
+   aussi:['de-wolkig','de-regnet','de-wetter'],
+   rem:'<b>Heute regnet es</b> et <b>Es regnet</b> disent la m&ecirc;me chose&nbsp;: d&egrave;s qu&rsquo;un mot passe devant, le verbe reste en deuxi&egrave;me position et le sujet le suit.'},
+  {id:952, ev:102, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
 ];
 
 /* « %L » est remplac&eacute; par la langue du cours ouvert. */
