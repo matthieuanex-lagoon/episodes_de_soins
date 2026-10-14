@@ -6,7 +6,7 @@ mots**.
 
 | Cours | Langue | Contenu |
 |-------|--------|---------|
-| **Mind the Gap** | anglais | 2 évaluations, 9 groupes, 122 mots |
+| **Mind the Gap** | anglais | 3 évaluations, 12 groupes, 136 mots |
 | **Sprichst du Deutsch?** | allemand | 1 évaluation, 5 groupes, 68 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
@@ -21,11 +21,19 @@ dans le navigateur (`localStorage`), rien n'est envoyé nulle part.
 | Mode | Ce qu'on demande | Tolérance |
 |------|------------------|-----------|
 | **Je choisis** | reconnaître le mot parmi trois | — |
+| **J'écoute** | le reconnaître à l'oreille, rien n'étant montré | — |
 | **Je le dis** | le dire à voix haute (micro, ou auto-évaluation si le micro n'est pas accessible) | l'article est facultatif, la phrase entière est acceptée |
 | **Je l'écris** | le taper au clavier | **aucune** : casse, espaces et point final mis à part, chaque lettre compte |
 
-Un mot n'est « maîtrisé » que lorsqu'il est juste dans les trois modes, sans
-indice. La barre en segments de la carte d'évaluation — un segment par groupe,
+**« J'écoute » ne compte pas dans l'acquis.** C'est l'exercice *Audio: what
+emotion?* de la fiche : le mot est dit, le roundel ne montre ni dessin ni
+français, et on le reconnaît parmi trois. Il a ses étoiles comme les autres,
+mais `MODES_ACQUIS` ne retient que les trois premiers piliers — sinon tout ce
+qui était déjà appris retomberait à 3/4 du jour au lendemain. Le dessin et le
+français reviennent avec la réponse.
+
+Un mot n'est « maîtrisé » que lorsqu'il est juste dans les trois modes qui
+comptent, sans indice. La barre en segments de la carte d'évaluation — un segment par groupe,
 large comme son nombre de mots — ne remplit que ceux-là.
 
 Les groupes de phrases suivent la même règle avec une seule souplesse : la
@@ -193,7 +201,7 @@ fois.
 
 ## Dessins
 
-179 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+193 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :
@@ -220,6 +228,17 @@ cours d'anglais : la case occupée dans la semaine, dans l'année.
 Un mot sur le cochon d'Inde : en silhouette pleine il ne se lisait plus — un
 bloc sombre avec une bosse. Il garde donc ses détails dans les deux emplois, et
 c'est l'herbe qui distingue le nom (`das Meerschweinchen`) du pronom (`es`).
+
+## Les émotions
+
+L'évaluation 3 vient de la fiche *Inside Out*. Un même visage, des sourcils et
+une bouche qui changent : `tete(traits)` porte le cercle, chaque émotion ses
+traits. L'adjectif montre le visage nu, la phrase à la première personne le met
+dans une bulle — même émotion, quelqu'un qui la dit. Les deux ne se croisent
+jamais dans un QCM, étant dans des groupes différents.
+
+La fiche donne deux mots pour deux émotions : *happy* ou *joyful*, *fearful* ou
+*scared*. Ils vivent en `alt`, comme `talk` pour `speak`, plutôt qu'en doublon.
 
 ## Le prénom n'est pas dans le dépôt
 

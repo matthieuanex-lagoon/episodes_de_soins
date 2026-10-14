@@ -213,6 +213,8 @@ button.evz:active{transform:scale(.993)}
 /* Au-del&agrave; de deux lignes la barre d&eacute;borderait du roundel sur un &eacute;cran
    bas, o&ugrave; le cercle est d&eacute;j&agrave; petit : on resserre encore. */
 .bar.tres{top:56%;font-size:clamp(11px,2.6vw,13px);line-height:1.18;padding:6px 9px}
+/* Pendant l'écoute, la barre ne dit rien : c'est l'oreille qui travaille. */
+.bar.mystere{letter-spacing:.5em;font-size:clamp(20px,6vw,30px);line-height:.8}
 .note{
   position:absolute;left:-12%;right:-12%;top:100%;
   padding-top:9px;text-align:center;color:var(--ink-soft);font-size:13px;font-style:italic;
@@ -655,6 +657,18 @@ function zahl(n){
   return d('<rect class="sl" x="16" y="22" width="88" height="76" rx="11"/>'+
     '<text class="txt '+(gros ? 'xl' : 'gr')+'" x="60" y="'+(gros ? 79 : 74)+'">'+t+'</text>');
 }
+
+/* Les &eacute;motions : un m&ecirc;me visage, des sourcils et une bouche qui
+   changent. L'adjectif montre le visage nu, la phrase &agrave; la premi&egrave;re
+   personne le met dans une bulle &mdash; m&ecirc;me &eacute;motion, quelqu'un qui la dit. */
+function tete(traits){
+  return '<circle class="sl" cx="60" cy="58" r="40"/>' + traits;
+}
+function bulle(dedans){
+  return '<path class="sl" d="M8 10h104a7 7 0 0 1 7 7v60a7 7 0 0 1-7 7H46L26 104V84H8a7 7 0 0 1-7-7V17a7 7 0 0 1 7-7z"/>'+
+         '<g transform="translate(23,10) scale(.62)">'+dedans+'</g>';
+}
+var YEUX = '<circle class="dk" cx="47" cy="58" r="4"/><circle class="dk" cx="73" cy="58" r="4"/>';
 
 /* Les trois genres ont chacun leur figure ; les phrases d'&acirc;ge
    reprennent la m&ecirc;me, r&eacute;duite, avec le nombre &agrave; c&ocirc;t&eacute;. */
@@ -1357,6 +1371,105 @@ var MOTS = [
   '<path class="hi" d="M78 46l1-14 6 7 5-10 5 10 6-7 1 14z"/>'+
   '<path class="dk" d="M27 66l-13-6v12z"/>')},
 
+/* ── &Eacute;valuation 3, ligne 10 · Feelings ────────────────────
+   Les cinq &eacute;motions de la fiche <i>Inside Out</i>. La fiche donne
+   deux mots pour deux d'entre elles : ils vivent en « alt », comme
+   talk pour speak, plut&ocirc;t qu'en doublon. */
+
+{id:'angry', l:10, en:'angry', fr:'en col&egrave;re', svg:d(tete(
+  '<path class="ln" d="M38 40l18 8M82 40l-18 8"/>'+YEUX+
+  '<path class="ln" d="M42 84q18-14 36 0"/>'))},
+
+{id:'sad', l:10, en:'sad', fr:'triste', svg:d(tete(
+  '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
+  '<path class="ln" d="M42 86q18-14 36 0"/>'+
+  '<path class="c2" d="M47 66c4 7 6 11 6 14a6 6 0 0 1-12 0c0-3 2-7 6-14z"/>'))},
+
+{id:'happy', l:10, en:'happy', alt:['joyful'], fr:'content', note:'ou joyeux', svg:d(tete(
+  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
+  '<path class="ln" d="M38 72q22 20 44 0"/>'))},
+
+{id:'fearful', l:10, en:'fearful', alt:['scared'], fr:'apeur&eacute;', note:'ou effray&eacute;', svg:d(tete(
+  '<path class="ln" d="M37 40q10-9 19-1M83 40q-10-9-19-1"/>'+
+  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="4.5"/>'+
+  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="4.5"/>'+
+  '<ellipse class="dk" cx="60" cy="84" rx="9" ry="7"/>'+
+  '<path class="c2" d="M97 30c4 7 6 10 6 13a6 6 0 0 1-12 0c0-3 2-6 6-13z"/>'))},
+
+{id:'disgusted', l:10, en:'disgusted', fr:'d&eacute;go&ucirc;t&eacute;', svg:d(tete(
+  '<path class="ln" d="M38 42l18 6M82 42l-18 6"/>'+
+  '<path class="ln" d="M40 62q7-9 14 0M66 62q7-9 14 0"/>'+
+  '<path class="ln" d="M44 80h32"/>'+
+  '<path class="hr" d="M55 80h14v11a7 7 0 0 1-14 0z"/>'))},
+
+/* ── Ligne 11 · How are you? ──────────────────────────────
+   La m&ecirc;me &eacute;motion, dite &agrave; la premi&egrave;re personne. */
+
+{id:'howareyou', l:11, en:'How are you?', fr:'Comment vas-tu&nbsp;?', svg:d(
+  '<circle class="sl" cx="34" cy="78" r="26"/>'+
+  '<circle class="dk" cx="26" cy="73" r="3.5"/><circle class="dk" cx="42" cy="73" r="3.5"/>'+
+  '<path class="ln" d="M24 90h20"/>'+
+  '<path class="sl" d="M56 10h50a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8H78L64 70V56h-8a8 8 0 0 1-8-8V18a8 8 0 0 1 8-8z"/>'+
+  '<text class="txt" x="84" y="44">?</text>')},
+
+{id:'imangry', l:11, en:"I'm angry", alt:['i am angry'], fr:'Je suis en col&egrave;re', svg:d(bulle(tete(
+  '<path class="ln" d="M38 40l18 8M82 40l-18 8"/>'+YEUX+
+  '<path class="ln" d="M42 84q18-14 36 0"/>')))},
+
+{id:'imsad', l:11, en:"I'm sad", alt:['i am sad'], fr:'Je suis triste', svg:d(bulle(tete(
+  '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
+  '<path class="ln" d="M42 86q18-14 36 0"/>'+
+  '<path class="c2" d="M47 66c4 7 6 11 6 14a6 6 0 0 1-12 0c0-3 2-7 6-14z"/>')))},
+
+{id:'imhappy', l:11, en:"I'm happy", alt:['i am happy',"i'm joyful",'i am joyful'],
+ fr:'Je suis content', svg:d(bulle(tete(
+  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
+  '<path class="ln" d="M38 72q22 20 44 0"/>')))},
+
+{id:'imfearful', l:11, en:"I'm fearful", alt:['i am fearful',"i'm scared",'i am scared'],
+ fr:'J&rsquo;ai peur', svg:d(bulle(tete(
+  '<path class="ln" d="M37 40q10-9 19-1M83 40q-10-9-19-1"/>'+
+  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="4.5"/>'+
+  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="4.5"/>'+
+  '<ellipse class="dk" cx="60" cy="84" rx="9" ry="7"/>')))},
+
+{id:'imdisgusted', l:11, en:"I'm disgusted", alt:['i am disgusted'], fr:'Je suis d&eacute;go&ucirc;t&eacute;', svg:d(bulle(tete(
+  '<path class="ln" d="M38 42l18 6M82 42l-18 6"/>'+
+  '<path class="ln" d="M40 62q7-9 14 0M66 62q7-9 14 0"/>'+
+  '<path class="ln" d="M44 80h32"/>'+
+  '<path class="hr" d="M55 80h14v11a7 7 0 0 1-14 0z"/>')))},
+
+/* ── Ligne 12 · Identity card ─────────────────────────────
+   Les tournures d'<i>About me</i>, remplies autrement. « My name
+   is... » rejoue depuis l'&eacute;valuation 2 par le champ « aussi ». */
+
+{id:'eleven', l:12, en:'I am eleven years old', alt:['i am 11 years old'],
+ fr:'J&rsquo;ai onze ans', svg:d(
+  '<circle class="ln" cx="34" cy="34" r="13"/>'+
+  '<path class="ln" d="M34 47v28M34 55L20 65M34 55l14 10M34 75L24 103M34 75l10 28"/>'+
+  '<path class="sl" d="M66 16h42a6 6 0 0 1 6 6v30a6 6 0 0 1-6 6H84l-11 12V58h-7a6 6 0 0 1-6-6V22a6 6 0 0 1 6-6z"/>'+
+  '<text class="txt" x="90" y="48">11</text>')},
+
+{id:'american', l:12, cap:true, en:'I am American', fr:'Je suis am&eacute;ricaine', svg:d(
+  '<g transform="translate(16,34)">'+
+  '<rect fill="#ffffff" x="0" y="0" width="88" height="52"/>'+
+  '<g fill="#b22234"><rect x="0" y="0" width="88" height="5.8"/><rect x="0" y="11.6" width="88" height="5.8"/>'+
+  '<rect x="0" y="23.2" width="88" height="5.8"/><rect x="0" y="34.7" width="88" height="5.8"/>'+
+  '<rect x="0" y="46.2" width="88" height="5.8"/></g>'+
+  '<rect fill="#3c3b6e" x="0" y="0" width="37" height="29"/>'+
+  '<g fill="#ffffff"><circle cx="7" cy="6" r="1.9"/><circle cx="16" cy="6" r="1.9"/><circle cx="25" cy="6" r="1.9"/>'+
+  '<circle cx="11" cy="14" r="1.9"/><circle cx="20" cy="14" r="1.9"/><circle cx="29" cy="14" r="1.9"/>'+
+  '<circle cx="7" cy="22" r="1.9"/><circle cx="16" cy="22" r="1.9"/><circle cx="25" cy="22" r="1.9"/></g>'+
+  '<rect fill="none" stroke="var(--draw)" stroke-width="3.5" x="0" y="0" width="88" height="52"/>'+
+  '</g>')},
+
+{id:'fromusa', l:12, cap:true, en:'I am from Minnesota in the United States of America',
+ fr:'Je viens du Minnesota, aux &Eacute;tats-Unis', svg:d(
+  '<rect class="wh" x="12" y="22" width="96" height="60" rx="4"/>'+
+  '<path class="tn" d="M12 42h96M12 62h96M42 22v60M78 22v60"/>'+
+  '<path class="dk" d="M60 34c10 0 17 8 17 17 0 13-17 28-17 28S43 64 43 51c0-9 7-17 17-17z"/>'+
+  '<circle class="wh" cx="60" cy="51" r="6"/>')},
+
 /* ═══════════════════════════════════════════════════════════
    COURS D'ALLEMAND · Sprichst du Deutsch?
    Les identifiants sont pr&eacute;fix&eacute;s « de- » : un mot n'existe qu'une
@@ -1606,6 +1719,9 @@ var EVALS = [
   {id:2, co:'en', nom:'&Eacute;valuation 2', zone:'Zone 2',
    sous:'Le <i>classroom English</i>, les couleurs, les mots qu&rsquo;on devine du fran&ccedil;ais, le calendrier de l&rsquo;anniversaire et la page o&ugrave; l&rsquo;on se pr&eacute;sente.'},
 
+  {id:3, co:'en', nom:'&Eacute;valuation 3', zone:'Zone 3',
+   sous:'Les &eacute;motions, d&rsquo;apr&egrave;s la fiche <i>Inside Out</i>&nbsp;: les nommer, les dire &agrave; la premi&egrave;re personne, et les reconna&icirc;tre &agrave; l&rsquo;oreille.'},
+
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
    sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'}
 ];
@@ -1636,6 +1752,15 @@ var LIGNES = [
    rem:'Les phrases de la page de pr&eacute;sentation. <b>French</b> prend une majuscule, et il s&rsquo;&eacute;crit avec un <b>e</b>&nbsp;&mdash; pas <i>franch</i>.'},
   {id:902, ev:2, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
 
+  {id:10, ev:3, tok:'--l1', nom:'Feelings', sous:'Les cinq &eacute;motions de la fiche',
+   rem:'La fiche donne deux mots pour deux d&rsquo;entre elles&nbsp;: <b>happy</b> ou <i>joyful</i>, <b>fearful</b> ou <i>scared</i>. Les deux formes sont accept&eacute;es &agrave; l&rsquo;&eacute;crit comme &agrave; l&rsquo;oral.'},
+  {id:11, ev:3, tok:'--l2', nom:'How are you?', sous:'R&eacute;pondre &agrave; la premi&egrave;re personne',
+   rem:'<b>I&rsquo;m</b> est la contraction de <i>I am</i>&nbsp;: l&rsquo;apostrophe compte &agrave; l&rsquo;&eacute;crit. Les deux formes passent.'},
+  {id:12, ev:3, tok:'--l3', nom:'Identity card', sous:'La carte d&rsquo;identit&eacute; de la fiche',
+   aussi:['myname'],
+   rem:'Les m&ecirc;mes tournures que dans <i>About me</i>, &eacute;valuation&nbsp;2, mais remplies autrement&nbsp;: la nationalit&eacute; et le pays changent, la phrase ne bouge pas. <b>American</b> prend une majuscule, comme <b>French</b>.'},
+  {id:903, ev:3, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
+
   {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
    rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},
   {id:102, ev:101, tok:'--d2', nom:'Zahlen 1&ndash;30', sous:'Compter de un &agrave; trente',
@@ -1650,11 +1775,18 @@ var LIGNES = [
 ];
 
 /* « %L » est remplac&eacute; par la langue du cours ouvert. */
+/* Trois modes comptent dans l'acquis d'un mot : reconna&icirc;tre, dire,
+   &eacute;crire. &laquo; J'&eacute;coute &raquo; est un quatri&egrave;me exercice, celui de la fiche
+   &laquo; Audio: what emotion? &raquo; : il a ses &eacute;toiles mais ne change pas la
+   d&eacute;finition de &laquo; ma&icirc;tris&eacute; &raquo;, qui resterait sinon hors d'atteinte
+   pour tout ce qui a d&eacute;j&agrave; &eacute;t&eacute; appris. */
 var MODES = [
-  {id:'qcm',   nom:'Je choisis',      sous:'Trois propositions.'},
-  {id:'oral',  nom:'Je le dis',       sous:'&Agrave; voix haute, en %L.'},
-  {id:'ecrit', nom:"Je l'&eacute;cris",     sous:'Au clavier. Z&eacute;ro faute admise.'}
+  {id:'qcm',    nom:'Je choisis',      sous:'Trois propositions.'},
+  {id:'ecoute', nom:"J'&eacute;coute",       sous:'Le mot est dit, pas montr&eacute;.'},
+  {id:'oral',   nom:'Je le dis',       sous:'&Agrave; voix haute, en %L.'},
+  {id:'ecrit',  nom:"Je l'&eacute;cris",     sous:'Au clavier. Z&eacute;ro faute admise.'}
 ];
+var MODES_ACQUIS = ['qcm','oral','ecrit'];
 
 /* ═══ &Eacute;tat ═══════════════════════════════════════════════ */
 var CLE = 'mind-the-gap-v1';
@@ -1768,9 +1900,7 @@ function parId(id){
 function acquis(id, m){ return !!(M[id] && M[id][m]); }
 function niveau(id){
   var n = 0;
-  if(acquis(id,'qcm')) n++;
-  if(acquis(id,'oral')) n++;
-  if(acquis(id,'ecrit')) n++;
+  MODES_ACQUIS.forEach(function(m){ if(acquis(id,m)) n++; });
   return n;
 }
 function noterMot(id, m, bon){
@@ -1822,7 +1952,13 @@ var ICONES = {
   ecrit:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9.5 14h5"/></svg>',
   cadenas:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>',
   micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="pastille" x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
-  epel:'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2" y="4.5" width="20" height="15" rx="3"/><text x="12" y="15.6" text-anchor="middle" font-size="8.4" font-weight="700" font-family="Jost, sans-serif" letter-spacing=".5" fill="currentColor" stroke="none">ABC</text></svg>'
+  epel:'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2" y="4.5" width="20" height="15" rx="3"/><text x="12" y="15.6" text-anchor="middle" font-size="8.4" font-weight="700" font-family="Jost, sans-serif" letter-spacing=".5" fill="currentColor" stroke="none">ABC</text></svg>',
+  ecoute:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M16 9a4.5 4.5 0 0 1 0 6"/><path d="M19 6a9 9 0 0 1 0 12"/></svg>',
+  /* Le grand signe qui remplace le dessin pendant l'&eacute;coute. */
+  onde:'<svg class="dess" viewBox="0 0 120 120" aria-hidden="true">'+
+       '<path class="sl" d="M18 46h20l26-24v76L38 74H18z"/>'+
+       '<path class="ln" d="M80 44a22 22 0 0 1 0 32"/>'+
+       '<path class="ln" d="M94 32a40 40 0 0 1 0 56"/></svg>'
 };
 
 /* ═══ Comparer ce qui est &eacute;crit ══════════════════════════
@@ -2376,9 +2512,9 @@ function construireCarnet(){
              '<small>'+m.fr+(m.note?' <i>('+m.note+')</i>':'')+
              (m.l !== L.id ? ' <i class="revu">&middot; '+nu(ligneDe(m.l).nom)+'</i>' : '')+'</small></span>';
       h +=   '<span class="pastilles" aria-hidden="true">'+
-               '<i class="'+(acquis(m.id,'qcm')?'on':'')+'"></i>'+
-               '<i class="'+(acquis(m.id,'oral')?'on':'')+'"></i>'+
-               '<i class="'+(acquis(m.id,'ecrit')?'on':'')+'"></i></span>';
+               MODES_ACQUIS.map(function(md){
+                 return '<i class="'+(acquis(m.id, md) ? 'on' : '')+'"></i>';
+               }).join('')+'</span>';
       h +=   '<button class="hp" type="button" data-epeler="'+m.id+'" aria-label="&Eacute;peler '+echapper(m.en)+'">'+ICONES.epel+'</button>';
       h +=   '<button class="hp" type="button" data-dire="'+m.id+'" aria-label="&Eacute;couter '+echapper(m.en)+'">🔊</button>';
       h +=   '<div class="epel-boite"></div>';
@@ -2412,10 +2548,13 @@ function poser(){
   arreterEpel();
   $('#epel-zone').innerHTML = '';
 
-  $('#dess').innerHTML = it.svg;
-  $('#bar-fr').className = 'bar' + classeBar(nu(it.fr));
-  $('#bar-fr').innerHTML = it.fr;
-  $('#note').innerHTML = it.note ? '(' + it.note + ')' : '';
+  /* En mode &eacute;coute, le roundel ne montre rien : ni dessin, ni
+     fran&ccedil;ais. Les deux reviennent avec la r&eacute;ponse. */
+  var muet = partie.mode === 'ecoute';
+  $('#dess').innerHTML = muet ? ICONES.onde : it.svg;
+  $('#bar-fr').className = 'bar' + (muet ? ' mystere' : classeBar(nu(it.fr)));
+  $('#bar-fr').innerHTML = muet ? '&middot; &middot; &middot;' : it.fr;
+  $('#note').innerHTML = (!muet && it.note) ? '(' + it.note + ')' : '';
   var t = $('#tampon'); t.className = 'tampon'; t.textContent = '';
   $('#btn-suite').classList.add('invisible');
 
@@ -2424,6 +2563,7 @@ function poser(){
   dessinerTrajet();
 
   if(partie.mode === 'qcm') rendreQcm(it);
+  else if(partie.mode === 'ecoute') rendreEcoute(it);
   else if(partie.mode === 'oral') rendreOral(it);
   else rendreEcrit(it);
 }
@@ -2442,11 +2582,11 @@ function dessinerTrajet(){
 }
 
 /* ── Mode 1 : choisir parmi trois ────────────────────── */
-function rendreQcm(it){
-  $('#info').innerHTML = 'Comment &ccedil;a se dit en '+coursActuel().adj+'&nbsp;?';
-  var pool = (partie.l === 0 ? MOTS : motsDe(it.l)).filter(function(x){ return x.id !== it.id; });
-  var autres = melange(pool).slice(0,2);
-  var opts = melange([it].concat(autres));
+/* Les trois propositions servent au QCM comme &agrave; l'&eacute;coute : m&ecirc;me
+   tirage, m&ecirc;me clavier 1-2-3. */
+function listeChoix(it){
+  var pool = motsDe(it.l).filter(function(x){ return x.id !== it.id; });
+  var opts = melange([it].concat(melange(pool).slice(0,2)));
   var lettres = ['1','2','3'];
   var longue = opts.some(function(o){ return o.en.length > 18; });
   var h = '<div class="choix-liste">';
@@ -2454,8 +2594,25 @@ function rendreQcm(it){
     h += '<button class="choix'+(longue?' long':'')+'" type="button" data-rep="'+o.id+'">'+
          '<span class="lettre">'+lettres[k]+'</span><span>'+echapper(o.en)+'</span></button>';
   });
-  h += '</div>';
-  $('#controles').innerHTML = h;
+  return h + '</div>';
+}
+
+function rendreQcm(it){
+  $('#info').innerHTML = 'Comment &ccedil;a se dit en '+coursActuel().adj+'&nbsp;?';
+  $('#controles').innerHTML = listeChoix(it);
+}
+
+/* ── Mode 4 : l'entendre et le reconna&icirc;tre ───────────────
+   L'exercice de la fiche : le mot est dit, rien n'est &eacute;crit ni
+   dessin&eacute;. Le dessin et le fran&ccedil;ais ne reviennent qu'&agrave; la r&eacute;ponse. */
+function rendreEcoute(it){
+  $('#info').innerHTML = son
+    ? '&Eacute;coute, puis reconnais le mot. <b>Rien n&rsquo;est montr&eacute;&nbsp;: tout est dans l&rsquo;oreille.</b>'
+    : 'Le son est coup&eacute;. Remets-le avec le bouton en haut &agrave; droite pour ce mode.';
+  $('#controles').innerHTML =
+    '<button class="micro" type="button" id="btn-rejouer">'+ICONES.ecoute+'<span>&Eacute;couter</span></button>'+
+    '<div style="height:9px"></div>' + listeChoix(it);
+  if(son) setTimeout(function(){ if(!partie.repondu) dire(it.en); }, 450);
 }
 
 /* ── Mode 2 : le dire &agrave; voix haute ────────────────────── */
@@ -2624,13 +2781,17 @@ function repondre(bon, it, mode, msgSup, saisie){
   }
   $('#info').innerHTML = h;
 
+  /* Ce que l'&eacute;coute avait cach&eacute; revient avec la r&eacute;ponse. */
+  if(mode === 'ecoute') $('#dess').innerHTML = it.svg;
+
   /* Verrouiller les commandes */
-  if(mode === 'qcm'){
+  if(mode === 'qcm' || mode === 'ecoute'){
     var btns = $('#controles').querySelectorAll('.choix');
     for(var k=0;k<btns.length;k++){
       btns[k].disabled = true;
       if(btns[k].getAttribute('data-rep') === it.id) btns[k].classList.add('bon');
     }
+    var rj = $('#btn-rejouer'); if(rj) rj.remove();
   } else if(mode === 'ecrit'){
     var c = $('#saisie');
     if(c){ c.disabled = true; c.classList.add(bon ? 'bon' : 'mauvais'); }
@@ -2721,7 +2882,7 @@ function bilan(){
 
 /* ═══ &Eacute;v&eacute;nements ══════════════════════════════════════ */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest ? ev.target.closest('[data-go],[data-cours],[data-uml],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-epeler],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-aide,#btn-passe,#btn-indice,#btn-epeler,#btn-bilan-1,#btn-bilan-2') : null;
+  var el = ev.target.closest ? ev.target.closest('[data-go],[data-cours],[data-uml],[data-eval],[data-ouvrir],[data-jouer],[data-rep],[data-dire],[data-epeler],[data-revoir],[data-suivant],#btn-suite,#btn-son,#btn-reset,#btn-parent,#btn-parent-annule,#btn-micro,#btn-modele,#btn-rejouer,#btn-aide,#btn-passe,#btn-indice,#btn-epeler,#btn-bilan-1,#btn-bilan-2') : null;
   if(!el) return;
 
   if(el.hasAttribute('data-go')){
@@ -2811,6 +2972,7 @@ document.addEventListener('click', function(ev){
     if(!bon) el.classList.add('mauvais');
     repondre(bon, it, 'qcm'); return;
   }
+  if(el.id === 'btn-rejouer'){ if(it && !partie.repondu) dire(it.en); return; }
   if(el.id === 'btn-micro'){ if(it) ecouter(it); return; }
   if(el.id === 'btn-modele'){ if(it) dire(it.en); return; }
   if(el.id === 'btn-aide'){
