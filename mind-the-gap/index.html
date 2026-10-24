@@ -287,6 +287,10 @@ button.evz:active{transform:scale(.993)}
 .champ.bon{background:var(--ok-doux);border-color:var(--ok);color:var(--ok)}
 .champ.mauvais{background:var(--ko-doux);border-color:var(--ko);color:var(--ko)}
 .relu{display:flex;align-items:center;min-height:60px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3}
+/* La syllabe accentu&eacute;e de &laquo;&nbsp;Speak like a pro&nbsp;&raquo;. Les capitales
+   portent l'information ; l'interlettrage les d&eacute;colle pour qu'on
+   voie o&ugrave; la coupe tombe. */
+.accent{font-weight:700;letter-spacing:.09em;white-space:nowrap}
 .faute{color:var(--ko);text-decoration:underline wavy var(--ko);text-decoration-thickness:2px;text-underline-offset:4px}
 .manque{color:var(--ko);font-weight:800;padding-inline:1px}
 .gabarit{font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;letter-spacing:.18em;color:var(--ink-soft);font-size:15px}
@@ -693,6 +697,120 @@ function bulle(dedans){
          '<g transform="translate(23,10) scale(.62)">'+dedans+'</g>';
 }
 var YEUX = '<circle class="dk" cx="47" cy="58" r="4"/><circle class="dk" cx="73" cy="58" r="4"/>';
+
+/* Les cinq visages de la fiche <i>Inside Out</i>. Ils servent trois
+   fois : &agrave; l'adjectif (&laquo;&nbsp;angry&nbsp;&raquo;), &agrave; la phrase &agrave; la premi&egrave;re
+   personne dans une bulle, et au nom de l'&eacute;motion (&laquo;&nbsp;Anger&nbsp;&raquo;) de
+   la le&ccedil;on 2. Un seul trac&eacute; pour les trois : un sourcil corrig&eacute; ici
+   se corrige partout. La goutte de sueur de la peur reste &agrave; part,
+   parce qu'elle sort du cadre quand la t&ecirc;te est r&eacute;duite. */
+var F_COLERE = '<path class="ln" d="M38 40l18 8M82 40l-18 8"/>'+YEUX+
+  '<path class="ln" d="M42 84q18-14 36 0"/>';
+var F_TRISTE = '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
+  '<path class="ln" d="M42 86q18-14 36 0"/>'+
+  '<path class="c2" d="M47 66c4 7 6 11 6 14a6 6 0 0 1-12 0c0-3 2-7 6-14z"/>';
+var F_JOIE = '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
+  '<path class="ln" d="M38 72q22 20 44 0"/>';
+var F_PEUR = '<path class="ln" d="M37 40q10-9 19-1M83 40q-10-9-19-1"/>'+
+  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="4.5"/>'+
+  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="4.5"/>'+
+  '<ellipse class="dk" cx="60" cy="84" rx="9" ry="7"/>';
+var F_DEGOUT = '<path class="ln" d="M38 42l18 6M82 42l-18 6"/>'+
+  '<path class="ln" d="M40 62q7-9 14 0M66 62q7-9 14 0"/>'+
+  '<path class="ln" d="M44 80h32"/>'+
+  '<path class="hr" d="M55 80h14v11a7 7 0 0 1-14 0z"/>';
+var SUEUR = '<path class="c2" d="M97 30c4 7 6 10 6 13a6 6 0 0 1-12 0c0-3 2-6 6-13z"/>';
+
+/* Les huit &eacute;tats de la fiche &laquo;&nbsp;How are you Riley&nbsp;?&nbsp;&raquo;. Six sont
+   des visages ; la soif et la faim se disent mieux par l'objet qui
+   manque, verre et assiette vide. */
+var F_BIEN = YEUX + '<path class="ln" d="M44 76q16 12 32 0"/>';
+var F_FATIGUE = '<path class="ln" d="M38 54q9 8 17 0M65 54q9 8 17 0"/>'+
+  '<path class="ln" d="M46 82q14-8 28 0"/>'+
+  '<text class="txt sm" x="100" y="30">z</text><text class="txt" x="104" y="56">Z</text>';
+var F_EXCITE = '<path class="ln" d="M37 42q10-8 19-1M83 42q-10-8-19-1"/>'+YEUX+
+  '<path class="dk" d="M40 70h40a20 20 0 0 1-40 0z"/>'+
+  '<path class="tn" d="M12 24l9 7M108 24l-9 7M25 10l3 10M95 10l-3 10"/>';
+var F_DESOLE = '<path class="ln" d="M38 48l18-6M82 48l-18-6"/>'+
+  '<circle class="wh" cx="47" cy="58" r="9"/><circle class="dk" cx="47" cy="62" r="4"/>'+
+  '<circle class="wh" cx="73" cy="58" r="9"/><circle class="dk" cx="73" cy="62" r="4"/>'+
+  '<path class="ln" d="M46 84q14-7 28 0"/>';
+var F_SURPRIS = '<path class="ln" d="M36 36q10-10 20-2M84 36q-10-10-20-2"/>'+
+  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="5"/>'+
+  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="5"/>'+
+  '<circle class="dk" cx="60" cy="86" r="8"/>';
+var F_FOU = '<path class="ln" d="M40 52l14 12M54 52l-14 12M66 52l14 12M80 52l-14 12"/>'+
+  '<path class="ln" d="M42 80q7-8 14 0t14 0"/>'+
+  '<path class="ln" d="M36 22l-7-13M60 16V4M84 22l7-13"/>';
+var VERRE = '<path class="sl" d="M38 24h44l-6 72H44z"/>'+
+  '<path class="c2" d="M45 56h30l-3 36H48z"/>'+
+  '<path class="ln" d="M38 24h44"/>';
+var ASSIETTE = '<circle class="sl" cx="60" cy="60" r="32"/>'+
+  '<circle class="wh" cx="60" cy="60" r="19"/>'+
+  '<path class="tn" d="M14 24v16M21 24v16M28 24v16"/>'+
+  '<path class="ep" d="M21 38v56"/>'+
+  '<path class="sl" d="M95 24h12v34H95z"/>'+
+  '<path class="ep" d="M101 58v36"/>';
+
+/* Un corps, pour les phrases o&ugrave; l'on d&eacute;signe quelqu'un. Le genre se
+   lit &agrave; la silhouette, &eacute;paules ou robe, comme dans garcon() et
+   fille() : le personnage de la fiche est colori&eacute;, il n'a donc pas
+   de cheveux pour le dire. */
+function corpsDe(fille, attr){
+  return fille ? '<path'+attr+' d="M60 64L26 116h68z"/>'
+               : '<path'+attr+' d="M22 116c0-30 17-46 38-46s38 16 38 46z"/>';
+}
+/* &laquo;&nbsp;He is purple&nbsp;&raquo;, &laquo;&nbsp;She is yellow&nbsp;&raquo; : la fiche fait colorier
+   le personnage. La couleur est donc dans le dessin, en dur, comme
+   les taches du groupe Colours. */
+function colorie(c, encre, fille){
+  var tr = ' fill="'+c+'" stroke="var(--draw)" stroke-width="4.6" stroke-linejoin="round"';
+  /* Le contour suit le th&egrave;me, pour que la silhouette se d&eacute;tache de
+     la carte ; les yeux et la bouche non, parce qu'ils sont POS&Eacute;S
+     sur la couleur, qui elle ne change pas. En sombre, des traits
+     clairs sur le jaune ne se voyaient plus. */
+  var ye = ' fill="'+encre+'" stroke="none"';
+  return d(corpsDe(fille, tr)+
+    '<circle cx="60" cy="42" r="22"'+tr+'/>'+
+    '<circle cx="52" cy="40" r="3"'+ye+'/><circle cx="68" cy="40" r="3"'+ye+'/>'+
+    '<path d="M52 50q8 6 16 0" fill="none" stroke="'+encre+'" stroke-width="4" stroke-linecap="round"/>');
+}
+/* &laquo;&nbsp;He is fearful&nbsp;&raquo;, &laquo;&nbsp;She is happy&nbsp;&raquo; : m&ecirc;me silhouette, mais
+   c'est le visage qui porte le mot, et ce sont les traits des
+   adjectifs de l'&eacute;valuation 3. */
+function quelquun(traits, fille){
+  return d(corpsDe(fille, ' class="sl"')+
+    '<g transform="translate(23,6) scale(.62)">'+tete(traits)+'</g>');
+}
+/* &laquo;&nbsp;This is...&nbsp;&raquo; et &laquo;&nbsp;That is...&nbsp;&raquo; : la fiche demande de montrer
+   de la main. Le geste ne change pas, la distance si &mdash; et c'est la
+   seule chose qui s&eacute;pare les deux mots. Le sol ne se dessine que
+   dans le lointain, o&ugrave; il donne la profondeur. */
+function montre(loin){
+  /* Un poing de face, index tendu. Les trois doigts repli&eacute;s se
+     lisent aux entailles du bord inf&eacute;rieur ; sans elles, le dessin
+     passait pour un marteau. */
+  var bout = loin ? 66 : 52;
+  var main = '<path class="sl" d="M8 52a6 6 0 0 1 6-6h10a8 8 0 0 1 8 8v2h'+(bout-32)+
+             'a7 7 0 0 1 0 14H32v12a8 8 0 0 1-8 8H14a6 6 0 0 1-6-6z"/>'+
+             '<path class="tn" d="M15 90v-9M24 90v-9"/>';
+  return loin
+    ? d('<path class="tn" d="M2 106h116"/>'+main+
+        '<circle class="sl" cx="94" cy="58" r="10"/>'+
+        '<path class="ln" d="M94 68v18M94 73l-9 7M94 73l9 7M94 86l-7 20M94 86l7 20"/>')
+    : d(main+
+        '<circle class="sl" cx="82" cy="36" r="18"/>'+
+        '<path class="ln" d="M82 54v32M82 63L62 76M82 63l20 13M82 86L70 114M82 86l12 28"/>');
+}
+/* Les ordinaux de la date : le chiffre et son suffixe, comme on les
+   &eacute;crit sur une fiche. &Agrave; deux chiffres le nombre r&eacute;tr&eacute;cit, sinon il
+   passe sous le suffixe. */
+function rang(n, suf){
+  var t = String(n), deux = t.length > 1;
+  return d('<rect class="sl" x="16" y="22" width="88" height="76" rx="11"/>'+
+    '<text class="txt '+(deux ? 'gr' : 'xl')+'" x="'+(deux ? 48 : 46)+'" y="'+(deux ? 76 : 79)+'">'+t+'</text>'+
+    '<text class="txt sm" x="'+(deux ? 84 : 74)+'" y="'+(deux ? 50 : 52)+'">'+suf+'</text>');
+}
 
 /* Les trois genres ont chacun leur figure ; les phrases d'&acirc;ge
    reprennent la m&ecirc;me, r&eacute;duite, avec le nombre &agrave; c&ocirc;t&eacute;. */
@@ -1400,31 +1518,17 @@ var MOTS = [
    deux mots pour deux d'entre elles : ils vivent en « alt », comme
    talk pour speak, plut&ocirc;t qu'en doublon. */
 
-{id:'angry', l:10, en:'angry', fr:'en col&egrave;re', svg:d(tete(
-  '<path class="ln" d="M38 40l18 8M82 40l-18 8"/>'+YEUX+
-  '<path class="ln" d="M42 84q18-14 36 0"/>'))},
+{id:'angry', l:10, en:'angry', fr:'en col&egrave;re', svg:d(tete(F_COLERE))},
 
-{id:'sad', l:10, en:'sad', fr:'triste', svg:d(tete(
-  '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
-  '<path class="ln" d="M42 86q18-14 36 0"/>'+
-  '<path class="c2" d="M47 66c4 7 6 11 6 14a6 6 0 0 1-12 0c0-3 2-7 6-14z"/>'))},
+{id:'sad', l:10, en:'sad', fr:'triste', svg:d(tete(F_TRISTE))},
 
-{id:'happy', l:10, en:'happy', alt:['joyful'], fr:'content', note:'ou joyeux', svg:d(tete(
-  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
-  '<path class="ln" d="M38 72q22 20 44 0"/>'))},
+{id:'happy', l:10, en:'happy', alt:['joyful'], fr:'content', note:'ou joyeux', svg:d(tete(F_JOIE))},
 
-{id:'fearful', l:10, en:'fearful', alt:['scared'], fr:'apeur&eacute;', note:'ou effray&eacute;', svg:d(tete(
-  '<path class="ln" d="M37 40q10-9 19-1M83 40q-10-9-19-1"/>'+
-  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="4.5"/>'+
-  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="4.5"/>'+
-  '<ellipse class="dk" cx="60" cy="84" rx="9" ry="7"/>'+
-  '<path class="c2" d="M97 30c4 7 6 10 6 13a6 6 0 0 1-12 0c0-3 2-6 6-13z"/>'))},
+{id:'fearful', l:10, en:'fearful', alt:['scared'], fr:'apeur&eacute;', note:'ou effray&eacute;',
+ svg:d(tete(F_PEUR) + SUEUR)},
 
-{id:'disgusted', l:10, en:'disgusted', fr:'d&eacute;go&ucirc;t&eacute;', svg:d(tete(
-  '<path class="ln" d="M38 42l18 6M82 42l-18 6"/>'+
-  '<path class="ln" d="M40 62q7-9 14 0M66 62q7-9 14 0"/>'+
-  '<path class="ln" d="M44 80h32"/>'+
-  '<path class="hr" d="M55 80h14v11a7 7 0 0 1-14 0z"/>'))},
+{id:'disgusted', l:10, en:'disgusted', fr:'d&eacute;go&ucirc;t&eacute;', accent:'dis-GUS-ted',
+ svg:d(tete(F_DEGOUT))},
 
 /* ── Ligne 11 · How are you? ──────────────────────────────
    La m&ecirc;me &eacute;motion, dite &agrave; la premi&egrave;re personne. */
@@ -1436,32 +1540,18 @@ var MOTS = [
   '<path class="sl" d="M56 10h50a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8H78L64 70V56h-8a8 8 0 0 1-8-8V18a8 8 0 0 1 8-8z"/>'+
   '<text class="txt" x="84" y="44">?</text>')},
 
-{id:'imangry', l:11, en:"I'm angry", alt:['i am angry'], fr:'Je suis en col&egrave;re', svg:d(bulle(tete(
-  '<path class="ln" d="M38 40l18 8M82 40l-18 8"/>'+YEUX+
-  '<path class="ln" d="M42 84q18-14 36 0"/>')))},
+{id:'imangry', l:11, en:"I'm angry", alt:['i am angry'], fr:'Je suis en col&egrave;re', svg:d(bulle(tete(F_COLERE)))},
 
-{id:'imsad', l:11, en:"I'm sad", alt:['i am sad'], fr:'Je suis triste', svg:d(bulle(tete(
-  '<path class="ln" d="M38 50l18-8M82 50l-18-8"/>'+YEUX+
-  '<path class="ln" d="M42 86q18-14 36 0"/>'+
-  '<path class="c2" d="M47 66c4 7 6 11 6 14a6 6 0 0 1-12 0c0-3 2-7 6-14z"/>')))},
+{id:'imsad', l:11, en:"I'm sad", alt:['i am sad'], fr:'Je suis triste', svg:d(bulle(tete(F_TRISTE)))},
 
 {id:'imhappy', l:11, en:"I'm happy", alt:['i am happy',"i'm joyful",'i am joyful'],
- fr:'Je suis content', svg:d(bulle(tete(
-  '<path class="ln" d="M39 44q9-7 17 0M64 44q9-7 17 0"/>'+YEUX+
-  '<path class="ln" d="M38 72q22 20 44 0"/>')))},
+ fr:'Je suis content', svg:d(bulle(tete(F_JOIE)))},
 
 {id:'imfearful', l:11, en:"I'm fearful", alt:['i am fearful',"i'm scared",'i am scared'],
- fr:'J&rsquo;ai peur', svg:d(bulle(tete(
-  '<path class="ln" d="M37 40q10-9 19-1M83 40q-10-9-19-1"/>'+
-  '<circle class="wh" cx="47" cy="60" r="10"/><circle class="dk" cx="47" cy="60" r="4.5"/>'+
-  '<circle class="wh" cx="73" cy="60" r="10"/><circle class="dk" cx="73" cy="60" r="4.5"/>'+
-  '<ellipse class="dk" cx="60" cy="84" rx="9" ry="7"/>')))},
+ fr:'J&rsquo;ai peur', svg:d(bulle(tete(F_PEUR)))},
 
-{id:'imdisgusted', l:11, en:"I'm disgusted", alt:['i am disgusted'], fr:'Je suis d&eacute;go&ucirc;t&eacute;', svg:d(bulle(tete(
-  '<path class="ln" d="M38 42l18 6M82 42l-18 6"/>'+
-  '<path class="ln" d="M40 62q7-9 14 0M66 62q7-9 14 0"/>'+
-  '<path class="ln" d="M44 80h32"/>'+
-  '<path class="hr" d="M55 80h14v11a7 7 0 0 1-14 0z"/>')))},
+{id:'imdisgusted', l:11, en:"I'm disgusted", alt:['i am disgusted'], fr:'Je suis d&eacute;go&ucirc;t&eacute;',
+ accent:'dis-GUS-ted', svg:d(bulle(tete(F_DEGOUT)))},
 
 /* ── Ligne 12 · Identity card ─────────────────────────────
    Les tournures d'<i>About me</i>, remplies autrement. « My name
@@ -1855,7 +1945,101 @@ var MOTS = [
   '<path class="ln" d="M36 58l-6 16M54 60l-6 16M72 58l-6 16M89 56l-6 16"/>'+
   '<rect class="sl" x="34" y="78" width="52" height="34" rx="5"/>'+
   '<path class="ln" d="M34 90h52M48 78v-8M72 78v-8"/>'+
-  '<rect class="dk" x="44" y="96" width="12" height="9" rx="2"/>')}
+  '<rect class="dk" x="44" y="96" width="12" height="9" rx="2"/>')},
+
+/* ══ &Eacute;valuation 4, le&ccedil;ons 2 et 3 ═════════════════════════════════ */
+
+/* ── Ligne 13 &middot; Meet the emotions ─────────────────────────────
+   Les m&ecirc;mes cinq visages que l'&eacute;valuation 3, mais c'est le NOM de
+   l'&eacute;motion qu'on cherche, pas l'adjectif : <i>Anger</i> en face de
+   <i>angry</i>. Les adjectifs ne rejouent pas ici par &laquo;&nbsp;aussi&nbsp;&raquo;, et
+   c'est voulu : avec le m&ecirc;me dessin, un QCM qui proposerait
+   <i>Anger</i> et <i>angry</i> c&ocirc;te &agrave; c&ocirc;te serait ind&eacute;cidable. */
+
+{id:'anger',   l:13, en:'Anger',   alt:['anger'],   fr:'la col&egrave;re',    svg:d(tete(F_COLERE))},
+{id:'fear',    l:13, en:'Fear',    alt:['fear'],    fr:'la peur',       svg:d(tete(F_PEUR) + SUEUR)},
+{id:'sadness', l:13, en:'Sadness', alt:['sadness'], fr:'la tristesse',  svg:d(tete(F_TRISTE))},
+{id:'disgust', l:13, en:'Disgust', alt:['disgust'], fr:'le d&eacute;go&ucirc;t',   svg:d(tete(F_DEGOUT))},
+{id:'joy',     l:13, en:'Joy',     alt:['joy'],     fr:'la joie',       svg:d(tete(F_JOIE))},
+
+/* ── Ligne 14 &middot; This is Joy ───────────────────────────────────
+   Montrer quelqu'un, puis en dire la couleur et l'humeur : les
+   trois lignes de l'exercice &laquo;&nbsp;write sentences and colour&nbsp;&raquo;. */
+
+{id:'thisis', l:14, en:'This is...', fr:'Voici&hellip;', note:'tout pr&egrave;s', svg:montre(false)},
+{id:'thatis', l:14, en:'That is...', fr:'Voil&agrave;&hellip;', note:'plus loin',  svg:montre(true)},
+
+{id:'heispurple',  l:14, en:'He is purple',  fr:'Il est violet',  svg:colorie('#5b2d8e', '#f2f5f8', false)},
+{id:'sheisyellow', l:14, en:'She is yellow', fr:'Elle est jaune', svg:colorie('#e7c012', '#1b1f24', true)},
+
+{id:'heisfearful', l:14, en:'He is fearful', alt:['he is scared'],
+ fr:'Il est apeur&eacute;', svg:quelquun(F_PEUR, false)},
+{id:'sheishappy',  l:14, en:'She is happy',  alt:['she is joyful'],
+ fr:'Elle est contente', svg:quelquun(F_JOIE, true)},
+
+/* ── Ligne 15 &middot; How are you Riley? ──────────────────────────────
+   Les huit r&eacute;ponses de la fiche. Toutes en bulle : ce sont des
+   phrases qu'on dit, comme celles de l'&eacute;valuation 3. Cinq portent
+   un &laquo;&nbsp;accent&nbsp;&raquo;, celui de l'exercice &laquo;&nbsp;Speak like a pro&nbsp;&raquo;. */
+
+{id:'imfine', l:15, en:'I am fine', alt:["i'm fine"], fr:'Je vais bien',
+ svg:d(bulle(tete(F_BIEN)))},
+{id:'imtired', l:15, en:'I am tired', alt:["i'm tired"], fr:'Je suis fatigu&eacute;e',
+ accent:'TI-red', svg:d(bulle(tete(F_FATIGUE)))},
+{id:'imexcited', l:15, en:'I am excited', alt:["i'm excited"], fr:'Je suis tout excit&eacute;e',
+ accent:'ex-CI-ted', svg:d(bulle(tete(F_EXCITE)))},
+{id:'imsorry', l:15, en:'I am sorry', alt:["i'm sorry"], fr:'Je suis d&eacute;sol&eacute;e',
+ svg:d(bulle(tete(F_DESOLE)))},
+{id:'imthirsty', l:15, en:'I am thirsty', alt:["i'm thirsty"], fr:'J&rsquo;ai soif',
+ svg:d(bulle(VERRE))},
+{id:'imhungry', l:15, en:'I am hungry', alt:["i'm hungry"], fr:'J&rsquo;ai faim',
+ accent:'HUN-gry', svg:d(bulle(ASSIETTE))},
+{id:'imsurprised', l:15, en:'I am surprised', alt:["i'm surprised"], fr:'Je suis surprise',
+ accent:'sur-PRISED', svg:d(bulle(tete(F_SURPRIS)))},
+{id:'imcrazy', l:15, en:'I am crazy', alt:["i'm crazy"], fr:'Je suis folle',
+ accent:'CRA-zy', svg:d(bulle(tete(F_FOU)))},
+
+/* ── Ligne 16 &middot; Ordinal numbers ────────────────────────────────
+   Il en faut pour dire la date. Jusqu'&agrave; douze on les apprend un
+   par un, parce que la moiti&eacute; sont irr&eacute;guliers ; apr&egrave;s, la r&egrave;gle
+   suffit, sauf aux dizaines. */
+
+{id:'first',    l:16, en:'first',    fr:'premier',    svg:rang(1, 'st')},
+{id:'second',   l:16, en:'second',   fr:'deuxi&egrave;me',   svg:rang(2, 'nd')},
+{id:'third',    l:16, en:'third',    fr:'troisi&egrave;me',  svg:rang(3, 'rd')},
+{id:'fourth',   l:16, en:'fourth',   fr:'quatri&egrave;me',  svg:rang(4, 'th')},
+{id:'fifth',    l:16, en:'fifth',    fr:'cinqui&egrave;me',  svg:rang(5, 'th')},
+{id:'sixth',    l:16, en:'sixth',    fr:'sixi&egrave;me',    svg:rang(6, 'th')},
+{id:'seventh',  l:16, en:'seventh',  fr:'septi&egrave;me',   svg:rang(7, 'th')},
+{id:'eighth',   l:16, en:'eighth',   fr:'huiti&egrave;me',   svg:rang(8, 'th')},
+{id:'ninth',    l:16, en:'ninth',    fr:'neuvi&egrave;me',   svg:rang(9, 'th')},
+{id:'tenth',    l:16, en:'tenth',    fr:'dixi&egrave;me',    svg:rang(10, 'th')},
+{id:'eleventh', l:16, en:'eleventh', fr:'onzi&egrave;me',    svg:rang(11, 'th')},
+{id:'twelfth',  l:16, en:'twelfth',  fr:'douzi&egrave;me',   svg:rang(12, 'th')},
+{id:'twentieth',l:16, en:'twentieth',fr:'vingti&egrave;me',  svg:rang(20, 'th')},
+{id:'thirtieth',l:16, en:'thirtieth',fr:'trenti&egrave;me',  svg:rang(30, 'th')},
+
+/* ── Ligne 17 &middot; Today it is... ──────────────────────────────────
+   La formule du cadre &laquo;&nbsp;Remember&nbsp;&raquo;, en trois morceaux qui se
+   remontent bout &agrave; bout. Le jour et le mois rejouent depuis le
+   calendrier de l'&eacute;valuation 2. */
+
+{id:'todayitis', l:17, en:'Today it is...', fr:'Aujourd&rsquo;hui nous sommes&hellip;',
+ svg:d(avecQuestion(calendrier()))},
+
+{id:'the16oct', l:17, en:'the sixteenth of October', fr:'le seize octobre',
+ note:'&agrave; l&rsquo;anglaise&nbsp;: le rang, puis le mois', svg:d(
+  '<rect class="sl" x="14" y="16" width="92" height="88" rx="9"/>'+
+  '<path class="ln" d="M14 42h92"/>'+
+  '<path class="ln" d="M38 16V6M82 16V6"/>'+
+  '<text class="txt sm" x="60" y="35">OCT</text>'+
+  '<text class="txt xl" x="60" y="86">16</text>')},
+
+{id:'twentytwentysix', l:17, en:'twenty twenty-six', fr:'deux mille vingt-six',
+ note:'l&rsquo;ann&eacute;e, dite par moiti&eacute;s', svg:d(
+  '<rect class="sl" x="8" y="30" width="104" height="58" rx="9"/>'+
+  '<text class="txt gr" x="60" y="72">2026</text>'+
+  '<path class="ln" d="M60 30v-8M60 88v8"/>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -1885,6 +2069,9 @@ var EVALS = [
 
   {id:3, co:'en', nom:'&Eacute;valuation 3', zone:'Zone 3',
    sous:'Les &eacute;motions, d&rsquo;apr&egrave;s la fiche <i>Inside Out</i>&nbsp;: les nommer, les dire &agrave; la premi&egrave;re personne, et les reconna&icirc;tre &agrave; l&rsquo;oreille.'},
+
+  {id:4, co:'en', nom:'&Eacute;valuation 4', zone:'Zone 4',
+   sous:'Les le&ccedil;ons 2 et 3&nbsp;: nommer les cinq &eacute;motions, pr&eacute;senter quelqu&rsquo;un, r&eacute;pondre &agrave; <i>How are you&nbsp;?</i> de huit fa&ccedil;ons, et dire la date &agrave; voix haute.'},
 
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
    sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'},
@@ -1927,6 +2114,20 @@ var LIGNES = [
    aussi:['myname'],
    rem:'Les m&ecirc;mes tournures que dans <i>About me</i>, &eacute;valuation&nbsp;2, mais remplies autrement&nbsp;: la nationalit&eacute; et le pays changent, la phrase ne bouge pas. <b>American</b> prend une majuscule, comme <b>French</b>.'},
   {id:903, ev:3, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:13, ev:4, tok:'--l1', nom:'Meet the emotions', sous:'Le nom de l&rsquo;&eacute;motion, pas l&rsquo;adjectif',
+   rem:'La le&ccedil;on&nbsp;1 donnait l&rsquo;adjectif, <b>angry</b>&nbsp;; la le&ccedil;on&nbsp;2 donne le nom, <b>Anger</b>. Sur la fiche ce sont des <b>personnages</b>, donc des pr&eacute;noms&nbsp;: <i>this is Fear</i>, <i>this is Joy</i>. Comme noms communs, <i>fear</i> et <i>joy</i> s&rsquo;&eacute;crivent sans majuscule&nbsp;: les deux passent.'},
+  {id:14, ev:4, tok:'--l2', nom:'This is Joy', sous:'Montrer quelqu&rsquo;un, puis le d&eacute;crire',
+   aussi:['purple','yellow'],
+   rem:'<b>This is</b> pour ce qui est tout pr&egrave;s, <b>That is</b> pour ce qui est plus loin&nbsp;&mdash; en fran&ccedil;ais &laquo;&nbsp;voici&nbsp;&raquo; et &laquo;&nbsp;voil&agrave;&nbsp;&raquo;, qu&rsquo;on ne distingue plus gu&egrave;re. La fiche demande de <b>montrer de la main</b> en le disant. Les deux couleurs reviennent du groupe <i>Colours</i>.'},
+  {id:15, ev:4, tok:'--l3', nom:'How are you Riley?', sous:'Huit fa&ccedil;ons de r&eacute;pondre',
+   rem:'La fiche &eacute;crit <b>I am</b> en entier&nbsp;; <i>I&rsquo;m</i> passe aussi. Cinq de ces mots viennent de l&rsquo;exercice <b>Speak like a pro</b>&nbsp;: la syllabe accentu&eacute;e s&rsquo;affiche avec la r&eacute;ponse, en capitales. On la dit plus fort et plus long, et c&rsquo;est elle qui rend la phrase anglaise.'},
+  {id:16, ev:4, tok:'--l4', nom:'Ordinal numbers', sous:'Les rangs, pour pouvoir dire la date',
+   rem:'La r&egrave;gle est simple&nbsp;: on ajoute <b>-th</b> au nombre, <i>sixteenth</i>, <i>twenty-first</i>. Ce sont les exceptions qu&rsquo;il faut savoir&nbsp;: <b>first</b>, <b>second</b>, <b>third</b>, <b>fifth</b>, <b>eighth</b> (un seul <i>t</i>), <b>ninth</b> (sans le <i>e</i> de <i>nine</i>), <b>twelfth</b>, <b>twentieth</b> et <b>thirtieth</b>.'},
+  {id:17, ev:4, tok:'--l5', nom:'Today it is...', sous:'La date &agrave; voix haute, comme au cahier',
+   aussi:['friday','october'],
+   rem:'Le cadre du cahier donne la formule&nbsp;: <b>Today it is</b> (jour) <b>the</b> (rang) <b>of</b> (mois), (ann&eacute;e). Bout &agrave; bout&nbsp;: <i>Today it is Friday the sixteenth of October, twenty twenty-six</i>. L&rsquo;ann&eacute;e se dit <b>par moiti&eacute;s</b>, vingt puis vingt-six&nbsp;&mdash; pas &laquo;&nbsp;two thousand twenty-six&nbsp;&raquo;.'},
+  {id:904, ev:4, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
 
   {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
    rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},
@@ -2607,7 +2808,7 @@ function construireEval(e){
     var tot = Math.min(etoilesDe(L.id,'qcm') + etoilesDe(L.id,'oral') + etoilesDe(L.id,'ecrit'), 3);
     var apercu = !ouvrable ? L.sous
       : (L.tout ? 'Douze mots tir&eacute;s au hasard parmi les ' + m.length
-                : m.length + ' mots &middot; ' + m.slice(0,3).map(function(x){ return x.en.toLowerCase(); }).join(', ') + '&hellip;');
+                : m.length + ' mots &middot; ' + m.slice(0,3).map(function(x){ return echapper(x.en); }).join(', ') + '&hellip;');
     h += '<div class="ligne'+(ouvrable?'':' verrou')+(ligneOuverte===L.id?' ouvert':'')+
          '" style="--lc:'+couleurDe(L.id)+'">';
     h +=   '<button class="ligne-tete" type="button" data-ouvrir="'+L.id+'"'+(ouvrable?'':' disabled')+'>';
@@ -2956,6 +3157,14 @@ function repondre(bon, it, mode, msgSup, saisie){
   } else {
     h = '<b class="ko">' + echapper(it.en) + '</b> ';
     if(msgSup) h += msgSup + ' ';
+  }
+  /* La fiche &laquo;&nbsp;Speak like a pro&nbsp;&raquo; demande d'appuyer sur une
+     syllabe. On ne le montre qu'avec la r&eacute;ponse : plus t&ocirc;t, la
+     coupe soufflerait le mot. Et avant la frappe relue, dont le
+     soulignement ondul&eacute; mordait sur la ligne suivante. */
+  if(it.accent){
+    h += '<br>&Agrave; voix haute&nbsp;: <span class="accent">'+it.accent+
+         '</span> &mdash; la syllabe en capitales porte l&rsquo;accent.';
   }
   if(mode === 'ecrit' && !bon && saisie){
     h += '<br>Tu as &eacute;crit&nbsp;: <span class="relu" style="display:inline">'+diffHTML(saisie, it.en)+'</span>';

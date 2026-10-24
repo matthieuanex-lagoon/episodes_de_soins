@@ -6,7 +6,7 @@ mots**.
 
 | Cours | Langue | Contenu |
 |-------|--------|---------|
-| **Mind the Gap** | anglais | 3 évaluations, 12 groupes, 136 mots |
+| **Mind the Gap** | anglais | 4 évaluations, 17 groupes, 172 mots |
 | **Sprichst du Deutsch?** | allemand | 2 évaluations, 10 groupes, 113 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
@@ -221,7 +221,7 @@ fois.
 
 ## Dessins
 
-239 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+251 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :
@@ -234,13 +234,21 @@ Trois familles font exception, forcément :
 - **le carré du U-Bahn**, bleu dans les deux thèmes, d'où le blanc posé en dur
   sur son numéro.
 
-Trois familles sont générées plutôt que dessinées, parce que ce qui distingue
-leurs membres est un rang ou un nombre, pas une image :
+Quelques familles sont générées plutôt que dessinées, parce que ce qui
+distingue leurs membres est un rang ou un nombre, pas une image :
 
 - `jourSem(n)` et `moisAn(n)` montrent la case occupée dans la semaine ou dans
   l'année — et ça apprend au passage que *September* est le neuvième mois ;
 - `zahl(n)` pose le chiffre dans le carré du U-Bahn. Montrer « 7 » ne souffle
-  rien : c'est *sieben* qu'on cherche.
+  rien : c'est *sieben* qu'on cherche ;
+- `rang(n, suf)` fait de même pour les ordinaux anglais : le nombre et son
+  suffixe, `1ˢᵗ`, `2ⁿᵈ`, `20ᵗʰ`, comme on les écrit sur une fiche.
+
+Deux figures colorées font exception à l'exception. `He is purple` et `She is
+yellow` portent une couleur en dur, comme les taches : leur **contour** suit
+donc le thème, pour que la silhouette se détache de la carte, mais leurs yeux
+et leur bouche non — ils sont posés *sur* la couleur, qui ne change pas. En
+sombre, des traits clairs sur le jaune avaient disparu.
 
 `Freitag` et `Oktober` réutilisent tels quels `jourSem(5)` et `moisAn(10)` du
 cours d'anglais : la case occupée dans la semaine, dans l'année.
@@ -259,6 +267,59 @@ jamais dans un QCM, étant dans des groupes différents.
 
 La fiche donne deux mots pour deux émotions : *happy* ou *joyful*, *fearful* ou
 *scared*. Ils vivent en `alt`, comme `talk` pour `speak`, plutôt qu'en doublon.
+
+## Le nom et l'adjectif
+
+L'évaluation 4 reprend les leçons 2 et 3 du même cahier, et son premier groupe
+est le pendant exact du précédent : la leçon 1 donnait l'adjectif, **angry** ;
+la leçon 2 donne le nom, **Anger**. Les cinq visages sont **les mêmes** — un
+seul tracé, `F_COLERE`, `F_PEUR`, `F_TRISTE`, `F_DEGOUT`, `F_JOIE`, partagé
+entre l'adjectif nu, la phrase en bulle et le nom.
+
+Les adjectifs ne **rejouent pas** dans ce groupe par le champ `aussi`, et c'est
+délibéré : avec le même dessin, un QCM qui proposerait *Anger* et *angry* côte
+à côte serait indécidable. C'est le `rem` du groupe qui porte la paire.
+
+Sur la fiche ce sont des personnages, donc des prénoms — *this is Fear*, *this
+is Joy*. Comme noms communs, *fear* et *joy* s'écrivent sans majuscule : la
+casse n'ayant jamais compté, les deux passent.
+
+## La syllabe accentuée
+
+L'exercice *Speak like a pro* de la leçon 3 fait entourer la syllabe qu'on
+accentue : CRA-ZY, SUR-PRI-SED, EX-CI-TED, HUN-GRY, TI-RED, DIS-GUS-TED. Ça ne
+fait pas un mode de plus — les quatre exercices demandent tous de **produire**
+le mot, pas de l'analyser. C'est un champ `accent` sur les six mots concernés,
+affiché **avec la réponse** :
+
+```js
+{id:'imcrazy', l:15, en:'I am crazy', accent:'CRA-zy', …}
+```
+
+La syllabe en capitales est celle qu'on appuie. Comme le bouton ABC, la ligne
+n'apparaît qu'une fois la réponse donnée : plus tôt, la coupe soufflerait le
+mot. Le test vérifie que la coupe recollée est bien un morceau du mot, et
+qu'elle n'est pas toute en capitales — sinon l'accent ne se voit plus.
+
+L'autre moitié de l'exercice, le classement des mots par son (æ, ɪ, aɪ), n'est
+pas reprise : les cases de la fiche sont vides, et inventer le classement
+serait inventer la leçon.
+
+## La date à l'oral
+
+Le cadre *Remember* du 16 octobre donne une formule, pas des mots :
+
+> Today it is (day) the (number) of (month), (year)
+
+Elle est découpée en trois morceaux tapables qui se remontent bout à bout —
+`Today it is...`, `the sixteenth of October`, `twenty twenty-six` — plus le
+groupe des **ordinaux**, qu'il faut bien avoir pour dire un quantième.
+
+`Friday` et `October` y rejouent depuis le calendrier de l'évaluation 2 par le
+champ `aussi`. Les ordinaux s'arrêtent à douze, plus `twentieth` et
+`thirtieth` : au-delà la règle suffit (`-th`), et ce sont les irréguliers qu'il
+faut savoir. L'année se dit **par moitiés**, *twenty twenty-six*, jamais *two
+thousand twenty-six* — c'est dans le `rem` du groupe.
 
 ## Le prénom n'est pas dans le dépôt
 
