@@ -20,7 +20,7 @@
   --ko:#c4271c; --ko-doux:#f9e6e4;
   --or:#c9a227; --jaune:#f5d400;
   --draw:#2a323a; --draw-soft:#aebbc6;
-  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l0:#10161c;
+  --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l6:#00782a; --l0:#10161c;
   /* Lignes du U-Bahn de Berlin, pour le cours d'allemand. */
   --d1:#1f4f86; --d2:#7b5b9c; --d3:#c9640d; --d4:#0e9fc9; --d5:#b4367c;
   --barre:var(--bleu); --barre-txt:var(--bar-txt);
@@ -389,7 +389,7 @@ button.evz:active{transform:scale(.993)}
     --ko:#e5786b; --ko-doux:#2a1815;
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
-    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
+    --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l6:#46b06c; --l0:#e9eef3;
     --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
@@ -402,7 +402,7 @@ button.evz:active{transform:scale(.993)}
   --ko:#e5786b; --ko-doux:#2a1815;
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
-  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l0:#e9eef3;
+  --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l6:#46b06c; --l0:#e9eef3;
   --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
@@ -756,6 +756,41 @@ var ASSIETTE = '<circle class="sl" cx="60" cy="60" r="32"/>'+
    lit &agrave; la silhouette, &eacute;paules ou robe, comme dans garcon() et
    fille() : le personnage de la fiche est colori&eacute;, il n'a donc pas
    de cheveux pour le dire. */
+/* Anxiety, l'&eacute;motion neuve de la lecture. Ce qui la s&eacute;pare de la
+   peur : les cheveux h&eacute;riss&eacute;s, la bouche ondul&eacute;e plut&ocirc;t que b&eacute;e, et
+   des pupilles qui regardent de c&ocirc;t&eacute;. La goutte, elles la partagent. */
+var F_ANXIETE = '<path class="ln" d="M36 42q10-9 20-2M84 42q-10-9-20-2"/>'+
+  '<circle class="wh" cx="47" cy="60" r="11"/><circle class="dk" cx="50" cy="62" r="5"/>'+
+  '<circle class="wh" cx="73" cy="60" r="11"/><circle class="dk" cx="76" cy="62" r="5"/>'+
+  '<path class="ln" d="M44 84q8-7 16 0t16 0"/>'+
+  '<path class="ln" d="M31 29L21 15M45 21l-4-15M60 17V3M75 21l4-15M89 29l10-14"/>'+
+  '<path class="c2" d="M97 36c4 7 6 10 6 13a6 6 0 0 1-12 0c0-3 2-6 6-13z"/>';
+
+/* ── Les pronoms sujets ─────────────────────────────────────
+   Celui qui parle porte une bulle, ceux dont on parle n'en ont pas,
+   et le nombre de silhouettes fait le reste : une pour « I », deux
+   pour « we », trois pour « they ». « You » se montre du doigt, le
+   geste que la fiche demande d&eacute;j&agrave; pour <i>this is</i>. La maison de
+   « it » vient de la fiche elle-m&ecirc;me : <i>My house is big</i>. */
+function buste(cx, cy, r){
+  var w = r*1.6, h = 104 - (cy + r*1.2);
+  return '<circle class="dk" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>'+
+         '<path class="dk" d="M'+(cx-w)+' 104a'+w+' '+h+' 0 0 1 '+(w*2)+' 0z"/>';
+}
+var BULLE_DIT = '<path class="sl" d="M84 4h30a5 5 0 0 1 5 5v18a5 5 0 0 1-5 5h-10l-10 10V32h-10a5 5 0 0 1-5-5V9a5 5 0 0 1 5-5z"/>'+
+  '<path class="tn" d="M91 13h16M91 22h10"/>';
+var P_I    = buste(40, 52, 20) + BULLE_DIT;
+var P_YOU  = mainMontre(50) + buste(84, 52, 18);
+var P_WE   = buste(30, 60, 13) + buste(74, 60, 13) + BULLE_DIT;
+var P_THEY = buste(22, 62, 11) + buste(60, 62, 11) + buste(98, 62, 11);
+
+/* « I am », « you are »... : le m&ecirc;me pronom, suivi du signe d'&eacute;galit&eacute;.
+   BE, c'est &ecirc;tre, et ce qui vient apr&egrave;s dit quoi. */
+function estCe(dedans){
+  return d('<g transform="translate(-2,10) scale(.74)">'+dedans+'</g>'+
+           '<path class="ep" d="M88 50h24M88 70h24"/>');
+}
+
 function corpsDe(fille, attr){
   return fille ? '<path'+attr+' d="M60 64L26 116h68z"/>'
                : '<path'+attr+' d="M22 116c0-30 17-46 38-46s38 16 38 46z"/>';
@@ -786,14 +821,16 @@ function quelquun(traits, fille){
    de la main. Le geste ne change pas, la distance si &mdash; et c'est la
    seule chose qui s&eacute;pare les deux mots. Le sol ne se dessine que
    dans le lointain, o&ugrave; il donne la profondeur. */
+/* Un poing de face, index tendu jusqu'&agrave; l'abscisse « bout ». Les
+   trois doigts repli&eacute;s se lisent aux entailles du bord inf&eacute;rieur ;
+   sans elles, le dessin passait pour un marteau. */
+function mainMontre(bout){
+  return '<path class="sl" d="M8 52a6 6 0 0 1 6-6h10a8 8 0 0 1 8 8v2h'+(bout-32)+
+         'a7 7 0 0 1 0 14H32v12a8 8 0 0 1-8 8H14a6 6 0 0 1-6-6z"/>'+
+         '<path class="tn" d="M15 90v-9M24 90v-9"/>';
+}
 function montre(loin){
-  /* Un poing de face, index tendu. Les trois doigts repli&eacute;s se
-     lisent aux entailles du bord inf&eacute;rieur ; sans elles, le dessin
-     passait pour un marteau. */
-  var bout = loin ? 66 : 52;
-  var main = '<path class="sl" d="M8 52a6 6 0 0 1 6-6h10a8 8 0 0 1 8 8v2h'+(bout-32)+
-             'a7 7 0 0 1 0 14H32v12a8 8 0 0 1-8 8H14a6 6 0 0 1-6-6z"/>'+
-             '<path class="tn" d="M15 90v-9M24 90v-9"/>';
+  var main = mainMontre(loin ? 66 : 52);
   return loin
     ? d('<path class="tn" d="M2 106h116"/>'+main+
         '<circle class="sl" cx="94" cy="58" r="10"/>'+
@@ -2039,7 +2076,99 @@ var MOTS = [
  note:'l&rsquo;ann&eacute;e, dite par moiti&eacute;s', svg:d(
   '<rect class="sl" x="8" y="30" width="104" height="58" rx="9"/>'+
   '<text class="txt gr" x="60" y="72">2026</text>'+
-  '<path class="ln" d="M60 30v-8M60 88v8"/>')}
+  '<path class="ln" d="M60 30v-8M60 88v8"/>')},
+
+/* ══ Évaluation 5, le Big Test ═══════════════════════════
+
+   Cette &eacute;valuation suit la fiche de r&eacute;visions, case par case. La
+   moiti&eacute; de ce qu'elle demande existe d&eacute;j&agrave; ailleurs dans le jeu :
+   ces mots-l&agrave; <b>rejouent</b> par le champ « aussi » plut&ocirc;t que
+   d'&ecirc;tre r&eacute;&eacute;crits. Seul ce que la fiche ajoute est neuf. */
+
+/* ── Ligne 18 · Moods and feelings ───────────────────
+   Les mots crois&eacute;s de la le&ccedil;on 7 demandent l'adjectif <b>nu</b>, l&agrave;
+   o&ugrave; l'&eacute;valuation 4 avait les phrases. M&ecirc;mes visages, sans la
+   bulle : c'est le rapport qu'ont d&eacute;j&agrave; les &eacute;valuations 3 et 4. */
+
+{id:'tired',     l:18, en:'tired',     fr:'fatigu&eacute;',  accent:'TI-red',    svg:d(tete(F_FATIGUE))},
+{id:'excited',   l:18, en:'excited',   fr:'tout excit&eacute;', accent:'ex-CI-ted', svg:d(tete(F_EXCITE))},
+{id:'surprised', l:18, en:'surprised', fr:'surpris',   accent:'sur-PRISED', svg:d(tete(F_SURPRIS))},
+{id:'crazy',     l:18, en:'crazy',     fr:'fou',       accent:'CRA-zy',    svg:d(tete(F_FOU))},
+{id:'sorry',     l:18, en:'sorry',     fr:'d&eacute;sol&eacute;',   svg:d(tete(F_DESOLE))},
+{id:'fine',      l:18, en:'fine',      fr:'bien',      note:'comme dans <i>I am fine</i>', svg:d(tete(F_BIEN))},
+{id:'thirsty',   l:18, en:'thirsty',   fr:'assoiff&eacute;',  note:'qui a soif', svg:d(VERRE)},
+{id:'hungry',    l:18, en:'hungry',    fr:'affam&eacute;',    accent:'HUN-gry', note:'qui a faim', svg:d(ASSIETTE)},
+
+/* ── Ligne 19 · Emotion names ──────────────────────
+   Les cinq noms rejouent ; la lecture de la le&ccedil;on 6 en ajoute un
+   sixi&egrave;me, l'&eacute;motion neuve de Riley. */
+
+{id:'anxiety', l:19, en:'Anxiety', alt:['anxiety'], fr:'l&rsquo;anxi&eacute;t&eacute;',
+ note:'l&rsquo;&eacute;motion de la lecture', svg:d(tete(F_ANXIETE))},
+
+/* ── Ligne 20 · Colours ───────────────────────────
+   Les onze couleurs rejouent depuis l'&eacute;valuation 2 ; la question de
+   la le&ccedil;on 3 et sa r&eacute;ponse sont neuves. */
+
+{id:'whatcolour', l:20, en:'What colour is he?', fr:'De quelle couleur est-il&nbsp;?',
+ note:'&agrave; la britannique&nbsp;: colour', svg:d(avecQuestion(
+  '<circle cx="48" cy="34" r="20" fill="#e03127" stroke="var(--draw)" stroke-width="5"/>'+
+  '<circle cx="92" cy="34" r="20" fill="#1f40b5" stroke="var(--draw)" stroke-width="5"/>'+
+  '<circle cx="70" cy="78" r="20" fill="#6aae2e" stroke="var(--draw)" stroke-width="5"/>'))},
+
+{id:'heisred', l:20, en:'He is red', fr:'Il est rouge', svg:colorie('#e03127', '#f7f9fa', false)},
+
+/* ── Ligne 21 · Subject pronouns ────────────────────
+   Le tableau de la le&ccedil;on 4. « You » vaut tu et vous, « they » ils
+   et elles : une case du tableau fran&ccedil;ais sur deux tombe sur le
+   m&ecirc;me mot anglais, et c'est le « fr » qui le dit. */
+
+{id:'pr-i',    l:21, en:'I',    cap:true, fr:'je',          svg:d(P_I)},
+{id:'pr-you',  l:21, en:'you',  fr:'tu, vous',   note:'le m&ecirc;me mot pour les deux', svg:d(P_YOU)},
+{id:'pr-he',   l:21, en:'he',   fr:'il',         note:'un gar&ccedil;on', svg:d(garcon())},
+{id:'pr-she',  l:21, en:'she',  fr:'elle',       note:'une fille',  svg:d(fille())},
+{id:'pr-it',   l:21, en:'it',   fr:'&ccedil;a',       note:'une chose, pas une personne', svg:d(maison())},
+{id:'pr-we',   l:21, en:'we',   fr:'nous',       svg:d(P_WE)},
+{id:'pr-they', l:21, en:'they', fr:'ils, elles', note:'le m&ecirc;me mot pour les deux', svg:d(P_THEY)},
+
+/* ── Ligne 22 · The verb BE ───────────────────────
+   Les sept formes du pr&eacute;sent simple, chacune derri&egrave;re son pronom.
+   La forme contract&eacute;e passe aussi, &agrave; l'&eacute;crit comme &agrave; l'oral. Les
+   tournures de pr&eacute;sentation rejouent : c'est le m&ecirc;me verbe. */
+
+{id:'be-i',    l:22, en:'I am',     alt:["i'm"],      cap:true, fr:'je suis',   svg:estCe(P_I)},
+{id:'be-you',  l:22, en:'you are',  alt:["you're"],   fr:'tu es, vous &ecirc;tes',  svg:estCe(P_YOU)},
+{id:'be-he',   l:22, en:'he is',    alt:["he's"],     fr:'il est',    svg:estCe(garcon())},
+{id:'be-she',  l:22, en:'she is',   alt:["she's"],    fr:'elle est',  svg:estCe(fille())},
+{id:'be-it',   l:22, en:'it is',    alt:["it's"],     fr:'c&rsquo;est',   note:'pour une chose', svg:estCe(maison())},
+{id:'be-we',   l:22, en:'we are',   alt:["we're"],    fr:'nous sommes', svg:estCe(P_WE)},
+{id:'be-they', l:22, en:'they are', alt:["they're"],  fr:'ils sont, elles sont', svg:estCe(P_THEY)},
+
+{id:'fromny', l:22, cap:true, en:'I am from New York', alt:['i am from new-york',"i'm from new york"],
+ fr:'Je viens de New York', note:'l&rsquo;origine, comme dans la lecture', svg:d(
+  '<rect class="sl" x="14" y="52" width="26" height="54"/>'+
+  '<rect class="sl" x="46" y="24" width="28" height="82"/>'+
+  '<rect class="sl" x="80" y="44" width="26" height="62"/>'+
+  '<path class="tn" d="M21 64h12M21 78h12M21 92h12M53 34h14M53 48h14M53 62h14M53 76h14M53 90h14M87 56h12M87 70h12M87 84h12"/>'+
+  '<path class="ln" d="M6 106h108"/>')},
+
+/* ── Ligne 23 · Ask and answer ─────────────────────
+   Les six questions de la le&ccedil;on 3 et leurs r&eacute;ponses. Comprendre la
+   question, c'est reconna&icirc;tre son premier mot : who, how, what. */
+
+{id:'whoisthis', l:23, en:'Who is this?', fr:'Qui est-ce&nbsp;?',
+ note:'tout pr&egrave;s', svg:d(avecQuestion(buste(72, 50, 22)))},
+{id:'howisshe', l:23, en:'How is she?', fr:'Comment va-t-elle&nbsp;?', svg:d(avecQuestion(fille()))},
+{id:'howarethey', l:23, en:'How are they?', fr:'Comment vont-ils&nbsp;?', svg:d(
+  buste(20, 66, 11) + buste(60, 66, 11) + buste(100, 66, 11)+
+  '<path class="sl" d="M76 4h34a6 6 0 0 1 6 6v22a6 6 0 0 1-6 6h-12l-11 11V38h-11a6 6 0 0 1-6-6V10a6 6 0 0 1 6-6z"/>'+
+  '<text class="txt" x="93" y="30">?</text>')},
+
+{id:'sheisdisgusted', l:23, en:'She is disgusted', fr:'Elle est d&eacute;go&ucirc;t&eacute;e',
+ accent:'dis-GUS-ted', svg:quelquun(F_DEGOUT, true)},
+{id:'theyarecrazy', l:23, en:'they are crazy', fr:'Ils sont fous', accent:'CRA-zy', svg:d(
+  '<g transform="translate(2,20) scale(.58)">'+tete(F_FOU)+'</g>'+
+  '<g transform="translate(50,20) scale(.58)">'+tete(F_FOU)+'</g>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -2072,6 +2201,9 @@ var EVALS = [
 
   {id:4, co:'en', nom:'&Eacute;valuation 4', zone:'Zone 4',
    sous:'Les le&ccedil;ons 2 et 3&nbsp;: nommer les cinq &eacute;motions, pr&eacute;senter quelqu&rsquo;un, r&eacute;pondre &agrave; <i>How are you&nbsp;?</i> de huit fa&ccedil;ons, et dire la date &agrave; voix haute.'},
+
+  {id:5, co:'en', nom:'The Big Test', zone:'Zone 5',
+   sous:'La fiche de r&eacute;visions du <i>big test</i>, case par case&nbsp;: les humeurs, le nom des &eacute;motions, les couleurs, les pronoms sujets, la conjugaison de <b>BE</b>, et <i>this is / that is</i>.'},
 
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
    sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'},
@@ -2128,6 +2260,25 @@ var LIGNES = [
    aussi:['friday','october'],
    rem:'Le cadre du cahier donne la formule&nbsp;: <b>Today it is</b> (jour) <b>the</b> (rang) <b>of</b> (mois), (ann&eacute;e). Bout &agrave; bout&nbsp;: <i>Today it is Friday the sixteenth of October, twenty twenty-six</i>. L&rsquo;ann&eacute;e se dit <b>par moiti&eacute;s</b>, vingt puis vingt-six&nbsp;&mdash; pas &laquo;&nbsp;two thousand twenty-six&nbsp;&raquo;.'},
   {id:904, ev:4, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:18, ev:5, tok:'--l1', nom:'Moods and feelings', sous:'Le vocabulaire des humeurs',
+   aussi:['angry','sad','happy','fearful','disgusted'],
+   rem:'Les onze mots des mots crois&eacute;s, mais l&rsquo;adjectif <b>nu</b>&nbsp;: <i>tired</i>, pas <i>I am tired</i>. <b>joyful</b> passe pour <i>happy</i> et <b>scared</b> pour <i>fearful</i>, comme toujours. Les cinq derniers reviennent de l&rsquo;&eacute;valuation&nbsp;3.'},
+  {id:19, ev:5, tok:'--l2', nom:'Emotion names', sous:'Le nom des cinq &eacute;motions, et d&rsquo;une sixi&egrave;me',
+   aussi:['anger','fear','sadness','disgust','joy'],
+   rem:'La lecture de la le&ccedil;on&nbsp;6 pr&eacute;sente <b>Anxiety</b>&nbsp;: dix-sept ans, am&eacute;ricaine, de New York, orange p&acirc;le, et sa meilleure amie est <i>Fear</i>. Ne pas confondre le <b>nom</b> de l&rsquo;&eacute;motion avec l&rsquo;adjectif&nbsp;: <i>Anger</i> est <i>angry</i>.'},
+  {id:20, ev:5, tok:'--l3', nom:'Colours', sous:'Les onze couleurs, et la question qui va avec',
+   aussi:['red','green','purple','orange','yellow','blue','black','pink','grey','brown','white'],
+   rem:'Les couleurs reviennent en entier de l&rsquo;&eacute;valuation&nbsp;2, parce que la fiche de r&eacute;visions les redemande. <b>colour</b> et <b>grey</b> s&rsquo;&eacute;crivent &agrave; la britannique&nbsp;; <i>color</i> et <i>gray</i> sont am&eacute;ricains.'},
+  {id:21, ev:5, tok:'--l4', nom:'Subject pronouns', sous:'Les huit cases du tableau, en sept mots',
+   rem:'Deux cases fran&ccedil;aises tombent sur le m&ecirc;me mot anglais&nbsp;: <b>you</b> vaut <i>tu</i> et <i>vous</i>, <b>they</b> vaut <i>ils</i> et <i>elles</i>. <b>it</b> d&eacute;signe une chose, jamais une personne&nbsp;: <i>My house is big &rarr; It is big</i>. Un pronom sert &agrave; ne pas r&eacute;p&eacute;ter un nom. Seul <b>I</b> prend une majuscule, partout dans la phrase.'},
+  {id:22, ev:5, tok:'--l5', nom:'The verb BE', sous:'&Ecirc;tre au pr&eacute;sent simple, et ce qu&rsquo;il sert &agrave; dire',
+   aussi:['myname','eleven','american'],
+   rem:'<b>am</b> pour <i>I</i>, <b>is</b> pour <i>he, she, it</i>, <b>are</b> pour <i>you, we, they</i>. La forme contract&eacute;e passe aussi&nbsp;: <i>I&rsquo;m, you&rsquo;re, he&rsquo;s, she&rsquo;s, it&rsquo;s, we&rsquo;re, they&rsquo;re</i> &mdash; l&rsquo;apostrophe comprise. <b>BE</b> sert &agrave; dire cinq choses&nbsp;: le nom, l&rsquo;&acirc;ge, l&rsquo;&eacute;motion, la nationalit&eacute; et l&rsquo;origine. Les trois derni&egrave;res lignes en sont&nbsp;; attention, en anglais on <b>est</b> onze ans, on ne les a pas.'},
+  {id:23, ev:5, tok:'--l6', nom:'Ask and answer', sous:'Comprendre une question, et y r&eacute;pondre',
+   aussi:['howareyou','thisis','thatis','imfearful'],
+   rem:'Tout se joue au premier mot&nbsp;: <b>who</b> demande <i>qui</i>, <b>how</b> demande <i>comment</i>, <b>what</b> demande <i>quoi</i> ou <i>quelle</i>, et <b>what colour</b> demande la couleur. La r&eacute;ponse reprend le verbe de la question&nbsp;: <i>How is she&nbsp;? &rarr; She <b>is</b> disgusted</i>, <i>How are they&nbsp;? &rarr; They <b>are</b> crazy</i>.'},
+  {id:905, ev:5, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
 
   {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
    rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},

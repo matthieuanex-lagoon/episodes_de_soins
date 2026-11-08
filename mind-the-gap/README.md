@@ -6,7 +6,7 @@ mots**.
 
 | Cours | Langue | Contenu |
 |-------|--------|---------|
-| **Mind the Gap** | anglais | 4 évaluations, 17 groupes, 172 mots |
+| **Mind the Gap** | anglais | 5 évaluations, 23 groupes, 203 mots |
 | **Sprichst du Deutsch?** | allemand | 2 évaluations, 10 groupes, 113 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
@@ -198,8 +198,8 @@ EVALS.push({id:102, co:'de', nom:'Évaluation 2', zone:'Bereich B', sous:'…'})
 Le cours d'un mot se déduit : mot → ligne → évaluation → cours. Rien n'est
 écrit deux fois, et un mot ne peut pas se retrouver dans la mauvaise langue.
 
-`tok` désigne un jeton de couleur : `--l1` à `--l5` pour les lignes de Londres,
-`--d1` à `--d3` pour celles de Berlin, `--l0` pour la révision. Ils se
+`tok` désigne un jeton de couleur : `--l1` à `--l6` pour les lignes de Londres,
+`--d1` à `--d5` pour celles de Berlin, `--l0` pour la révision. Ils se
 réutilisent d'une évaluation à l'autre, jamais deux fois dans la même.
 `tout:true` marque la ligne de révision, qui rebat douze mots au hasard parmi
 ceux de **son** évaluation — elle reste cachée tant que l'évaluation n'a qu'un
@@ -221,7 +221,7 @@ fois.
 
 ## Dessins
 
-251 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+278 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :
@@ -320,6 +320,56 @@ champ `aussi`. Les ordinaux s'arrêtent à douze, plus `twentieth` et
 `thirtieth` : au-delà la règle suffit (`-th`), et ce sont les irréguliers qu'il
 faut savoir. L'année se dit **par moitiés**, *twenty twenty-six*, jamais *two
 thousand twenty-six* — c'est dans le `rem` du groupe.
+
+## The Big Test
+
+L'évaluation 5 n'est pas une leçon de plus : c'est la **fiche de révisions** du
+contrôle, recopiée case par case. Ses six groupes sont, dans l'ordre, les six
+cases « Je dois connaître » :
+
+| Case de la fiche | Groupe |
+|------------------|--------|
+| Le vocabulaire des humeurs | *Moods and feelings* |
+| Le nom des émotions | *Emotion names* |
+| Les couleurs | *Colours* |
+| Les pronoms personnels sujets | *Subject pronouns* |
+| La conjugaison de BE au présent simple | *The verb BE* |
+| this is / that is | *Ask and answer* |
+
+Les cinq cases « Je dois être capable » ne sont pas des groupes, parce qu'elles
+décrivent des **façons d'interroger**, que le jeu a déjà : comprendre le
+vocabulaire à l'oral, c'est le mode « J'écoute » ; reproduire l'orthographe,
+c'est « Je l'écris », zéro faute admise ; faire une phrase avec BE et répondre
+à une question, c'est le contenu des deux derniers groupes ; se présenter
+(nom / âge / nationalité / origine), ce sont les tournures que *The verb BE*
+rejoue depuis les évaluations 2 et 3.
+
+**La moitié de cette évaluation rejoue.** Les onze couleurs reviennent en entier
+de l'évaluation 2 — la fiche les redemande, et elles restent aussi à leur place
+d'origine ; les cinq adjectifs d'humeur reviennent de l'évaluation 3, les cinq
+noms d'émotions de l'évaluation 4, `this is` et `that is` également. Seul ce que
+la fiche ajoute est neuf : les sept pronoms, les sept formes de BE, les
+questions, et les adjectifs nus que les mots croisés de la leçon 7 font épeler.
+
+Deux pièges de dessin résolus là :
+
+- **les pronoms** n'ont pas d'image évidente. Celui qui parle porte une bulle,
+  ceux dont on parle n'en ont pas, et le nombre de silhouettes fait le reste :
+  une pour *I*, deux pour *we*, trois pour *they*. *You* se montre du doigt — le
+  geste que la fiche de la leçon 2 demandait déjà pour *this is*. Et *it* est
+  une maison, parce que c'est l'exemple de la fiche elle-même : *My house is big
+  → It is big* ;
+- **les formes de BE** reprennent la même scène, suivie d'un signe **=**. Les
+  deux groupes ne se croisant jamais dans un QCM, la ressemblance ne gêne pas ;
+  elle dit au contraire que *I* et *I am* parlent de la même personne.
+
+Les formes contractées (`I'm`, `you're`, `he's`…) sont acceptées à la frappe,
+apostrophe droite ou courbe, mais pas sans apostrophe : le test le vérifie forme
+par forme.
+
+Ce que la fiche **ne demande pas** n'y est pas : le classement des mots par son
+(æ, ɪ, aɪ) de *Speak like a pro* reste hors du jeu, bien que la page soit
+remplie. La syllabe accentuée, elle, y est, sur les mots que la fiche liste.
 
 ## Le prénom n'est pas dans le dépôt
 
