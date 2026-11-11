@@ -6,7 +6,7 @@ mots**.
 
 | Cours | Langue | Contenu |
 |-------|--------|---------|
-| **Mind the Gap** | anglais | 5 évaluations, 23 groupes, 203 mots |
+| **Mind the Gap** | anglais | 6 évaluations, 27 groupes, 231 mots |
 | **Sprichst du Deutsch?** | allemand | 2 évaluations, 10 groupes, 113 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
@@ -199,7 +199,8 @@ Le cours d'un mot se déduit : mot → ligne → évaluation → cours. Rien n'e
 écrit deux fois, et un mot ne peut pas se retrouver dans la mauvaise langue.
 
 `tok` désigne un jeton de couleur : `--l1` à `--l6` pour les lignes de Londres,
-`--d1` à `--d5` pour celles de Berlin, `--l0` pour la révision. Ils se
+`--d1` à `--d5` pour celles de Berlin, `--h1` à `--h4` pour Halloween, `--l0`
+pour la révision. Ils se
 réutilisent d'une évaluation à l'autre, jamais deux fois dans la même.
 `tout:true` marque la ligne de révision, qui rebat douze mots au hasard parmi
 ceux de **son** évaluation — elle reste cachée tant que l'évaluation n'a qu'un
@@ -221,7 +222,7 @@ fois.
 
 ## Dessins
 
-278 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+305 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :
@@ -370,6 +371,52 @@ par forme.
 Ce que la fiche **ne demande pas** n'y est pas : le classement des mots par son
 (æ, ɪ, aɪ) de *Speak like a pro* reste hors du jeu, bien que la page soit
 remplie. La syllabe accentuée, elle, y est, sur les mots que la fiche liste.
+
+La fiche *Create a character for Inside Out 3* n'a ajouté que deux mots, là où
+ils vont : **Excitement** au groupe des noms d'émotions, **She is small** à
+celui de BE. Tout le reste de ce qu'elle demande — désigner, dire les couleurs,
+dire les émotions — était déjà dans l'évaluation.
+
+## Halloween
+
+L'évaluation 6 est la fiche du 31 octobre, et c'est la première qui a son
+**habillage à elle**. Jusqu'ici seul un cours pouvait en avoir un
+(`body.cours-de` pour Berlin) ; `montrer()` pose maintenant aussi une classe
+`eval-<id>`, mais seulement sur les écrans où l'évaluation est ouverte —
+l'accueil du cours les montre toutes, il reste neutre.
+
+```css
+body.eval-6{--barre:#e8801a; --barre-txt:#1b1008; --bleu:#5b2d8e}
+```
+
+Potiron sur la barre du roundel, violet partout où passait le bleu de Londres.
+Le signe, lui, reste rond : c'est toujours le même cours. `--bar-txt` bascule
+déjà avec le thème, donc les deux violets gardent leur contraste sur les
+boutons sans qu'on ait à y toucher.
+
+Le **ton** suit le même chemin. Une évaluation peut redéfinir `bravos`, `rate`
+et `aide`, que `ambiance()` va chercher avant ceux du cours :
+
+```js
+{id:6, co:'en', nom:'Halloween', zone:'Night Tube',
+ bravos:['Spooktacular!','Fang-tastic!','Wicked!',…], rate:'Boo!'}
+```
+
+Le tampon des ratés dit donc **Boo!** au lieu de *Mind the gap!*, et le reste
+du cours garde les siens.
+
+Quatre jetons de couleur de plus, `--h1` à `--h4` : potiron, sorcière, potion,
+sang. Et quatorze pictogrammes, dont quatre posent leur teinte en dur pour la
+même raison que les taches de couleur — une citrouille qui n'est pas orange
+n'est plus une citrouille. Le contour suit le thème, pour que la forme se
+détache de la carte ; ce qui est posé *sur* la couleur reste sombre dans les
+deux thèmes, sinon les yeux du potiron disparaîtraient la nuit.
+
+Le groupe *Singular and plural* fait voir la règle plutôt que l'énoncer :
+`deux(dedans)` reprend le même pictogramme deux fois, décalé, et `a bat` devient
+`bats`. Les phrases, elles, passent par la bulle, comme partout ailleurs dans le
+jeu : `It is a bat` est le dessin de `a bat` dans une bulle. Le piège de la
+fiche — **witch → witch*es*** après `-ch` — est dans le `rem` du groupe.
 
 ## Le prénom n'est pas dans le dépôt
 

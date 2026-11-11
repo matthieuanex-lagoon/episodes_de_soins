@@ -21,6 +21,8 @@
   --or:#c9a227; --jaune:#f5d400;
   --draw:#2a323a; --draw-soft:#aebbc6;
   --l1:#0098d4; --l2:#6950a1; --l3:#9b0056; --l4:#b36305; --l5:#00767a; --l6:#00782a; --l0:#10161c;
+  /* Halloween : potiron, sorci&egrave;re, potion, sang. */
+  --h1:#e8801a; --h2:#7b3fa0; --h3:#4e9b2e; --h4:#b3121b;
   /* Lignes du U-Bahn de Berlin, pour le cours d'allemand. */
   --d1:#1f4f86; --d2:#7b5b9c; --d3:#c9640d; --d4:#0e9fc9; --d5:#b4367c;
   --barre:var(--bleu); --barre-txt:var(--bar-txt);
@@ -377,6 +379,7 @@ button.evz:active{transform:scale(.993)}
 .dess .txt.gr{font-size:38px}
 .dess .txt.xl{font-size:54px}
 .dess .txt.sm{font-size:24px}
+.dess .txt.xs{font-size:17px}
 .dess .kox{fill:none;stroke:var(--ko);stroke-width:8;stroke-linecap:round}
 
 /* ══ Thème sombre ════════════════════════════════════════ */
@@ -390,6 +393,7 @@ button.evz:active{transform:scale(.993)}
     --or:#d8b13f; --jaune:#e8cf2a;
     --draw:#c9d4de; --draw-soft:#57646f;
     --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l6:#46b06c; --l0:#e9eef3;
+  --h1:#f09a3e; --h2:#b07fd8; --h3:#6fc256; --h4:#e8595f;
     --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
     --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
   }
@@ -403,6 +407,7 @@ button.evz:active{transform:scale(.993)}
   --or:#d8b13f; --jaune:#e8cf2a;
   --draw:#c9d4de; --draw-soft:#57646f;
   --l1:#4fbdf0; --l2:#a894e2; --l3:#e2589f; --l4:#d9a05a; --l5:#3cbabd; --l6:#46b06c; --l0:#e9eef3;
+  --h1:#f09a3e; --h2:#b07fd8; --h3:#6fc256; --h4:#e8595f;
   --d1:#7aa4dd; --d2:#b394d8; --d3:#e2913f; --d4:#4fc6ea; --d5:#e07aae;
   --ombre:0 1px 0 rgba(0,0,0,.35), 0 12px 28px -18px rgba(0,0,0,.95);
 }
@@ -411,6 +416,18 @@ button.evz:active{transform:scale(.993)}
    Le carré arrondi au U blanc remplace le roundel londonien, et la
    barre passe au jaune BVG. Rien d'autre ne bouge : mêmes écrans,
    mêmes gestes, mêmes trois modes. */
+/* Halloween n'est pas un cours mais une &eacute;valuation : son habillage
+   se pose sur le corps tant qu'elle est ouverte, et dispara&icirc;t d&egrave;s
+   qu'on revient &agrave; l'accueil du cours. Potiron sur la barre du
+   roundel, violet partout o&ugrave; passait le bleu de Londres ; le signe,
+   lui, reste rond. &laquo; bar-txt &raquo; bascule d&eacute;j&agrave; avec le th&egrave;me, donc
+   les deux violets gardent leur contraste sur les boutons. */
+body.eval-6{--barre:#e8801a; --barre-txt:#1b1008; --bleu:#5b2d8e}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) body.eval-6{--bleu:#b98bdf}
+}
+:root[data-theme="dark"] body.eval-6{--bleu:#b98bdf}
+
 body.cours-de{--barre:#f0d722; --barre-txt:#17140a}
 body.cours-de .roundel{border-radius:15%}
 body.cours-de .fiche .rond{border-radius:26%}
@@ -901,6 +918,166 @@ function tache(c, fond){
     '<g class="tach" fill="'+c+'">'+
     '<path d="M63.2 11.1Q67.6 28.7 83.5 12.9Q78.3 32.5 97.3 26.6Q81.8 41.6 103.6 46Q86.6 54.2 94.9 61.7Q79.1 63 77.9 78.1Q66.4 68.2 60.5 79.9Q52.2 69.9 40.5 76.2Q39.1 62.2 21.1 69.6Q37.4 53.1 20.8 49.3Q33.5 42.2 18 30.4Q39.1 31.5 36.2 18.5Q51.1 23.5 63.2 11.1Z"/>'+
     '<circle cx="82.4" cy="9" r="4.2"/><circle cx="109" cy="42.5" r="3.9"/><circle cx="93.9" cy="85.9" r="3.4"/><circle cx="37.8" cy="86" r="3.1"/><circle cx="11" cy="51.9" r="3.8"/><circle cx="28.5" cy="10.9" r="4.1"/></g>');
+}
+
+
+/* ══ Halloween ═══════════════════════════════════════
+
+   Quatorze pictogrammes pour la fiche du 31 octobre. Comme les
+   taches de couleur, quatre d'entre eux posent leur teinte en dur,
+   pour la m&ecirc;me raison : une citrouille qui n'est pas orange n'est
+   plus une citrouille. Le contour suit le th&egrave;me, pour que la forme
+   se d&eacute;tache de la carte ; ce qui est pos&eacute; SUR la couleur reste
+   sombre dans les deux th&egrave;mes, sinon les yeux du potiron
+   dispara&icirc;traient la nuit.
+
+   Chaque fonction rend l'int&eacute;rieur du SVG, sans d() : le pluriel et
+   les bulles les reprennent tels quels. */
+
+var HW_OR = '#e8801a', HW_VERT = '#5aa832', HW_PEAU = '#86b94a', HW_NUIT = '#241405';
+function hwFond(c){ return ' fill="'+c+'" stroke="var(--draw)" stroke-width="4.6" stroke-linejoin="round"'; }
+function hwTrait(w){ return ' fill="none" stroke="'+HW_NUIT+'" stroke-width="'+w+'" stroke-linecap="round"'; }
+var HW_ENCRE = ' fill="'+HW_NUIT+'" stroke="none"';
+
+/* Un drap, six festons au bas : c'est le feston qui fait le
+   fant&ocirc;me, pas la couleur, qui suit le th&egrave;me comme le reste. */
+function ghost(){
+  return '<path class="wh" d="M20 104V58a40 40 0 0 1 80 0v46l-13-11-13 11-14-11-13 11-14-11-13 11z"/>'+
+    '<ellipse class="dk" cx="46" cy="54" rx="7" ry="10"/>'+
+    '<ellipse class="dk" cx="74" cy="54" rx="7" ry="10"/>'+
+    '<ellipse class="dk" cx="60" cy="80" rx="8" ry="11"/>';
+}
+/* Le vampire tient &agrave; trois choses : la pointe de cheveux sur le
+   front, le col dress&eacute;, et les deux crocs. */
+function vampire(){
+  return '<path class="dk" d="M22 112c0-22 14-34 38-34s38 12 38 34z"/>'+
+    '<path class="dk" d="M36 86L16 66l24 5zM84 86l20-20-24 5z"/>'+
+    '<path class="sl" d="M46 80h28l-14 13z"/>'+
+    '<circle class="sl" cx="60" cy="48" r="27"/>'+
+    '<path class="dk" d="M33 46c0-16 12-28 27-28s27 12 27 28c-5-9-11-12-18-12l-9 9-9-9c-7 0-13 3-18 12z"/>'+
+    '<path class="ln" d="M43 48l13 5M77 48l-13 5"/>'+
+    '<circle class="dk" cx="49" cy="56" r="3.4"/><circle class="dk" cx="71" cy="56" r="3.4"/>'+
+    '<path class="ln" d="M49 67h22"/>'+
+    '<path class="wh" d="M52 67l3.5 9 3.5-9zM61 67l3.5 9 3.5-9z"/>';
+}
+/* Le cr&acirc;ne : orbites rondes et m&acirc;choire &agrave; dents. C'est la m&acirc;choire
+   qui le s&eacute;pare du masque, qui n'en a pas. */
+function skull(){
+  return '<path class="wh" d="M60 12c23 0 40 17 40 40 0 15-6 24-13 29v13a6 6 0 0 1-6 6H39a6 6 0 0 1-6-6V81c-7-5-13-14-13-29 0-23 17-40 40-40z"/>'+
+    '<ellipse class="dk" cx="45" cy="50" rx="11" ry="13"/>'+
+    '<ellipse class="dk" cx="75" cy="50" rx="11" ry="13"/>'+
+    '<path class="dk" d="M60 66l-6 12h12z"/>'+
+    '<path class="ln" d="M33 88h54M47 88v12M60 88v12M73 88v12"/>';
+}
+function skeleton(){
+  return '<path class="wh" d="M60 6c13 0 22 9 22 21 0 8-4 14-9 17v5H47v-5c-5-3-9-9-9-17 0-12 9-21 22-21z"/>'+
+    '<circle class="dk" cx="52" cy="26" r="4.5"/><circle class="dk" cx="68" cy="26" r="4.5"/>'+
+    '<path class="dk" d="M60 34l-4 7h8z"/>'+
+    '<path class="tn" d="M51 46h18M56 41v5M64 41v5"/>'+
+    '<path class="ln" d="M60 56L30 44M60 56l30-12"/>'+
+    '<path class="tn" d="M30 44l-9-7M30 44l-10 3M90 44l9-7M90 44l10 3"/>'+
+    '<path class="ln" d="M60 54v34"/>'+
+    '<path class="tn" d="M48 64h24M46 74h28M49 84h22"/>'+
+    '<path class="ln" d="M60 88L44 114M60 88l16 26"/>';
+}
+/* La sorci&egrave;re est verte, le chapeau sombre : les deux ensemble ne
+   se confondent pas avec le chapeau seul, qui n'a pas de visage. */
+function witch(){
+  return '<path class="dk" d="M34 58L63 8c1.5-3 5.5-3 6.5.5L84 58z"/>'+
+    '<ellipse class="dk" cx="60" cy="60" rx="43" ry="8"/>'+
+    '<path class="dk" d="M32 68c-5 19-1 35 5 43 2-15 6-24 11-28zM88 68c5 19 1 35-5 43-2-15-6-24-11-28z"/>'+
+    '<path d="M60 64c12 0 21 10 21 22 0 16-9 29-21 29s-21-13-21-29c0-12 9-22 21-22z" fill="'+HW_PEAU+'" stroke="var(--draw)" stroke-width="4.4" stroke-linejoin="round"/>'+
+    '<path d="M57 79l-16 12 15 6z" fill="'+HW_PEAU+'" stroke="var(--draw)" stroke-width="3.6" stroke-linejoin="round"/>'+
+    '<circle'+HW_ENCRE+' cx="53" cy="78" r="3.2"/><circle'+HW_ENCRE+' cx="71" cy="80" r="3.2"/>'+
+    '<path'+hwTrait(3.6)+' d="M62 99q8-1 11-6"/>'+
+    '<circle'+HW_ENCRE+' cx="46" cy="100" r="2.6"/>';
+}
+function devil(){
+  return '<path class="hr" d="M32 42C24 30 24 16 28 10c5 10 11 17 19 21zM88 42c8-12 8-26 4-32-5 10-11 17-19 21z"/>'+
+    '<circle class="hr" cx="60" cy="64" r="30"/>'+
+    '<path class="ln" d="M44 54l13 7M76 54l-13 7"/>'+
+    '<circle class="dk" cx="50" cy="65" r="4"/><circle class="dk" cx="70" cy="65" r="4"/>'+
+    '<path class="ln" d="M43 76q17 14 34 0"/>'+
+    '<path class="hr" d="M52 92l8 17 8-17z"/>';
+}
+/* Deux ailes en miroir : l'arc du dessus part de l'&eacute;paule, le
+   dessous revient par trois festons, un par doigt de la membrane. */
+function bat(){
+  return '<path class="dk" d="M52 48C38 32 22 28 8 36l8 18Q26 46 32 62Q40 54 46 70Q50 60 52 48z"/>'+
+    '<path class="dk" d="M68 48c14-16 30-20 44-12l-8 18Q94 46 88 62Q80 54 74 70Q70 60 68 48z"/>'+
+    '<ellipse class="dk" cx="60" cy="56" rx="10" ry="15"/>'+
+    '<path class="dk" d="M53 44l-4-14 10 9zM67 44l4-14-10 9z"/>'+
+    '<circle class="wh" cx="56" cy="52" r="3"/><circle class="wh" cx="64" cy="52" r="3"/>';
+}
+function araignee(){
+  return '<path class="tn" d="M60 2v30"/>'+
+    '<path class="ln" d="M42 58L20 46 10 56M42 68L14 70 8 84M44 78L24 92 22 106M50 86L38 104 44 114"/>'+
+    '<path class="ln" d="M78 58l22-12 10 10M78 68l28 2 6 14M76 78l20 14 2 14M70 86l12 18-6 10"/>'+
+    '<ellipse class="dk" cx="60" cy="74" rx="23" ry="20"/>'+
+    '<circle class="dk" cx="60" cy="46" r="13"/>'+
+    '<circle class="wh" cx="54" cy="44" r="4.5"/><circle class="wh" cx="66" cy="44" r="4.5"/>'+
+    '<circle class="dk" cx="54" cy="45" r="2"/><circle class="dk" cx="66" cy="45" r="2"/>';
+}
+function bonbon(){
+  return '<ellipse class="hi" cx="60" cy="60" rx="27" ry="20"/>'+
+    '<path class="hi" d="M33 60L10 42v36zM87 60l23-18v36z"/>'+
+    '<path'+hwTrait(3.4)+' d="M48 44v33M60 42v37M72 44v33"/>';
+}
+function bonbons(){
+  return '<g transform="translate(-8,-14) scale(.62)">'+bonbon()+'</g>'+
+         '<g transform="translate(32,26) scale(.62)">'+bonbon()+'</g>';
+}
+function tombe(){
+  return '<path class="sl" d="M28 102V50a32 32 0 0 1 64 0v52z"/>'+
+    '<text class="txt xs" x="60" y="56">R.I.P.</text>'+
+    '<path class="ln" d="M8 102h104"/>'+
+    '<path class="tn" d="M18 102l-5-13M25 102V87M32 102l5-13M88 102l-5-13M95 102V87M102 102l5-13"/>';
+}
+function citrouille(){
+  return '<path class="ln" d="M64 28c2-9 8-14 16-15"/>'+
+    '<path class="dk" d="M55 22h10v15H55z"/>'+
+    '<ellipse cx="60" cy="70" rx="45" ry="36"'+hwFond(HW_OR)+'/>'+
+    '<path'+hwTrait(3)+' d="M38 41c-7 12-7 46 0 58M82 41c7 12 7 46 0 58"/>'+
+    '<path'+HW_ENCRE+' d="M39 60l16-9 2 16zM81 60l-16-9-2 16z"/>'+
+    '<path'+HW_ENCRE+' d="M36 82h9l4-7 5 7h12l5-7 4 7h9l-7 13H43z"/>';
+}
+/* Le masque a des sangles et pas de m&acirc;choire ; le cr&acirc;ne l'inverse. */
+function masque(){
+  return '<rect class="sl" x="4" y="46" width="112" height="9" rx="4.5"/>'+
+    '<rect class="sl" x="4" y="72" width="112" height="9" rx="4.5"/>'+
+    '<path class="wh" d="M60 12c24 0 35 17 35 40 0 27-17 56-35 56S25 79 25 52c0-23 11-40 35-40z"/>'+
+    '<ellipse class="dk" cx="45" cy="50" rx="10" ry="8"/>'+
+    '<ellipse class="dk" cx="75" cy="50" rx="10" ry="8"/>'+
+    '<rect class="dk" x="47" y="76" width="26" height="6" rx="3"/>'+
+    '<circle class="dk" cx="42" cy="30" r="3"/><circle class="dk" cx="78" cy="30" r="3"/>'+
+    '<circle class="dk" cx="44" cy="66" r="3"/><circle class="dk" cx="76" cy="66" r="3"/>'+
+    '<circle class="dk" cx="60" cy="94" r="3"/>';
+}
+function chaudron(){
+  var v = hwFond(HW_VERT);
+  return '<circle'+v+' cx="44" cy="30" r="8"/><circle'+v+' cx="68" cy="18" r="6"/><circle'+v+' cx="56" cy="6" r="4.5"/>'+
+    '<path class="dk" d="M26 96l-11 16h15zM94 96l11 16H90z"/>'+
+    '<path class="dk" d="M16 58h88c0 27-18 46-44 46S16 85 16 58z"/>'+
+    '<ellipse class="dk" cx="60" cy="58" rx="46" ry="10"/>'+
+    '<ellipse'+v+' cx="60" cy="58" rx="36" ry="7"/>';
+}
+function chapeau(){
+  return '<path class="dk" d="M34 76L64 10c1.5-3 5.5-3 6.5.5L84 76z"/>'+
+    '<path d="M43 56h38l4 18H39z" fill="'+HW_OR+'" stroke="var(--draw)" stroke-width="3.4" stroke-linejoin="round"/>'+
+    '<rect fill="none" stroke="var(--draw)" stroke-width="3.6" x="53" y="60" width="16" height="11" rx="1.5"/>'+
+    '<path class="dk" d="M14 76h92a9 9 0 0 1 0 18H14a9 9 0 0 1 0-18z"/>';
+}
+/* Deux enfants, pour « kids ». */
+function enfants(){
+  return '<g transform="translate(-6,22) scale(.56)">'+garcon()+'</g>'+
+         '<g transform="translate(58,22) scale(.56)">'+fille()+'</g>';
+}
+/* Le pluriel se dessine : deux exemplaires du m&ecirc;me pictogramme,
+   d&eacute;cal&eacute;s plut&ocirc;t qu'align&eacute;s, pour que &ccedil;a reste une sc&egrave;ne et pas un
+   tableau. */
+function deux(dedans){
+  return '<g transform="translate(-8,8) scale(.52)">'+dedans+'</g>'+
+         '<g transform="translate(50,40) scale(.52)">'+dedans+'</g>';
 }
 
 var MOTS = [
@@ -2106,6 +2283,12 @@ var MOTS = [
 {id:'anxiety', l:19, en:'Anxiety', alt:['anxiety'], fr:'l&rsquo;anxi&eacute;t&eacute;',
  note:'l&rsquo;&eacute;motion de la lecture', svg:d(tete(F_ANXIETE))},
 
+/* La fiche « Create a character for Inside Out 3 » demande d'inventer
+   une &eacute;motion et de la d&eacute;crire avec BE. Elle n'ajoute que deux mots
+   au jeu : le nom de l'&eacute;motion, et l'adjectif de taille. */
+{id:'excitement', l:19, en:'Excitement', alt:['excitement'], fr:'l&rsquo;excitation',
+ note:'le nom, pas l&rsquo;adjectif <i>excited</i>', svg:d(tete(F_EXCITE))},
+
 /* ── Ligne 20 · Colours ───────────────────────────
    Les onze couleurs rejouent depuis l'&eacute;valuation 2 ; la question de
    la le&ccedil;on 3 et sa r&eacute;ponse sont neuves. */
@@ -2144,6 +2327,12 @@ var MOTS = [
 {id:'be-we',   l:22, en:'we are',   alt:["we're"],    fr:'nous sommes', svg:estCe(P_WE)},
 {id:'be-they', l:22, en:'they are', alt:["they're"],  fr:'ils sont, elles sont', svg:estCe(P_THEY)},
 
+{id:'small', l:22, en:'She is small', alt:['he is small'], fr:'Elle est petite',
+ note:'d&eacute;crire la taille, avec BE', svg:d(
+  '<path class="tn" d="M10 104h100"/>'+
+  '<g transform="translate(-4,34) scale(.56)">'+fille()+'</g>'+
+  '<g transform="translate(52,4) scale(.92)">'+garcon()+'</g>')},
+
 {id:'fromny', l:22, cap:true, en:'I am from New York', alt:['i am from new-york',"i'm from new york"],
  fr:'Je viens de New York', note:'l&rsquo;origine, comme dans la lecture', svg:d(
   '<rect class="sl" x="14" y="52" width="26" height="54"/>'+
@@ -2168,7 +2357,76 @@ var MOTS = [
  accent:'dis-GUS-ted', svg:quelquun(F_DEGOUT, true)},
 {id:'theyarecrazy', l:23, en:'they are crazy', fr:'Ils sont fous', accent:'CRA-zy', svg:d(
   '<g transform="translate(2,20) scale(.58)">'+tete(F_FOU)+'</g>'+
-  '<g transform="translate(50,20) scale(.58)">'+tete(F_FOU)+'</g>')}
+  '<g transform="translate(50,20) scale(.58)">'+tete(F_FOU)+'</g>')},
+
+/* ══ Évaluation 6, Halloween ═══════════════════════════ */
+
+/* ── Ligne 24 · Creatures of the night ─────────────── */
+
+{id:'hw-ghost',    l:24, en:'a ghost',    fr:'un fant&ocirc;me',  svg:d(ghost())},
+{id:'hw-vampire',  l:24, en:'a vampire',  fr:'un vampire',  svg:d(vampire())},
+{id:'hw-witch',    l:24, en:'a witch',    fr:'une sorci&egrave;re', svg:d(witch())},
+{id:'hw-skeleton', l:24, en:'a skeleton', fr:'un squelette', svg:d(skeleton())},
+{id:'hw-devil',    l:24, en:'a devil',    fr:'un diable',   svg:d(devil())},
+{id:'hw-bat',      l:24, en:'a bat',      fr:'une chauve-souris', svg:d(bat())},
+{id:'hw-spider',   l:24, en:'a spider',   fr:'une araign&eacute;e',  svg:d(araignee())},
+
+/* ── Ligne 25 · Tricks and treats ────────────────── */
+
+{id:'hw-skull',    l:25, en:'a skull',    fr:'un cr&acirc;ne',      svg:d(skull())},
+{id:'hw-sweets',   l:25, en:'sweets',     fr:'des bonbons',
+ note:'toujours au pluriel', svg:d(bonbons())},
+{id:'hw-grave',    l:25, en:'a grave',    fr:'une tombe',     svg:d(tombe())},
+{id:'hw-pumpkin',  l:25, en:'a pumpkin',  fr:'une citrouille', svg:d(citrouille())},
+{id:'hw-mask',     l:25, en:'a mask',     fr:'un masque',     svg:d(masque())},
+{id:'hw-cauldron', l:25, en:'a cauldron', fr:'un chaudron',   svg:d(chaudron())},
+{id:'hw-hat',      l:25, en:'a hat',      fr:'un chapeau',    svg:d(chapeau())},
+
+/* ── Ligne 26 · Singular and plural ────────────────
+   Le pluriel se voit : un dessin, puis deux. Les phrases, elles,
+   passent par la bulle, comme partout ailleurs dans le jeu. */
+
+{id:'hw-bats',     l:26, en:'bats',     fr:'des chauves-souris', svg:d(deux(bat()))},
+{id:'hw-pumpkins', l:26, en:'pumpkins', fr:'des citrouilles',    svg:d(deux(citrouille()))},
+{id:'hw-witches',  l:26, en:'witches',  fr:'des sorci&egrave;res',     svg:d(deux(witch()))},
+
+{id:'hw-itbat',    l:26, en:'It is a bat',      alt:["it's a bat"],      fr:'C&rsquo;est une chauve-souris',
+ svg:d(bulle(bat()))},
+{id:'hw-theybats', l:26, en:'They are bats',    alt:["they're bats"],    fr:'Ce sont des chauves-souris',
+ svg:d(bulle(deux(bat())))},
+{id:'hw-itwitch',  l:26, en:'It is a witch',    alt:["it's a witch"],    fr:'C&rsquo;est une sorci&egrave;re',
+ svg:d(bulle(witch()))},
+{id:'hw-theywitches', l:26, en:'They are witches', alt:["they're witches"], fr:'Ce sont des sorci&egrave;res',
+ svg:d(bulle(deux(witch())))},
+
+/* ── Ligne 27 · Trick or treat! ─────────────────── */
+
+{id:'hw-kids', l:27, en:'kids', fr:'les enfants', note:'pluriel de <i>kid</i>', svg:d(enfants())},
+
+{id:'hw-its', l:27, en:"It's Halloween!", alt:['it is halloween'], cap:true,
+ fr:'C&rsquo;est Halloween&nbsp;!', svg:d(
+  '<rect class="sl" x="14" y="16" width="92" height="88" rx="9"/>'+
+  '<path class="ln" d="M14 42h92"/>'+
+  '<path class="ln" d="M38 16V6M82 16V6"/>'+
+  '<text class="txt sm" x="60" y="35">OCT</text>'+
+  '<text class="txt xl" x="60" y="88" style="fill:'+HW_OR+'">31</text>')},
+
+{id:'hw-trick', l:27, en:'Trick or treat!', fr:'Des bonbons ou un sort&nbsp;!',
+ note:'ce que les enfants crient &agrave; la porte', svg:d(bulle(bonbons()))},
+
+{id:'hw-happy', l:27, cap:true, en:'Happy Halloween!', fr:'Joyeux Halloween&nbsp;!',
+ svg:d(bulle(citrouille()))},
+
+{id:'hw-phrase', l:27, cap:true,
+ en:'It\u2019s Halloween so kids say trick or treat!',
+ alt:["it's halloween so kids say trick or treat",
+      'it\u2019s halloween so kids say \u201ctrick or treat!\u201d',
+      'it\'s halloween so kids say "trick or treat!"'],
+ fr:'C&rsquo;est Halloween, alors les enfants disent &laquo;&nbsp;des bonbons ou un sort&nbsp;!&nbsp;&raquo;',
+ svg:d(
+  '<path class="hi" d="M100 8a19 19 0 1 0 12 32 23 23 0 0 1-12-32z"/>'+
+  '<g transform="translate(-6,10) scale(.7)">'+maison()+'</g>'+
+  '<g transform="translate(64,62) scale(.42)">'+citrouille()+'</g>')}
 ];
 
 /* Les &eacute;valuations de la prof. Chacune regroupe ses groupes de mots ;
@@ -2204,6 +2462,14 @@ var EVALS = [
 
   {id:5, co:'en', nom:'The Big Test', zone:'Zone 5',
    sous:'La fiche de r&eacute;visions du <i>big test</i>, case par case&nbsp;: les humeurs, le nom des &eacute;motions, les couleurs, les pronoms sujets, la conjugaison de <b>BE</b>, et <i>this is / that is</i>.'},
+
+  /* Halloween a son propre ton : des f&eacute;licitations qui jouent sur
+     les mots de la f&ecirc;te, et un tampon qui hue au lieu d'avertir.
+     Le cours garde les siens pour les autres &eacute;valuations. */
+  {id:6, co:'en', nom:'Halloween', zone:'Night Tube',
+   sous:'La fiche du 31&nbsp;octobre&nbsp;: les cr&eacute;atures de la nuit, ce qu&rsquo;on rapporte dans son sac, le singulier et le pluriel, et la phrase myst&egrave;re.',
+   bravos:['Spooktacular!','Fang-tastic!','Wicked!','Boo-rilliant!','Frightfully good!','Ghoulishly good!','Bewitching!','Scary good!'],
+   rate:'Boo!'},
 
   {id:101, co:'de', nom:'&Eacute;valuation 1', zone:'Bereich A',
    sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'},
@@ -2279,6 +2545,17 @@ var LIGNES = [
    aussi:['howareyou','thisis','thatis','imfearful'],
    rem:'Tout se joue au premier mot&nbsp;: <b>who</b> demande <i>qui</i>, <b>how</b> demande <i>comment</i>, <b>what</b> demande <i>quoi</i> ou <i>quelle</i>, et <b>what colour</b> demande la couleur. La r&eacute;ponse reprend le verbe de la question&nbsp;: <i>How is she&nbsp;? &rarr; She <b>is</b> disgusted</i>, <i>How are they&nbsp;? &rarr; They <b>are</b> crazy</i>.'},
   {id:905, ev:5, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:24, ev:6, tok:'--h1', nom:'Creatures of the night', sous:'Ce qui sort le 31 octobre',
+   rem:'Tous prennent l&rsquo;article&nbsp;: <b>a ghost</b>, <b>a witch</b>&nbsp;&mdash; en anglais un nom singulier d&eacute;nombrable ne se dit presque jamais tout seul. Devant une voyelle il devient <b>an</b>&nbsp;: <i>an owl</i>. Attention &agrave; <b>bat</b>, qui veut dire la chauve-souris <i>et</i> la batte de cricket.'},
+  {id:25, ev:6, tok:'--h2', nom:'Tricks and treats', sous:'Ce qu&rsquo;on rapporte dans son sac',
+   rem:'<b>sweets</b> est toujours au pluriel en anglais britannique&nbsp;&mdash; les Am&eacute;ricains disent <i>candy</i>, au singulier. <b>cauldron</b> se prononce comme <i>cold</i> avec un <i>r</i>&nbsp;: le <i>l</i> ne s&rsquo;entend pas.'},
+  {id:26, ev:6, tok:'--h3', nom:'Singular and plural', sous:'Un, puis deux&nbsp;: la r&egrave;gle du <i>-s</i>',
+   aussi:['hw-bat','hw-pumpkin','hw-witch'],
+   rem:'On ajoute <b>-s</b>&nbsp;: <i>a bat &rarr; bats</i>, <i>a pumpkin &rarr; pumpkins</i>. Mais apr&egrave;s <b>-ch</b>, <b>-sh</b>, <b>-s</b>, <b>-x</b> et <b>-o</b>, on ajoute <b>-es</b>&nbsp;: <i>a witch &rarr; witch<b>es</b></i>. Et le verbe suit&nbsp;: <b>It is</b> au singulier, <b>They are</b> au pluriel.'},
+  {id:27, ev:6, tok:'--h4', nom:'Trick or treat!', sous:'La phrase myst&egrave;re de la fiche',
+   rem:'<b>Trick or treat</b>, mot &agrave; mot &laquo;&nbsp;un tour ou une friandise&nbsp;&raquo;&nbsp;: c&rsquo;est ce que les enfants crient &agrave; la porte, et la menace est pour rire. <b>kids</b> est le mot courant pour <i>children</i>. Halloween prend une <b>majuscule</b>, comme tous les noms de f&ecirc;tes.'},
+  {id:906, ev:6, tok:'--l0', tout:true, nom:'All change', sous:'Douze mots au hasard, tous groupes'},
 
   {id:101, ev:101, tok:'--d1', nom:'Hobbys', sous:'Dire ce qu&rsquo;on aime faire',
    rem:'L&rsquo;allemand met une <b>majuscule &agrave; tous les noms</b>, pas seulement aux jours et aux mois&nbsp;: <b>Fu&szlig;ball</b>, <b>Musik</b>, <b>Fahrrad</b>. La fiche &eacute;crit <i>Fussball</i> et <i>Hobbies</i>&nbsp;; les deux orthographes passent, le <b>&szlig;</b> valant <b>ss</b>.'},
@@ -2384,6 +2661,12 @@ function evalsDe(co){ return EVALS.filter(function(E){ return E.co === co; }); }
 function coursDeEval(e){ var E = evalDe(e); return E ? E.co : COURS[0].id; }
 function coursDeLigne(l){ var L = ligneDe(l); return L ? coursDeEval(L.ev) : COURS[0].id; }
 function coursDeMot(m){ return m ? coursDeLigne(m.l) : COURS[0].id; }
+/* Le ton d'une partie vient du cours, qu'une &eacute;valuation peut
+   r&eacute;&eacute;crire : Halloween a ses f&eacute;licitations et son tampon &agrave; elle. */
+function ambiance(){
+  var C = coursActuel(), E = evalDe(evalOuvert) || {};
+  return { bravos: E.bravos || C.bravos, rate: E.rate || C.rate, aide: E.aide || C.aide };
+}
 function motsDeCours(co){ return MOTS.filter(function(m){ return coursDeMot(m) === co; }); }
 
 function lignesDe(e){ return LIGNES.filter(function(L){ return L.ev === e; }); }
@@ -2840,6 +3123,12 @@ function montrer(nom){
   COURS.forEach(function(C){
     document.body.classList.toggle('cours-'+C.id, C.id === coursOuvert && nom !== 'cours');
   });
+  /* Une &eacute;valuation peut avoir le sien par-dessus, mais seulement l&agrave;
+     o&ugrave; elle est ouverte : l'accueil du cours les montre toutes. */
+  EVALS.forEach(function(E){
+    document.body.classList.toggle('eval-'+E.id,
+      E.id === evalOuvert && ['eval','jeu','bilan'].indexOf(nom) >= 0);
+  });
   ['cours','accueil','eval','jeu','bilan','carnet'].forEach(function(n){
     $('#ecran-'+n).hidden = (n !== nom);
   });
@@ -3287,10 +3576,10 @@ function repondre(bon, it, mode, msgSup, saisie){
   if(!bon) partie.rates.push(it.id);
   noterMot(it.id, mode, bon && !aide);
 
-  var C = coursActuel();
+  var A = ambiance();
   var t = $('#tampon');
   t.className = 'tampon' + (bon ? '' : ' ko');
-  t.textContent = bon ? (aide ? C.aide : auHasard(C.bravos)) : C.rate;
+  t.textContent = bon ? (aide ? A.aide : auHasard(A.bravos)) : A.rate;
   setTimeout(function(){ t.classList.add('vu'); }, 40);
   bip(bon);
 
