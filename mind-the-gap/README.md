@@ -7,7 +7,7 @@ mots**.
 | Cours | Langue | Contenu |
 |-------|--------|---------|
 | **Mind the Gap** | anglais | 6 évaluations, 27 groupes, 231 mots |
-| **Sprichst du Deutsch?** | allemand | 2 évaluations, 10 groupes, 113 mots |
+| **Sprichst du Deutsch?** | allemand | 3 évaluations, 12 groupes, 131 mots |
 
 L'écran d'entrée pose la question et les deux cartes y répondent. On ouvre un
 cours sur ses évaluations, une évaluation sur ses groupes, et chaque groupe se
@@ -126,6 +126,43 @@ Les sept jours et les douze mois forment un groupe à part. `Freitag` et
 récrits — ils n'existent qu'une fois dans `MOTS`, et le compteur ne les compte
 pas deux fois.
 
+## Der Stundenplan
+
+L'évaluation 3 allemande tient en deux groupes : les onze **matières** de la
+page, puis **dire quel jour on a quoi**. Les sept jours y rejouent depuis
+l'évaluation 2, comme les couleurs rejouent dans le *Big Test* anglais.
+
+Les trois langues se disent par leur **drapeau** — français, allemand, Union
+Jack. Les couleurs sont en dur, pour la raison des taches : un drapeau qui
+change de teinte avec le thème n'est plus un drapeau. Seul le cadre suit, pour
+que le rectangle se détache de la carte. La palette de *Kunst* garde ses quatre
+pastilles pour la même raison.
+
+Deux matières ne se devinent pas depuis le français, et c'est le `rem` qui les
+porte : **Erdkunde** est la géographie, mot à mot la science de la Terre, et
+**Geschichte** l'histoire. Toutes prennent la **majuscule**, y compris celles
+qui ressemblent au français — *Sport*, *Religion*, *Musik*, *Biologie* — parce
+que ce sont des noms. Et **Französisch** prend un `ö`, donc la rangée de touches
+et la substitution `oe` servent ici aussi.
+
+La phrase de la page est découpée en morceaux tapables puis remontée, comme la
+date anglaise :
+
+```
+Wann?  ·  Ich habe...  ·  am Montag  ·  Wann hast du Deutsch?
+Ich habe Deutsch am Montag.
+```
+
+Deux phrases de plus suivent le même patron, avec une autre matière et un autre
+jour : une phrase qu'on ne sait dire qu'avec un seul mot n'est pas sue. Le point
+de grammaire est dans le `rem` : **haben** change avec la personne (*ich habe*,
+*du hast*), le verbe passe devant le sujet dans la question, et **am** + le jour
+veut dire « le » — c'est *an dem* contracté.
+
+`jourSem(n)` s'est scindé en `semaine(n)`, qui rend le dessin nu, et `jourSem(n)`
+qui l'enveloppe : `am Montag` y ajoute une horloge, et `fachAmTag(icône, n)` pose
+la matière à gauche et le jour à droite.
+
 ## La majuscule
 
 Les jours, les mois et les nationalités prennent une majuscule en anglais ; en
@@ -222,7 +259,7 @@ fois.
 
 ## Dessins
 
-305 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
+323 pictogrammes au trait, redessinés d'après les fiches des cahiers. Ils
 prennent leurs couleurs des jetons CSS : les deux thèmes suivent.
 
 Trois familles font exception, forcément :

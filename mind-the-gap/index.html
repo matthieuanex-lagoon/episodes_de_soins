@@ -637,7 +637,7 @@ function calendrier(){
          '<path class="ln" d="M6 36 h108"/>'+
          '<path class="ln" d="M34 16 V5 M86 16 V5"/>';
 }
-function jourSem(n){
+function semaine(n){
   var h = calendrier(), i, x;
   for(i=0;i<7;i++){
     x = (11.5 + i*14.4).toFixed(1);
@@ -645,8 +645,9 @@ function jourSem(n){
       ? '<rect class="dk" x="'+x+'" y="44" width="12" height="38" rx="3"/>'
       : '<rect class="wh" x="'+x+'" y="54" width="12" height="20" rx="3"/>';
   }
-  return d(h);
+  return h;
 }
+function jourSem(n){ return d(semaine(n)); }
 function moisAn(n){
   var h = calendrier(), i, x, y;
   for(i=0;i<12;i++){
@@ -1078,6 +1079,105 @@ function enfants(){
 function deux(dedans){
   return '<g transform="translate(-8,8) scale(.52)">'+dedans+'</g>'+
          '<g transform="translate(50,40) scale(.52)">'+dedans+'</g>';
+}
+
+
+/* ══ Der Stundenplan ═════════════════════════════════
+
+   Les trois langues se disent par leur drapeau. Les couleurs sont en
+   dur, comme pour les taches : un drapeau qui change de teinte avec
+   le th&egrave;me n'est plus un drapeau. Seul le cadre suit, pour que le
+   rectangle se d&eacute;tache de la carte. */
+
+function drapeau(dedans){
+  return '<g transform="translate(14,32)">'+dedans+
+    '<rect fill="none" stroke="var(--draw)" stroke-width="3.5" x="0" y="0" width="92" height="56"/></g>';
+}
+function drapeauFR(){
+  return drapeau('<rect fill="#002395" x="0" y="0" width="31" height="56"/>'+
+    '<rect fill="#ffffff" x="31" y="0" width="30" height="56"/>'+
+    '<rect fill="#ed2939" x="61" y="0" width="31" height="56"/>');
+}
+function drapeauDE(){
+  return drapeau('<rect fill="#000000" x="0" y="0" width="92" height="18.7"/>'+
+    '<rect fill="#dd0000" x="0" y="18.7" width="92" height="18.6"/>'+
+    '<rect fill="#ffce00" x="0" y="37.3" width="92" height="18.7"/>');
+}
+function drapeauUK(){
+  return drapeau('<rect fill="#012169" x="0" y="0" width="92" height="56"/>'+
+    '<path fill="none" stroke="#ffffff" stroke-width="12" d="M0 0L92 56M92 0L0 56"/>'+
+    '<path fill="none" stroke="#c8102e" stroke-width="6" d="M0 0L92 56M92 0L0 56"/>'+
+    '<path fill="none" stroke="#ffffff" stroke-width="19" d="M46 0V56M0 28H92"/>'+
+    '<path fill="none" stroke="#c8102e" stroke-width="10" d="M46 0V56M0 28H92"/>');
+}
+
+/* Une seule croche sur sa port&eacute;e : la double croche sert d&eacute;j&agrave; &agrave;
+   &laquo;&nbsp;Ich spiele gern Musik&nbsp;&raquo;, dans les Hobbys. */
+function noteMusique(){
+  return '<path class="tn" d="M8 34h104M8 48h104M8 62h104M8 76h104M8 90h104"/>'+
+    '<ellipse class="dk" cx="46" cy="82" rx="15" ry="11" transform="rotate(-20 46 82)"/>'+
+    '<path class="ln" d="M60 78V24"/>'+
+    '<path class="dk" d="M60 24c15 5 23 13 23 26 5-18-6-28-23-34z"/>';
+}
+/* La palette garde ses couleurs : une palette grise n'en est plus une. */
+function palette(){
+  return '<path class="sl" d="M56 14c27 0 48 17 48 37 0 14-12 19-21 19-7 0-11 4-11 10 0 8-6 13-16 13-26 0-46-19-46-40S30 14 56 14z"/>'+
+    '<ellipse class="wh" cx="56" cy="80" rx="11" ry="8"/>'+
+    '<circle fill="#e03127" stroke="var(--draw)" stroke-width="3" cx="36" cy="44" r="8"/>'+
+    '<circle fill="#1f40b5" stroke="var(--draw)" stroke-width="3" cx="60" cy="34" r="8"/>'+
+    '<circle fill="#e7c012" stroke="var(--draw)" stroke-width="3" cx="84" cy="46" r="8"/>'+
+    '<circle fill="#6aae2e" stroke="var(--draw)" stroke-width="3" cx="32" cy="70" r="8"/>';
+}
+function calcul(){
+  return '<rect class="sl" x="14" y="14" width="92" height="92" rx="10"/>'+
+    '<path class="ln" d="M28 40h22M39 29v22"/>'+
+    '<path class="ln" d="M70 40h22"/>'+
+    '<path class="ln" d="M68 71l18 18M86 71l-18 18"/>'+
+    '<path class="ln" d="M28 80h22"/>'+
+    '<circle class="dk" cx="39" cy="70" r="3.6"/><circle class="dk" cx="39" cy="90" r="3.6"/>';
+}
+function feuille(){
+  return '<path class="sl" d="M60 8c27 19 37 41 37 59 0 25-17 43-37 43S23 92 23 67c0-18 10-40 37-59z"/>'+
+    '<path class="tn" d="M60 22v84M60 44L38 57M60 44l22 13M60 66L40 79M60 66l20 13"/>'+
+    '<path class="ln" d="M60 106v8"/>';
+}
+function globe(){
+  return '<circle class="sl" cx="60" cy="60" r="44"/>'+
+    '<path class="tn" d="M16 60h88M60 16v88M60 16c-17 13-17 75 0 88M60 16c17 13 17 75 0 88M24 35c20 11 52 11 72 0M24 85c20-11 52-11 72 0"/>';
+}
+function sablier(){
+  return '<path class="ln" d="M26 12h68M26 108h68"/>'+
+    '<path class="sl" d="M34 14h52c0 22-20 34-20 46s20 24 20 46H34c0-22 20-34 20-46s-20-24-20-46z"/>'+
+    '<path class="dk" d="M41 20h38c-2 14-15 24-19 30-4-6-17-16-19-30z"/>'+
+    '<path class="dk" d="M46 102h28c-2-12-10-18-14-23-4 5-12 11-14 23z"/>';
+}
+function eglise(){
+  return '<path class="ln" d="M60 6v18M52 13h16"/>'+
+    '<path class="sl" d="M44 104V48l16-21 16 21v56z"/>'+
+    '<path class="sl" d="M12 104V62h32v42zM76 104V62h32v42z"/>'+
+    '<path class="wh" d="M52 104V84a8 8 0 0 1 16 0v20z"/>'+
+    '<circle class="wh" cx="28" cy="80" r="8"/><circle class="wh" cx="92" cy="80" r="8"/>';
+}
+/* Un coureur : t&ecirc;te, buste pench&eacute;, bras et jambes en ciseaux. */
+function coureur(){
+  return '<circle class="sl" cx="80" cy="22" r="13"/>'+
+    '<path class="ln" d="M74 36L56 62"/>'+
+    '<path class="ln" d="M56 62l10 22-6 24"/>'+
+    '<path class="ln" d="M56 62L36 76l-16-6"/>'+
+    '<path class="ln" d="M66 46l22 8 6-13"/>'+
+    '<path class="ln" d="M68 42L44 33"/>';
+}
+function horloge(){
+  return '<circle class="sl" cx="60" cy="62" r="42"/>'+
+    '<path class="tn" d="M60 24v8M60 92v8M22 62h8M90 62h8"/>'+
+    '<path class="ln" d="M60 62V36M60 62l20 12"/>'+
+    '<circle class="dk" cx="60" cy="62" r="4"/>';
+}
+/* « Ich habe Deutsch am Montag » : la mati&egrave;re &agrave; gauche, le jour de la
+   semaine &agrave; droite. Les deux morceaux de la phrase, c&ocirc;te &agrave; c&ocirc;te. */
+function fachAmTag(icone, n){
+  return d('<g transform="translate(0,2) scale(.54)">'+icone+'</g>'+
+           '<g transform="translate(58,54) scale(.48)">'+semaine(n)+'</g>');
 }
 
 var MOTS = [
@@ -2161,6 +2261,61 @@ var MOTS = [
   '<path class="ln" d="M34 90h52M48 78v-8M72 78v-8"/>'+
   '<rect class="dk" x="44" y="96" width="12" height="9" rx="2"/>')},
 
+/* ══ Évaluation 103, Der Stundenplan ════════════════════ */
+
+/* ── Ligne 301 · Die Fächer ─────────────────────────
+   Les onze mati&egrave;res de la page. Toutes prennent la majuscule : ce
+   sont des noms, et l'allemand les &eacute;crit ainsi, m&ecirc;me quand le mot
+   ressemble au fran&ccedil;ais. */
+
+{id:'de-franzoesisch', l:301, cap:true, en:'Französisch', fr:'le fran&ccedil;ais', svg:d(drapeauFR())},
+{id:'de-deutsch',      l:301, cap:true, en:'Deutsch',     fr:'l&rsquo;allemand', svg:d(drapeauDE())},
+{id:'de-englisch',     l:301, cap:true, en:'Englisch',    fr:'l&rsquo;anglais',  svg:d(drapeauUK())},
+{id:'de-musikfach',    l:301, cap:true, en:'Musik',       fr:'la musique',  svg:d(noteMusique())},
+{id:'de-kunst',        l:301, cap:true, en:'Kunst',       fr:'les arts plastiques', svg:d(palette())},
+{id:'de-mathe',        l:301, cap:true, en:'Mathe',       alt:['mathematik'], fr:'les maths',
+ note:'abr&eacute;g&eacute; de <i>Mathematik</i>', svg:d(calcul())},
+{id:'de-biologie',     l:301, cap:true, en:'Biologie',    fr:'la biologie', note:'la SVT', svg:d(feuille())},
+{id:'de-erdkunde',     l:301, cap:true, en:'Erdkunde',    fr:'la g&eacute;ographie',
+ note:'mot &agrave; mot&nbsp;: la science de la Terre', svg:d(globe())},
+{id:'de-geschichte',   l:301, cap:true, en:'Geschichte',  fr:'l&rsquo;histoire', svg:d(sablier())},
+{id:'de-religion',     l:301, cap:true, en:'Religion',    fr:'la religion', svg:d(eglise())},
+{id:'de-sport',        l:301, cap:true, en:'Sport',       fr:'le sport',    note:'l&rsquo;EPS', svg:d(coureur())},
+
+/* ── Ligne 302 · Wann hast du Deutsch? ─────────────────
+   La question et la r&eacute;ponse de la page, d&eacute;coup&eacute;es en morceaux
+   tapables puis remont&eacute;es, et deux phrases de plus sur le m&ecirc;me
+   patron : une phrase qu'on ne sait dire qu'avec un seul mot n'est
+   pas sue. Les sept jours rejouent depuis l'&eacute;valuation 2. */
+
+{id:'de-wann', l:302, cap:true, en:'Wann?', fr:'Quand&nbsp;?', svg:d(avecQuestion(horloge()))},
+
+{id:'de-ichhabe', l:302, cap:true, en:'Ich habe...', fr:'J&rsquo;ai&hellip;',
+ note:'le verbe <i>haben</i>, avoir', svg:d(
+  buste(34, 58, 18)+
+  '<path class="sl" d="M62 10h50a6 6 0 0 1 6 6v34a6 6 0 0 1-6 6H84L70 70V56h-8a6 6 0 0 1-6-6V16a6 6 0 0 1 6-6z"/>'+
+  '<path class="wh" d="M87 25c-5-4-13-5-16-3v20c3-2 11-1 16 3z"/>'+
+  '<path class="wh" d="M87 25c5-4 13-5 16-3v20c-3-2-11-1-16 3z"/>')},
+
+{id:'de-ammontag', l:302, cap:true, en:'am Montag', fr:'le lundi',
+ note:'un lundi pr&eacute;cis, pas tous les lundis', svg:d(
+  semaine(1)+
+  '<circle class="wh" cx="92" cy="86" r="22"/>'+
+  '<path class="ln" d="M92 72v14l10 6"/>'+
+  '<circle class="dk" cx="92" cy="86" r="3"/>')},
+
+{id:'de-wanndeutsch', l:302, cap:true, en:'Wann hast du Deutsch?',
+ fr:'Quand as-tu allemand&nbsp;?', svg:d(avecQuestion(drapeauDE()))},
+
+{id:'de-deutschmontag', l:302, cap:true, en:'Ich habe Deutsch am Montag',
+ fr:'J&rsquo;ai allemand le lundi', svg:fachAmTag(drapeauDE(), 1)},
+
+{id:'de-sportfreitag', l:302, cap:true, en:'Ich habe Sport am Freitag',
+ fr:'J&rsquo;ai sport le vendredi', svg:fachAmTag(coureur(), 5)},
+
+{id:'de-englischmittwoch', l:302, cap:true, en:'Ich habe Englisch am Mittwoch',
+ fr:'J&rsquo;ai anglais le mercredi', svg:fachAmTag(drapeauUK(), 3)},
+
 /* ══ &Eacute;valuation 4, le&ccedil;ons 2 et 3 ═════════════════════════════════ */
 
 /* ── Ligne 13 &middot; Meet the emotions ─────────────────────────────
@@ -2475,7 +2630,10 @@ var EVALS = [
    sous:'Dire ce qu&rsquo;on aime faire, compter jusqu&rsquo;&agrave; cent, pr&eacute;senter quelqu&rsquo;un, et ouvrir la page par la date et le temps qu&rsquo;il fait.'},
 
   {id:102, co:'de', nom:'&Eacute;valuation 2', zone:'Bereich B',
-   sous:'Tout ce qui ouvre et ferme un cours&nbsp;: saluer, dire qui on est, o&ugrave; l&rsquo;on habite et comment on va, &eacute;crire la date et le temps qu&rsquo;il fait.'}
+   sous:'Tout ce qui ouvre et ferme un cours&nbsp;: saluer, dire qui on est, o&ugrave; l&rsquo;on habite et comment on va, &eacute;crire la date et le temps qu&rsquo;il fait.'},
+
+  {id:103, co:'de', nom:'&Eacute;valuation 3', zone:'Bereich C',
+   sous:'L&rsquo;emploi du temps&nbsp;: les onze mati&egrave;res de la page, puis dire quel jour on a quoi.'}
 ];
 
 /* Un groupe de mots = une ligne du plan. « ev » dit de quelle &eacute;valuation
@@ -2581,7 +2739,14 @@ var LIGNES = [
   {id:205, ev:102, tok:'--d5', nom:'Das Wetter', sous:'Le temps qu&rsquo;il fait, en t&ecirc;te de page',
    aussi:['de-wolkig','de-regnet','de-wetter'],
    rem:'<b>Heute regnet es</b> et <b>Es regnet</b> disent la m&ecirc;me chose&nbsp;: d&egrave;s qu&rsquo;un mot passe devant, le verbe reste en deuxi&egrave;me position et le sujet le suit.'},
-  {id:952, ev:102, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
+  {id:952, ev:102, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'},
+
+  {id:301, ev:103, tok:'--d1', nom:'Die F&auml;cher', sous:'Les onze mati&egrave;res de la page',
+   rem:'Toutes prennent la <b>majuscule</b>&nbsp;: ce sont des noms, et l&rsquo;allemand les &eacute;crit ainsi m&ecirc;me quand le mot ressemble au fran&ccedil;ais &mdash; <b>Sport</b>, <b>Religion</b>, <b>Musik</b>, <b>Biologie</b>. Deux ne se devinent pas&nbsp;: <b>Erdkunde</b> est la g&eacute;ographie, mot &agrave; mot la science de la Terre, et <b>Geschichte</b> l&rsquo;histoire. <b>Mathe</b> est l&rsquo;abr&eacute;g&eacute; de <i>Mathematik</i>&nbsp;; les deux passent. <b>Franz&ouml;sisch</b> prend un <b>&ouml;</b>&nbsp;&mdash; <i>oe</i> au clavier fran&ccedil;ais.'},
+  {id:302, ev:103, tok:'--d2', nom:'Wann hast du Deutsch?', sous:'Dire quel jour on a quoi',
+   aussi:['de-montag','de-dienstag','de-mittwoch','de-donnerstag','de-freitag','de-samstag','de-sonntag'],
+   rem:'Le verbe <b>haben</b> change avec la personne&nbsp;: <i>ich <b>habe</b></i>, <i>du <b>hast</b></i>. Et dans la question il passe devant le sujet&nbsp;: <i>Wann <b>hast du</b>&hellip;&nbsp;?</i>, comme en fran&ccedil;ais. <b>am</b> + le jour veut dire &laquo;&nbsp;le&nbsp;&raquo;&nbsp;: <i>am Montag</i>, le lundi &mdash; c&rsquo;est <i>an dem</i> contract&eacute;. Les sept jours reviennent de l&rsquo;&eacute;valuation&nbsp;2.'},
+  {id:953, ev:103, tok:'--l0', tout:true, nom:'Alles umsteigen', sous:'Douze mots au hasard, tous groupes'}
 ];
 
 /* « %L » est remplac&eacute; par la langue du cours ouvert. */
